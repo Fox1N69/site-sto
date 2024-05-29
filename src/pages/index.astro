@@ -26,10 +26,15 @@ const images = [
 ];
 ---
 
-<Layout title="Title page">
+<Layout title="Автосервис Rem Zona">
   <main>
-    <section id="main-section">
+    <section id="main__section">
       <Header />
+      <div class="main__content">
+        <h1><img src="title.svg" alt="title main page" /></h1>
+        <p>Делаем качественно, быстро и с душой</p>
+        <button>Оставить заявку</button>
+      </div>
     </section>
   </main>
 
@@ -38,6 +43,7 @@ const images = [
 
 <style lang="scss" scoped>
   main {
+    color: #fff3f3;
     background-color: #171717;
     height: 100vh;
   }
