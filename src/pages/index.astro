@@ -1,6 +1,6 @@
 ---
-import TestScreen from "@components/TestScreen/test";
 import Layout from "../layouts/Layout.astro";
+import Header from "@components/Header/Header.astro";
 
 const images = [
   {
@@ -27,104 +27,9 @@ const images = [
 ---
 
 <Layout title="Title page">
-  <TestScreen />
   <main>
-    <section class="main-section">
-      <div class="section-wrapper">
-        <header class="header">
-          <img
-            loading="lazy"
-            src="https://cdn.builder.io/api/v1/image/assets/TEMP/c0351d670025db3be3399879186aec361c532c7220ea8e0f6f1497855dd516b3?apiKey=86a8077d13b044688be2a49a34f38b33&"
-            class="logo"
-            alt="Company Logo"
-          />
-          <nav class="main-navigation">
-            <ul class="nav-list">
-              <li class="nav-item"><a href="/" class="nav-link">Home</a></li>
-              <li class="nav-item">
-                <a href="/about" class="nav-link">About Us</a>
-              </li>
-              <li class="nav-item">
-                <a href="/services" class="nav-link">Services</a>
-              </li>
-              <li class="nav-item">
-                <a href="/contact" class="nav-link">Contact</a>
-              </li>
-            </ul>
-          </nav>
-          <span class="working-hours">9.00-20.00 пн-пт</span>
-        </header>
-        <img
-          loading="lazy"
-          src="https://cdn.builder.io/api/v1/image/assets/TEMP/86d9fe4a80e25a78f2c5dd6a87b9c5d4e0b9b6abff47e107ad91a8a112a66a7e?apiKey=86a8077d13b044688be2a49a34f38b33&"
-          class="promo-image"
-          alt="Promotional Banner"
-        />
-        <button class="cta-button">Запись</button>
-      </div>
-      <img
-        loading="lazy"
-        src="https://cdn.builder.io/api/v1/image/assets/TEMP/0fa06b43789abad72a5f015b0988f05c299dd606c7b1c1048a9aaada69a2c61d?apiKey=86a8077d13b044688be2a49a34f38b33&"
-        class="featured-image"
-        alt="Featured Content Image"
-      />
-      <img
-        loading="lazy"
-        src="https://cdn.builder.io/api/v1/image/assets/TEMP/9427c002e7b9b56058efafebc3dc90c803d56e87cb02795f6443a40cfc338915?apiKey=86a8077d13b044688be2a49a34f38b33&"
-        class="badge-image"
-        alt="Badge Image"
-      />
-      <section class="services-section">
-        <div class="services-wrapper">
-          <div class="service-title-section">
-            <h2 class="service-main-title">Наши Услуги</h2>
-          </div>
-          <div class="service-column">
-            <div class="service-card">
-              <img
-                loading="lazy"
-                src="https://cdn.builder.io/api/v1/image/assets/TEMP/a40e12791c0a2f8bb62d6ecb6956c6b258b09eef33c9e1117dbd3fbb0cec397c?apiKey=86a8077d13b044688be2a49a34f38b33&"
-                class="service-icon"
-                alt="Service Icon"
-              />
-              <div class="service-info">
-                <span class="service-title">Ремонт ходовой</span>
-                <a href="#" class="service-link">подробнее</a>
-              </div>
-            </div>
-          </div>
-          <div class="service-column">
-            <div class="service-card highlighted-service-card">
-              <img
-                loading="lazy"
-                src="https://cdn.builder.io/api/v1/image/assets/TEMP/a40e12791c0a2f8bb62d6ecb6956c6b258b09eef33c9e1117dbd3fbb0cec397c?apiKey=86a8077d13b044688be2a49a34f38b33&"
-                class="service-icon"
-                alt="Service Icon"
-              />
-              <div class="service-info">
-                <span class="service-title">Ремонт подвески</span>
-                <a href="#" class="service-link secondary-service-link"
-                  >подробнее</a
-                >
-              </div>
-            </div>
-          </div>
-          <div class="service-column">
-            <div class="service-card">
-              <img
-                loading="lazy"
-                src="https://cdn.builder.io/api/v1/image/assets/TEMP/a40e12791c0a2f8bb62d6ecb6956c6b258b09eef33c9e1117dbd3fbb0cec397c?apiKey=86a8077d13b044688be2a49a34f38b33&"
-                class="service-icon"
-                alt="Service Icon"
-              />
-              <div class="service-info">
-                <span class="service-title">Диагностика</span>
-                <a href="#" class="service-link">подробнее</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+    <section id="main-section">
+      <Header/>
     </section>
   </main>
 
