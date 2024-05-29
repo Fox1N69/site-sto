@@ -1,186 +1,132 @@
 ---
+import TestScreen from "@components/TestScreen/test";
 import Layout from "../layouts/Layout.astro";
 
+const images = [
+  {
+    src: "https://cdn.builder.io/api/v1/image/assets/TEMP/c0351d670025db3be3399879186aec361c532c7220ea8e0f6f1497855dd516b3?apiKey=86a8077d13b044688be2a49a34f38b33&",
+    alt: "Company Logo",
+    class: "logo",
+  },
+  {
+    src: "https://cdn.builder.io/api/v1/image/assets/TEMP/86d9fe4a80e25a78f2c5dd6a87b9c5d4e0b9b6abff47e107ad91a8a112a66a7e?apiKey=86a8077d13b044688be2a49a34f38b33&",
+    alt: "Promotional Banner",
+    class: "promo-image",
+  },
+  {
+    src: "https://cdn.builder.io/api/v1/image/assets/TEMP/0fa06b43789abad72a5f015b0988f05c299dd606c7b1c1048a9aaada69a2c61d?apiKey=86a8077d13b044688be2a49a34f38b33&",
+    alt: "Featured Content Image",
+    class: "featured-image",
+  },
+  {
+    src: "https://cdn.builder.io/api/v1/image/assets/TEMP/9427c002e7b9b56058efafebc3dc90c803d56e87cb02795f6443a40cfc338915?apiKey=86a8077d13b044688be2a49a34f38b33&",
+    alt: "Badge Image",
+    class: "badge-image",
+  },
+];
 ---
 
 <Layout title="Title page">
-  <main class="flex flex-col items-center pb-20 bg-neutral-900">
-    <section
-      class="flex flex-col items-center self-stretch px-12 pt-px pb-20 w-full text-center bg-neutral-900 max-md:px-5 max-md:max-w-full"
-    >
-      <header
-        class="flex gap-5 justify-between items-center self-stretch w-full max-md:flex-wrap max-md:max-w-full"
-      >
+  <TestScreen />
+  <main>
+    <section class="main-section">
+      <div class="section-wrapper">
+        <header class="header">
+          <img
+            loading="lazy"
+            src="https://cdn.builder.io/api/v1/image/assets/TEMP/c0351d670025db3be3399879186aec361c532c7220ea8e0f6f1497855dd516b3?apiKey=86a8077d13b044688be2a49a34f38b33&"
+            class="logo"
+            alt="Company Logo"
+          />
+          <nav class="main-navigation">
+            <ul class="nav-list">
+              <li class="nav-item"><a href="/" class="nav-link">Home</a></li>
+              <li class="nav-item">
+                <a href="/about" class="nav-link">About Us</a>
+              </li>
+              <li class="nav-item">
+                <a href="/services" class="nav-link">Services</a>
+              </li>
+              <li class="nav-item">
+                <a href="/contact" class="nav-link">Contact</a>
+              </li>
+            </ul>
+          </nav>
+          <span class="working-hours">9.00-20.00 пн-пт</span>
+        </header>
         <img
-          src="https://cdn.builder.io/api/v1/image/assets/TEMP/c0351d670025db3be3399879186aec361c532c7220ea8e0f6f1497855dd516b3?apiKey=86a8077d13b044688be2a49a34f38b33&"
-          alt="Company Logo"
-          class="shrink-0 self-stretch max-w-full mix-blend-lighten aspect-[1.75] w-[209px]"
+          loading="lazy"
+          src="https://cdn.builder.io/api/v1/image/assets/TEMP/86d9fe4a80e25a78f2c5dd6a87b9c5d4e0b9b6abff47e107ad91a8a112a66a7e?apiKey=86a8077d13b044688be2a49a34f38b33&"
+          class="promo-image"
+          alt="Promotional Banner"
         />
-        <nav
-          class="flex gap-5 justify-between self-stretch my-auto text-base font-light leading-4 whitespace-nowrap max-md:flex-wrap max-md:max-w-full"
-        >
-          <a href="#" class="font-semibold bg-clip-text">Акции</a>
-          <a href="#" class="text-white">Услуги</a>
-          <a href="#" class="font-extralight text-white">Отзывы</a>
-          <a href="#" class="text-white">Контакты</a>
-        </nav>
-        <div class="self-stretch my-auto text-xl leading-5 text-white">
-          9.00-20.00 пн-пт
-        </div>
-      </header>
+        <button class="cta-button">Запись</button>
+      </div>
       <img
-        src="https://cdn.builder.io/api/v1/image/assets/TEMP/86d9fe4a80e25a78f2c5dd6a87b9c5d4e0b9b6abff47e107ad91a8a112a66a7e?apiKey=86a8077d13b044688be2a49a34f38b33&"
-        alt="Promotional Banner"
-        class="mt-12 max-w-full aspect-[3.23] w-[407px] max-md:mt-10"
-      />
-      <a
-        href="#"
-        class="justify-center items-center px-16 py-5 mt-11 mb-80 max-w-full text-lg font-semibold tracking-widest leading-5 text-white whitespace-nowrap bg-red-600 rounded-md shadow-lg w-[204px] max-md:px-5 max-md:my-10"
-        >Запись</a
-      >
-    </section>
-
-    <section>
-      <img
+        loading="lazy"
         src="https://cdn.builder.io/api/v1/image/assets/TEMP/0fa06b43789abad72a5f015b0988f05c299dd606c7b1c1048a9aaada69a2c61d?apiKey=86a8077d13b044688be2a49a34f38b33&"
-        alt="Service Station Image"
-        class="mt-64 w-full aspect-[3.7] max-w-[1041px] max-md:mt-10 max-md:max-w-full"
+        class="featured-image"
+        alt="Featured Content Image"
       />
       <img
+        loading="lazy"
         src="https://cdn.builder.io/api/v1/image/assets/TEMP/9427c002e7b9b56058efafebc3dc90c803d56e87cb02795f6443a40cfc338915?apiKey=86a8077d13b044688be2a49a34f38b33&"
-        alt="Engineering Machinery"
-        class="mt-64 max-w-full aspect-[4.55] w-[147px] max-md:mt-10"
+        class="badge-image"
+        alt="Badge Image"
       />
-
-      <section
-        class="px-5 mt-12 w-full max-w-[1135px] max-md:mt-10 max-md:max-w-full"
-      >
-        <div class="flex gap-5 max-md:flex-col max-md:gap-0">
-          <article class="flex flex-col w-[33%] max-md:ml-0 max-md:w-full">
-            <div
-              class="flex grow gap-5 justify-between pt-2 w-full text-center text-white rounded-md bg-stone-900 leading-[100%] max-md:mt-10"
-            >
+      <section class="services-section">
+        <div class="services-wrapper">
+          <div class="service-title-section">
+            <h2 class="service-main-title">Наши Услуги</h2>
+          </div>
+          <div class="service-column">
+            <div class="service-card">
               <img
+                loading="lazy"
                 src="https://cdn.builder.io/api/v1/image/assets/TEMP/a40e12791c0a2f8bb62d6ecb6956c6b258b09eef33c9e1117dbd3fbb0cec397c?apiKey=86a8077d13b044688be2a49a34f38b33&"
-                alt="Running Gear Repair Service"
-                class="shrink-0 aspect-[0.63] w-[83px]"
+                class="service-icon"
+                alt="Service Icon"
               />
-              <div class="flex flex-col my-auto">
-                <h2 class="text-xl font-bold">Ремонт ходовой</h2>
-                <a
-                  href="#"
-                  class="justify-center px-9 py-4 mt-3.5 text-base whitespace-nowrap bg-red-600 rounded-md max-md:px-5"
+              <div class="service-info">
+                <span class="service-title">Ремонт ходовой</span>
+                <a href="#" class="service-link">подробнее</a>
+              </div>
+            </div>
+          </div>
+          <div class="service-column">
+            <div class="service-card highlighted-service-card">
+              <img
+                loading="lazy"
+                src="https://cdn.builder.io/api/v1/image/assets/TEMP/a40e12791c0a2f8bb62d6ecb6956c6b258b09eef33c9e1117dbd3fbb0cec397c?apiKey=86a8077d13b044688be2a49a34f38b33&"
+                class="service-icon"
+                alt="Service Icon"
+              />
+              <div class="service-info">
+                <span class="service-title">Ремонт подвески</span>
+                <a href="#" class="service-link secondary-service-link"
                   >подробнее</a
                 >
               </div>
             </div>
-          </article>
-          <article class="flex flex-col ml-5 w-[33%] max-md:ml-0 max-md:w-full">
-            <div
-              class="flex grow gap-5 justify-between pt-2 w-full text-center text-white bg-red-600 rounded-md leading-[100%] max-md:mt-10"
-            >
+          </div>
+          <div class="service-column">
+            <div class="service-card">
               <img
+                loading="lazy"
                 src="https://cdn.builder.io/api/v1/image/assets/TEMP/a40e12791c0a2f8bb62d6ecb6956c6b258b09eef33c9e1117dbd3fbb0cec397c?apiKey=86a8077d13b044688be2a49a34f38b33&"
-                alt="Suspension Repair Service"
-                class="shrink-0 aspect-[0.63] w-[83px]"
+                class="service-icon"
+                alt="Service Icon"
               />
-              <div class="flex flex-col my-auto">
-                <h2 class="text-xl font-bold">Ремонт подвески</h2>
-                <a
-                  href="#"
-                  class="justify-center px-9 py-4 mt-3.5 text-base whitespace-nowrap rounded-md bg-neutral-800 max-md:px-5"
-                  >подробнее</a
-                >
+              <div class="service-info">
+                <span class="service-title">Диагностика</span>
+                <a href="#" class="service-link">подробнее</a>
               </div>
             </div>
-          </article>
-          <article class="flex flex-col ml-5 w-[33%] max-md:ml-0 max-md:w-full">
-            <div
-              class="flex grow gap-5 justify-between pt-2 w-full text-center text-white rounded-md bg-stone-900 leading-[100%] max-md:mt-10"
-            >
-              <img
-                src="https://cdn.builder.io/api/v1/image/assets/TEMP/a40e12791c0a2f8bb62d6ecb6956c6b258b09eef33c9e1117dbd3fbb0cec397c?apiKey=86a8077d13b044688be2a49a34f38b33&"
-                alt="Diagnostic Service"
-                class="shrink-0 aspect-[0.63] w-[83px]"
-              />
-              <div class="flex flex-col my-auto">
-                <h2 class="text-xl font-bold">Диагностика</h2>
-                <a
-                  href="#"
-                  class="justify-center px-9 py-4 mt-3.5 text-base whitespace-nowrap bg-red-600 rounded-md max-md:px-5"
-                  >подробнее</a
-                >
-              </div>
-            </div>
-          </article>
-        </div>
-      </section>
-
-      <section
-        class="px-5 mt-16 w-full max-w-[1135px] max-md:mt-10 max-md:max-w-full"
-      >
-        <div class="flex gap-5 max-md:flex-col max-md:gap-0">
-          <article class="flex flex-col w-[33%] max-md:ml-0 max-md:w-full">
-            <div
-              class="flex grow gap-5 justify-between pt-2 w-full text-center text-white rounded-md bg-stone-900 leading-[100%] max-md:mt-10"
-            >
-              <img
-                src="https://cdn.builder.io/api/v1/image/assets/TEMP/a40e12791c0a2f8bb62d6ecb6956c6b258b09eef33c9e1117dbd3fbb0cec397c?apiKey=86a8077d13b044688be2a49a34f38b33&"
-                alt="Engine Repair Service"
-                class="shrink-0 aspect-[0.63] w-[83px]"
-              />
-              <div class="flex flex-col my-auto">
-                <h2 class="text-xl font-bold">Ремонт ДВС</h2>
-                <a
-                  href="#"
-                  class="justify-center px-9 py-4 mt-3.5 text-base whitespace-nowrap bg-red-600 rounded-md max-md:px-5"
-                  >подробнее</a
-                >
-              </div>
-            </div>
-          </article>
-          <article class="flex flex-col ml-5 w-[33%] max-md:ml-0 max-md:w-full">
-            <div
-              class="flex grow gap-5 justify-between pt-2 w-full text-center text-white rounded-md bg-stone-900 leading-[100%] max-md:mt-10"
-            >
-              <img
-                src="https://cdn.builder.io/api/v1/image/assets/TEMP/a40e12791c0a2f8bb62d6ecb6956c6b258b09eef33c9e1117dbd3fbb0cec397c?apiKey=86a8077d13b044688be2a49a34f38b33&"
-                alt="Running Gear Repair Service Repeat"
-                class="shrink-0 aspect-[0.63] w-[83px]"
-              />
-              <div class="flex flex-col my-auto">
-                <h2 class="text-xl font-bold">Ремонт ходовой</h2>
-                <a
-                  href="#"
-                  class="justify-center px-9 py-4 mt-3.5 text-base whitespace-nowrap bg-red-600 rounded-md max-md:px-5"
-                  >подробнее</a
-                >
-              </div>
-            </div>
-          </article>
-          <article class="flex flex-col ml-5 w-[33%] max-md:ml-0 max-md:w-full">
-            <div
-              class="flex grow gap-5 justify-between pt-2 w-full text-center text-white rounded-md bg-stone-900 leading-[100%] max-md:mt-10"
-            >
-              <img
-                src="https://cdn.builder.io/api/v1/image/assets/TEMP/a40e12791c0a2f8bb62d6ecb6956c6b258b09eef33c9e1117dbd3fbb0cec397c?apiKey=86a8077d13b044688be2a49a34f38b33&"
-                alt="Running Gear Repair Service Repeat Again"
-                class="shrink-0 aspect-[0.63] w-[83px]"
-              />
-              <div class="flex flex-col my-auto">
-                <h2 class="text-xl font-bold">Ремонт ходовой</h2>
-                <a
-                  href="#"
-                  class="justify-center px-9 py-4 mt-3.5 text-base whitespace-nowrap bg-red-600 rounded-md max-md:px-5"
-                  >подробнее</a
-                >
-              </div>
-            </div>
-          </article>
+          </div>
         </div>
       </section>
     </section>
   </main>
-</Layout>
 
-<style lang="scss" scoped></style>
+  <style lang="scss" scoped></style>
+</Layout>
