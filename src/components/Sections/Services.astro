@@ -1,0 +1,214 @@
+<section id="services">
+  <h2 class="h2-title mt-[170px]">услуги автосервиса</h2>
+  <div class="services__container">
+    <div class="services__row">
+      <div class="services__list">
+        <article class="services__item">
+          <div class="services__content">
+            <img
+              loading="lazy"
+              src="https://cdn.builder.io/api/v1/image/assets/TEMP/1d52c391c14c3e7b48930baf67abb168f037bb110983cf0518c3124258d411c4?apiKey=86a8077d13b044688be2a49a34f38b33&"
+              alt="Car Suspension Repair"
+              class="services__image"
+            />
+            <div class="services__details">
+              <h3 class="services__title">Ремонт ходовой</h3>
+              <p class="services__price">от 1950</p>
+              <button class="services__button">подробнее</button>
+            </div>
+          </div>
+        </article>
+        <article class="services__item">
+          <div class="services__content">
+            <img
+              loading="lazy"
+              src="https://cdn.builder.io/api/v1/image/assets/TEMP/ef1b756c27ec6f8e3957f08030b7e2a1fe500d947cf079d685723b40f494e944?apiKey=86a8077d13b044688be2a49a34f38b33&"
+              alt="Tire Fitting"
+              class="services__image"
+            />
+            <div class="services__details">
+              <h3 class="services__title">Шиномонтаж</h3>
+              <p class="services__price">от 1950</p>
+              <button class="services__button">подробнее</button>
+            </div>
+          </div>
+        </article>
+        <article class="services__item">
+          <div class="services__content">
+            <img
+              loading="lazy"
+              src="https://cdn.builder.io/api/v1/image/assets/TEMP/e2e45edb298e0750c4d7b5723c203be940c2cd3b16f9fcc5e653693d0028776b?apiKey=86a8077d13b044688be2a49a34f38b33&"
+              alt="Car Diagnostics"
+              class="services__image"
+            />
+            <div class="services__details">
+              <h3 class="services__title">Диагностика</h3>
+              <p class="services__price">от 1950</p>
+              <button class="services__button">подробнее</button>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+    <div class="container__row">
+      <div class="services__list">
+        <article class="services__item">
+          <div class="services__content">
+            <img
+              loading="lazy"
+              src="https://cdn.builder.io/api/v1/image/assets/TEMP/27d09b0756127bb1f6749bc290811ee52fb7c89b1e2ec0b3d9ee4586668b8f28?apiKey=86a8077d13b044688be2a49a34f38b33&"
+              alt="Engine Repair"
+              class="services__image"
+            />
+            <div class="services__details">
+              <h3 class="services__title">Ремонт ДВС</h3>
+              <p class="services__price">от 1950</p>
+              <button class="services__button">подробнее</button>
+            </div>
+          </div>
+        </article>
+        <article class="services__item">
+          <div class="services__content">
+            <img
+              loading="lazy"
+              src="https://cdn.builder.io/api/v1/image/assets/TEMP/58100ea0dde7dc6d6e6c7574cd95a8b92835c06b08f6dd2811ac1c9
+              alt="
+              class="services__image"
+            />
+            <div class="services__details">
+              <h3 class="services__title">Ремонт подвески</h3>
+              <p class="services__price">от 1950</p>
+              <button class="services__button">подробнее</button>
+            </div>
+          </div>
+        </article>
+        <article class="services__item">
+          <div class="services__content">
+            <img
+              loading="lazy"
+              src="https://cdn.builder.io/api/v1/image/assets/TEMP/e7ec79f4993e561a0146a4fed58bdd1826fe16290e78058e5a65922e1329121e?apiKey=86a8077d13b044688be2a49a34f38b33&"
+              alt="Vehicle Maintenance"
+              class="services__image"
+            />
+            <div class="services__details">
+              <h3 class="services__title">ТО автомобиля</h3>
+              <p class="services__price">от 1950</p>
+              <button class="services__button">подробнее</button>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style lang="scss">
+  .services {
+    &__title {
+      margin-top: 44px;
+      font-size: 4xl;
+      font-style: italic;
+      letter-spacing: wide;
+      text-align: center;
+      color: #ffefef;
+      text-transform: uppercase;
+
+      @media (max-width: 768px) {
+        margin-top: 10px;
+      }
+    }
+
+    &__container {
+      padding: 0 20px;
+      margin-top: 16px;
+      width: 100%;
+      max-width: 1020px;
+      display: flex;
+      flex-direction: column;
+      gap: 60px;
+
+      @media (max-width: 768px) {
+        margin-top: 10px;
+        max-width: 100%;
+      }
+    }
+
+    &__list {
+      display: flex;
+      gap: 30px;
+
+      @media (max-width: 768px) {
+        flex-direction: column;
+        gap: 0;
+      }
+    }
+
+    &__item {
+      display: flex;
+      flex-direction: column;
+      width: 33%;
+
+      @media (max-width: 768px) {
+        margin-left: 0;
+        width: 100%;
+      }
+    }
+
+    &__content {
+      display: flex;
+      flex-grow: 1;
+      gap: 4px;
+      padding: 10px 0;
+      width: 100%;
+      text-align: center;
+      color: #ffefef;
+      border-radius: 8px;
+      background-color: #2d2d2d;
+      line-height: 1.4;
+
+      @media (max-width: 768px) {
+        margin-top: 8px;
+      }
+    }
+
+    &__image {
+      flex-shrink: 0;
+      max-width: 100%;
+      width: 109px;
+    }
+
+    &__details {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      margin: auto 0;
+    }
+
+    &__title {
+      font-size: 1.25rem;
+      font-weight: 500;
+    }
+
+    &__price {
+      margin-top: 16px;
+      font-size: 1rem;
+      line-height: 1.25;
+      color: #d1d1d1;
+    }
+
+    &__button {
+      display: flex;
+      justify-content: center;
+      padding: 10px 20px;
+      margin-top: 16px;
+      font-size: 1rem;
+      white-space: nowrap;
+      background-color: #e60000;
+      border-radius: 8px;
+
+      @media (max-width: 768px) {
+        padding: 10px 20px;
+      }
+    }
+  }
+</style>

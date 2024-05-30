@@ -1,16 +1,21 @@
 ---
 interface Props {
   content: string;
+  style?: string;
+  w?: string;
+  h?: string;
 }
 
-const { content } = Astro.props;
+const { content, style, w, h } = Astro.props;
 ---
 
-<button>{content}</button>
+<button class={style} style={`width: ${w}px; height: ${h}px;`}>
+  {content}
+</button>
 
-<style lang="scss" scoped>
+<style lang="scss">
   button {
-    width: 205px;
+    width: 250px;
     height: 51px;
 
     background-color: #d02a35;
