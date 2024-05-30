@@ -1,50 +1,48 @@
 ---
+import MainButton from "@components/Buttons/MainButton.astro";
 import Layout from "../layouts/Layout.astro";
 import Header from "@components/Header/Header.astro";
-
-const images = [
-  {
-    src: "https://cdn.builder.io/api/v1/image/assets/TEMP/c0351d670025db3be3399879186aec361c532c7220ea8e0f6f1497855dd516b3?apiKey=86a8077d13b044688be2a49a34f38b33&",
-    alt: "Company Logo",
-    class: "logo",
-  },
-  {
-    src: "https://cdn.builder.io/api/v1/image/assets/TEMP/86d9fe4a80e25a78f2c5dd6a87b9c5d4e0b9b6abff47e107ad91a8a112a66a7e?apiKey=86a8077d13b044688be2a49a34f38b33&",
-    alt: "Promotional Banner",
-    class: "promo-image",
-  },
-  {
-    src: "https://cdn.builder.io/api/v1/image/assets/TEMP/0fa06b43789abad72a5f015b0988f05c299dd606c7b1c1048a9aaada69a2c61d?apiKey=86a8077d13b044688be2a49a34f38b33&",
-    alt: "Featured Content Image",
-    class: "featured-image",
-  },
-  {
-    src: "https://cdn.builder.io/api/v1/image/assets/TEMP/9427c002e7b9b56058efafebc3dc90c803d56e87cb02795f6443a40cfc338915?apiKey=86a8077d13b044688be2a49a34f38b33&",
-    alt: "Badge Image",
-    class: "badge-image",
-  },
-];
+import AboutUS from "@components/Sections/AboutUS.astro";
 ---
 
 <Layout title="Автосервис Rem Zona">
   <main>
     <section id="main__section">
       <Header />
-      <div class="main__content">
-        <h1><img src="title.svg" alt="title main page" /></h1>
-        <p>Делаем качественно, быстро и с душой</p>
-        <button>Оставить заявку</button>
+      <div class="main__content flex flex-col items-center gap-9">
+        <img src="title.svg" alt="Heading" class="w-[568px] h-[57px]" />
+        <p class="description">Делаем качественно, быстро и с душой</p>
+        <MainButton content="Оставить заявку" />
       </div>
     </section>
+    <AboutUS />
   </main>
-
   <style lang="scss" scoped></style>
 </Layout>
 
 <style lang="scss" scoped>
   main {
+    font-family: var(--font-family);
     color: #fff3f3;
-    background-color: #171717;
-    height: 100vh;
+  }
+
+  #main__section {
+    background-image: url("/public/main-backgound.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    height: 800px;
+  }
+
+  .main__content {
+    width: max-content;
+    margin: 98px auto;
+  }
+
+  .description {
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 140%;
+    text-align: right;
+    color: #fff3f3;
   }
 </style>

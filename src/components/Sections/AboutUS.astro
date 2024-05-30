@@ -1,0 +1,153 @@
+---
+
+---
+
+<section id="about-us">
+  <h2 class="about-title">почему выбирают нас</h2>
+  <div class="grid-container mt-[50px]">
+    <div class="left mt-[48px]">
+      <div class="left-one flex gap-6">
+        <span class="number">1</span>
+        <div class="text flex flex-col gap-5 items-start mt-1">
+          <h5>Удобное расположение</h5>
+          <p>
+            Находимся неподалеку от того- <br /> то, до нас удобно добираться <br
+            /> из любой точки города
+          </p>
+        </div>
+      </div>
+
+      <div class="left-two flex gap-6 items-start content-start">
+        <span class="number">2</span>
+        <div class="text flex flex-col gap-5 items-start mt-1">
+          <h5>Классные мастера</h5>
+          <p>
+            У нас работают те-то те-то <br /> и такие-то такие-то мастера, в <br
+            /> общем классные все
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="center flex items-center justify-center">
+      <img src="man.png" alt="Man about us" />
+    </div>
+
+    <div class="right mt-[48px]">
+      <div class="right-one flex gap-6">
+        <div class="text flex flex-col gap-5 items-end text-right mt-1">
+          <h5>Качество оборудования</h5>
+          <p>
+            Мы закупили хорошее и очень дорогое оборудование, теперь нам надо
+            отработать эти деньги
+          </p>
+        </div>
+        <span class="number">3</span>
+      </div>
+
+      <div class="right-two flex gap-6">
+        <div class="text flex flex-col gap-5 items-end text-right mt-1">
+          <h5>Быстрое обслуживание</h5>
+          <p>
+            Там-сям, туда-сюда и за три секунды все готово будет, в общем
+            приезжайте скорее
+          </p>
+        </div>
+        <span class="number">4</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style lang="scss" scoped>
+  #about-us {
+    margin-top: 140px;
+    height: 800px;
+    padding: 0 206px;
+  }
+
+  .about-title {
+    font-style: italic;
+    font-weight: 400;
+    font-size: 34px;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+    text-align: center;
+    color: #fff3f3;
+  }
+
+  .number {
+    font-weight: 300;
+    font-size: 45px;
+    line-height: 140%;
+    text-align: right;
+    color: #e53e49;
+  }
+
+  .text {
+    h5 {
+      font-family: var(--font-family);
+      font-weight: 500;
+      font-size: 20px;
+      line-height: 140%;
+      text-align: center;
+      color: #fff3f3;
+    }
+
+    p {
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 140%;
+      color: #b9b9b9;
+    }
+  }
+
+  .grid-container {
+    display: grid;
+    grid-template-columns: 1.5fr 2fr 1.5fr;
+    grid-template-rows: 1fr 2fr 1fr;
+    gap: 0px;
+    grid-template-areas:
+      "left center right"
+      ". . ."
+      ". . .";
+  }
+
+  .left,
+  .right {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: 3fr 1fr 3fr;
+    gap: 0px;
+    grid-auto-flow: row;
+  }
+
+  .left {
+    grid-area: left;
+  }
+
+  .right {
+    grid-area: right;
+  }
+
+  .left-one,
+  .left-two,
+  .right-one,
+  .right-two {
+    & {
+      grid-row: 1 / span 3;
+      grid-column: 1 / span 3;
+    }
+  }
+
+  .left-two,
+  .right-two {
+    & {
+      grid-row: 3;
+    }
+  }
+
+  .center {
+    grid-area: center;
+  }
+</style>
