@@ -11,7 +11,13 @@ import Services from "@components/Sections/Services.astro";
     <section id="main__section">
       <Header />
       <div class="main__content flex flex-col items-center gap-9">
-        <img src="title.svg" alt="Heading" class="w-[568px] h-[57px]" />
+        <img
+          src="title.svg"
+          alt="Heading"
+          loading="eager"
+          decoding="async"
+          class="w-[568px] h-[57px]"
+        />
         <p class="description">Делаем качественно, быстро и с душой</p>
         <MainButton content="Оставить заявку" />
       </div>

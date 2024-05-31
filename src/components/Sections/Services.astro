@@ -1,5 +1,5 @@
 ---
-import MainButton from "@components/Buttons/MainButton.astro";
+import Button from "@components/Buttons/MainButton.astro";
 ---
 
 <section id="services">
@@ -7,74 +7,110 @@ import MainButton from "@components/Buttons/MainButton.astro";
   <div class="services__container">
     <div class="services__list">
       <article class="services__card">
-        <img src="" alt="" class="w-[109.5px] h-[140px]" />
+        <img
+          src="hodov.svg"
+          decoding="async"
+          loading="lazy"
+          alt="Фото ходовой системы машины"
+          class="w-[109.5px] h-[140px]"
+        />
         <div class="card__content">
           <div class="card-title h5-title">Ремонт ходовой</div>
           <div class="card-description description-text">от 1500</div>
-          <MainButton w="140" h="35" content="Подробнее" />
+          <Button w="140" h="35" content="Подробнее" style={"services-btn"} />
         </div>
       </article>
 
       <article class="services__card">
-        <img src="" alt="" class="w-[126px] h-[146px]" />
+        <img
+          src="tires.svg"
+          decoding="async"
+          loading="lazy"
+          alt="Изображения колес для услуги шиномонтаж"
+          class="w-[126px] h-[146px]"
+        />
         <div class="card__content">
           <div class="card-title h5-title">Шиномонтаж</div>
           <div class="card-description description-text">от 5000</div>
-          <MainButton w="140" h="35" content="Подробнее" />
+          <Button w="140" h="35" content="Подробнее" style={"services-btn"} />
         </div>
       </article>
 
       <article class="services__card">
-        <img src="" alt="" class="w-[126px] h-[136px]" />
+        <img
+          src="monitor.svg"
+          alt="Фото аппарата диагностики машины для услуги диагностика"
+          class="w-[126px] h-[136px]"
+          decoding="async"
+          loading="lazy"
+        />
         <div class="card__content">
           <div class="card-title h5-title">Диагностика</div>
           <div class="card-description description-text">от 1990</div>
-          <MainButton w="140" h="35" content="Подробнее" />
+          <Button w="140" h="35" content="Подробнее" style={"services-btn"} />
         </div>
       </article>
     </div>
 
     <div class="services__list">
       <article class="services__card">
-        <img src="" alt="" class="w-[126px] h-[138px]" />
+        <img
+          src="dvs.svg"
+          alt="Фото двигателя для услуг по ремонту ДВС"
+          decoding="async"
+          loading="lazy"
+          class="w-[126px] h-[138px]"
+        />
         <div class="card__content">
           <div class="card-title h5-title">Ремонт ДВС</div>
           <div class="card-description description-text">от 10000</div>
-          <MainButton w="140" h="35" content="Подробнее" />
+          <Button w="140" h="35" content="Подробнее" style={"services-btn"} />
         </div>
       </article>
 
       <article class="services__card">
-        <img src="" alt="" class="w-[112px] h-[140px]" />
+        <img
+          src="podveska.svg"
+          alt="Фотография подвески автомобиля для услуги по ремонту подвески"
+          decoding="async"
+          loading="lazy"
+          class="w-[112px] h-[140px]"
+        />
         <div class="card__content">
           <div class="card-title h5-title">Ремонт подвески</div>
           <div class="card-description description-text">от 1950</div>
-          <MainButton w="140" h="35" content="Подробнее" />
+          <Button w="140" h="35" content="Подробнее" style={"services-btn"} />
         </div>
       </article>
 
       <article class="services__card">
-        <img src="" alt="" class="w-[133px] h-[113px]" />
+        <img
+          src="motul.svg"
+          alt="Фотография канистры с маслом для услуги по техническому обслуживанию автомабиля"
+          decoding="async"
+          loading="lazy"
+        />
         <div class="card__content">
           <div class="card-title h5-title">ТО Автомобиля</div>
           <div class="card-description description-text">от 1000</div>
-          <MainButton w="140" h="35" content="Подробнее" />
+          <Button w="140" h="35" content="Подробнее" style={"services-btn"} />
         </div>
       </article>
     </div>
   </div>
 </section>
 
-<style lang="scss" scoped>
+<style lang="scss" is:global>
   #services {
     height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 70px;
   }
 
   #title {
-    margin-top: 70px;
+    margin-top: 170px;
   }
 
   .services__container {
@@ -96,11 +132,27 @@ import MainButton from "@components/Buttons/MainButton.astro";
       align-items: center;
 
       background-color: #222222;
+      border-radius: 5px;
+
+      &:hover {
+        background-color: #d02a35;
+        transition: background-color 0.5s ease;
+        box-shadow: 0 0 50px 0 rgba(208, 42, 53, 0.6);
+
+        .services-btn {
+          background-color: #222222;
+          transition: background-color 0.6s ease;
+        }
+      }
 
       .card__content {
         display: flex;
         flex-direction: column;
         gap: 15px;
+
+        .services-btn {
+          border-radius: 3px;
+        }
       }
     }
   }
