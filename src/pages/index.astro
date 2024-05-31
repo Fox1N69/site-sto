@@ -6,7 +6,7 @@ import AboutUS from "@components/Sections/AboutUS.astro";
 import Services from "@components/Sections/Services.astro";
 ---
 
-<Layout title="Автосервис Rem Zona">
+<Layout title="Автосервис - RemZona || Мариупаль">
   <main>
     <section id="main__section">
       <Header />
@@ -25,10 +25,9 @@ import Services from "@components/Sections/Services.astro";
     <AboutUS />
     <Services />
   </main>
-  <style lang="scss" scoped></style>
 </Layout>
 
-<style lang="scss" scoped>
+<style lang="scss">
   main {
     font-family: var(--font-family);
     color: #fff3f3;
@@ -44,6 +43,15 @@ import Services from "@components/Sections/Services.astro";
   .main__content {
     width: max-content;
     margin: 98px auto;
+
+    h1 {
+      font-style: italic;
+      font-weight: 600;
+      font-size: 68px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #fff3f3;
+    }
   }
 
   .description {

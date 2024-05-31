@@ -17,6 +17,9 @@ importers:
       '@astrojs/tailwind':
         specifier: ^5.1.0
         version: 5.1.0(astro@4.8.6(sass@1.77.2)(typescript@5.4.5))(tailwindcss@3.4.3)
+      animejs:
+        specifier: ^3.2.2
+        version: 3.2.2
       astro:
         specifier: ^4.8.6
         version: 4.8.6(sass@1.77.2)(typescript@5.4.5)
@@ -856,6 +859,9 @@ packages:
     resolution: {integrity: sha512-Y9rRfJG5jcKOE0CLisYbojUjIrIEE7AGMzA/Sm4BslANhbS+cDMpgBdcPT91oJ7OuJ9hYJBx59RjbhxVnrF8Xg==}
     engines: {node: '>=0.4.0'}
     hasBin: true
+
+  animejs@3.2.2:
+    resolution: {integrity: sha512-Ao95qWLpDPXXM+WrmwcKbl6uNlC5tjnowlaRYtuVDHHoygjtIPfDUoK9NthrlZsQSKjZXlmji2TrBUAVbiH0LQ==}
 
   ansi-align@3.0.1:
     resolution: {integrity: sha512-IOfwwBF5iczOjp/WeY4YxyjqAFMQoZufdQWDd19SEExbVLNXqvpzSJ/M7Za4/sCPmQ0+GRquoA7bGcINcxew6w==}
@@ -3077,6 +3083,8 @@ snapshots:
   '@vscode/l10n@0.0.18': {}
 
   acorn@8.11.3: {}
+
+  animejs@3.2.2: {}
 
   ansi-align@3.0.1:
     dependencies:

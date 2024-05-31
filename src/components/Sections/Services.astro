@@ -135,9 +135,8 @@ import Button from "@components/Buttons/MainButton.astro";
       border-radius: 5px;
 
       &:hover {
-        background-color: #d02a35;
-        transition: background-color 0.5s ease;
         box-shadow: 0 0 50px 0 rgba(208, 42, 53, 0.6);
+        animation: fillBackground 0.3s forwards;
 
         .services-btn {
           background-color: #222222;
@@ -154,6 +153,15 @@ import Button from "@components/Buttons/MainButton.astro";
           border-radius: 3px;
         }
       }
+    }
+  }
+
+  @keyframes fillBackground {
+    from {
+      background-color: #ffffff;
+    }
+    to {
+      background-color: #d02a35;
     }
   }
 </style>
