@@ -4,6 +4,7 @@ import Layout from "../layouts/Layout.astro";
 import Header from "@components/Header/Header.astro";
 import AboutUS from "@components/Sections/AboutUS.astro";
 import Services from "@components/Sections/Services.astro";
+import BodyWork from "@components/Sections/BodyWork.astro";
 ---
 
 <Layout title="Автосервис - RemZona || Мариупаль">
@@ -24,6 +25,7 @@ import Services from "@components/Sections/Services.astro";
     </section>
     <AboutUS />
     <Services />
+    <BodyWork />
   </main>
 </Layout>
 
@@ -34,7 +36,7 @@ import Services from "@components/Sections/Services.astro";
   }
 
   #main__section {
-    background-image: url("/public/main-backgound.png");
+    background-image: url("/main-backgound.png");
     background-size: contain;
     background-repeat: no-repeat;
     height: 800px;
