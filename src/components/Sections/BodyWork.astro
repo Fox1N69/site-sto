@@ -4,10 +4,52 @@
 
 <section id="bodywork">
   <h2 class="h2-title">Кузовные работы</h2>
+  <div class="car-bodywork">
+    <img
+      src="bodywork.png"
+      alt="Фото машины для демонстрации кузовных работ"
+      class="car-image"
+    />
+    <div class="detail description-1">
+      <p class="h5-title">Крылья передние | задние</p>
+    </div>
+    <div class="detail description-2">Деталь 2</div>
+    <div class="detail description-3">Деталь 3</div>
+  </div>
 </section>
 
 <style lang="scss" scoped>
   #bodywork {
     height: 100vh;
+  }
+
+  .car-bodywork {
+    position: relative;
+    margin-top: 50px;
+
+    .car-image {
+      margin-top: 120px;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .detail {
+      position: absolute;
+    }
+
+    .description-1 {
+      top: 1%;
+      left: 10%;
+    }
+
+    .description-2 {
+      top: 30%;
+      right: 15%;
+    }
+
+    .description-3 {
+      bottom: 20%;
+      left: 20%;
+    }
   }
 </style>
