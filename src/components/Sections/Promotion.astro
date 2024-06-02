@@ -4,41 +4,81 @@
 
 <section id="promotion">
   <div class="promotion__container flex">
-    <div class="container__left flex flex-col">
-      <div class="promotion__card">
-        <h5 class="h5-title"></h5>
+    <div class="container__left flex flex-col gap-[30px]">
+      <div class="promotion__card promotion__card-one">
+        <h5 class="promotion__title">Бесплатная диагностика</h5>
+        <p class="card__description">
+          Lorem ipsum dolor sit amet. Lorem, ipsum dolor sit amet consectetur
+          adipisicing elit. Possimus, aspernatur.
+        </p>
       </div>
 
       <div class="left__bottom flex">
-        <div class="promotion__card">2</div>
-
+        <div class="promotion__card promotion__card-two">
+          <h5 class="promotion__title">Скидка 10%</h5>
+          <div class="card__description">
+            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Facere,
+            ut.
+          </div>
+        </div>
         <div class="promotion__card">3</div>
       </div>
     </div>
 
-    <div class="container__right">4</div>
+    <div class="container__right promotion__card">4</div>
   </div>
 </section>
 
 <style lang="scss" scoped>
   #promotion {
     margin-top: 170px;
-  }
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 
-  .promotion__container {
-    gap: 30px;
-  }
-
-  .container__left {
-    .promotion__card {
-      width: 664px;
-      width: 250px;
-    }
-
-    .left__bottom {
+    .promotion__container {
       gap: 30px;
-      .promotion__card {
-        width: 317px;
+
+      .container__left {
+        .promotion__card {
+          .promotion__title {
+            font-style: italic;
+            font-weight: 400;
+            font-size: 34px;
+            letter-spacing: 0.01em;
+            text-transform: uppercase;
+            color: #fff3f3;
+          }
+
+          .card__description {
+            width: 309px;
+            margin-top: 30px;
+          }
+
+          &-one {
+            width: 664px;
+            height: 250px;
+            padding: 40px 0 0 30px;
+            background: url("prom-card-back.png");
+          }
+
+          &-two {
+            background: url("prom-sale-black.jpg");
+            border-radius: 12px;
+            padding: 40px 0 0 30px;
+          }
+
+          width: 317px;
+          height: 230px;
+        }
+
+        .left__bottom {
+          gap: 30px;
+        }
+      }
+
+      .container__right {
+        width: 664px;
         height: 230px;
       }
     }
