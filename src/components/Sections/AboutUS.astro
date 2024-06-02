@@ -1,5 +1,6 @@
 ---
-
+import { Image } from "astro:assets";
+import manImage from "public/man.png";
 ---
 
 <section id="about-us">
@@ -30,12 +31,7 @@
     </div>
 
     <div class="center flex items-center justify-center">
-      <img
-        src="man.png"
-        alt="Фото мужчины автомеханика с гаячным ключем"
-        decoding="async"
-        loading="lazy"
-      />
+      <Image src={manImage} alt="Фото мужчины автомеханика с гаячным ключем" />
     </div>
 
     <div class="right mt-[48px]">

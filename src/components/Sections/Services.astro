@@ -1,5 +1,13 @@
 ---
 import Button from "@components/Buttons/MainButton.astro";
+import { Image } from "astro:assets";
+
+import dvs from "public/dvs.svg";
+import hodov from "public/hodov.svg";
+import tires from "public/tires.svg";
+import monitor from "public/monitor.svg";
+import podveska from "public/podveska.svg";
+import motul from "public/motul.svg";
 ---
 
 <section id="services">
@@ -7,13 +15,7 @@ import Button from "@components/Buttons/MainButton.astro";
   <div class="services__container">
     <div class="services__list">
       <article class="services__card">
-        <img
-          src="hodov.svg"
-          decoding="async"
-          loading="lazy"
-          alt="Фото ходовой системы машины"
-          class="w-[109.5px] h-[140px]"
-        />
+        <Image src={hodov} alt="Фото ходовой системы машины" />
         <div class="card__content">
           <div class="card-title h5-title">Ремонт ходовой</div>
           <div class="card-description description-text">от 1500</div>
@@ -22,12 +24,11 @@ import Button from "@components/Buttons/MainButton.astro";
       </article>
 
       <article class="services__card">
-        <img
-          src="tires.svg"
+        <Image
+          src={tires}
           decoding="async"
           loading="lazy"
           alt="Изображения колес для услуги шиномонтаж"
-          class="w-[126px] h-[146px]"
         />
         <div class="card__content">
           <div class="card-title h5-title">Шиномонтаж</div>
@@ -37,12 +38,9 @@ import Button from "@components/Buttons/MainButton.astro";
       </article>
 
       <article class="services__card">
-        <img
-          src="monitor.svg"
+        <Image
+          src={monitor}
           alt="Фото аппарата диагностики машины для услуги диагностика"
-          class="w-[126px] h-[136px]"
-          decoding="async"
-          loading="lazy"
         />
         <div class="card__content">
           <div class="card-title h5-title">Диагностика</div>
@@ -54,13 +52,7 @@ import Button from "@components/Buttons/MainButton.astro";
 
     <div class="services__list">
       <article class="services__card">
-        <img
-          src="dvs.svg"
-          alt="Фото двигателя для услуг по ремонту ДВС"
-          decoding="async"
-          loading="lazy"
-          class="w-[126px] h-[138px]"
-        />
+        <Image src={dvs} alt="Фото двигателя для услуг по ремонту ДВС" />
         <div class="card__content">
           <div class="card-title h5-title">Ремонт ДВС</div>
           <div class="card-description description-text">от 10000</div>
@@ -69,12 +61,9 @@ import Button from "@components/Buttons/MainButton.astro";
       </article>
 
       <article class="services__card">
-        <img
-          src="podveska.svg"
+        <Image
+          src={podveska}
           alt="Фотография подвески автомобиля для услуги по ремонту подвески"
-          decoding="async"
-          loading="lazy"
-          class="w-[112px] h-[140px]"
         />
         <div class="card__content">
           <div class="card-title h5-title">Ремонт подвески</div>
@@ -84,11 +73,9 @@ import Button from "@components/Buttons/MainButton.astro";
       </article>
 
       <article class="services__card">
-        <img
-          src="motul.svg"
+        <Image
+          src={motul}
           alt="Фотография канистры с маслом для услуги по техническому обслуживанию автомабиля"
-          decoding="async"
-          loading="lazy"
         />
         <div class="card__content">
           <div class="card-title h5-title">ТО Автомобиля</div>

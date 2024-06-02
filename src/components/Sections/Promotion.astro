@@ -21,11 +21,24 @@
             ut.
           </div>
         </div>
-        <div class="promotion__card">3</div>
+        <div class="promotion__card promotion__card-three">
+          <h5 class="promotion__title">Скидка 10%</h5>
+          <div class="card__description">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Aut,
+            voluptatum.
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="container__right promotion__card">4</div>
+    <div class="container__right">
+      <div class="promotion__title">замена шин</div>
+      <div class="card__description">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+        tempor incididunt ut labore et dolore do eiusmod tempor incididunt ut
+        labore et dolore
+      </div>
+    </div>
   </div>
 </section>
 
@@ -68,6 +81,12 @@
             padding: 40px 0 0 30px;
           }
 
+          &-three {
+            background: url("prom-sale-red.jpg");
+            border-radius: 12px;
+            padding: 40px 0 0 30px;
+          }
+
           width: 317px;
           height: 230px;
         }
@@ -78,8 +97,32 @@
       }
 
       .container__right {
-        width: 664px;
-        height: 230px;
+        width: 320px;
+        height: 510px;
+
+        padding: 40px 0 0 30px;
+
+        background: url("prom-card-right.png");
+        border-radius: 10px;
+
+        .promotion__title {
+          font-style: italic;
+          font-weight: 400;
+          font-size: 34px;
+          letter-spacing: 0.01em;
+          text-transform: uppercase;
+          color: #fff3f3;
+        }
+
+        .card__description {
+          font-weight: 400;
+          font-size: 16px;
+          line-height: 140%;
+          color: #fff3f3;
+
+          width: 222px;
+          margin-top: 30px;
+        }
       }
     }
   }
