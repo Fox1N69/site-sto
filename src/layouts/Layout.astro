@@ -1,4 +1,6 @@
 ---
+import { SEO } from "astro-seo";
+
 interface Props {
   title: string;
 }
@@ -8,6 +10,10 @@ const { title } = Astro.props;
 <!doctype html>
 <html lang="en">
   <head>
+    <SEO
+      title="Автосервис RemZona || Мариуполь"
+      description="Лучший автосервис в городе Мариуполь.. В RemZona выполняются все виды работаи и используется новейшее оборудывание, что позволяет добится качественной и быстрой работы"
+    />
     <meta charset="UTF-8" />
     <meta name="description" content="Astro description" />
     <meta name="viewport" content="width=device-width" />
@@ -18,65 +24,63 @@ const { title } = Astro.props;
   </head>
   <body>
     <slot />
+    <style lang="scss" is:global>
+      * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        background-color: #171717;
+      }
+
+      :root {
+        --font-family: "Mona Sans", sans-serif;
+        --second-family: "Uni Neue-Trial", sans-serif;
+      }
+
+      html {
+        font-family: system-ui, sans-serif;
+      }
+
+      code {
+        font-family:
+          Menlo,
+          Monaco,
+          Lucida Console,
+          Liberation Mono,
+          DejaVu Sans Mono,
+          Bitstream Vera Sans Mono,
+          Courier New,
+          monospace;
+      }
+
+      .h2-title {
+        font-style: italic;
+        font-weight: 400;
+        font-size: 34px;
+        letter-spacing: 0.01em;
+        text-transform: uppercase;
+        text-align: center;
+        color: #fff3f3;
+      }
+
+      .h5-title {
+        font-weight: 500;
+        font-size: 20px;
+        line-height: 140%;
+        text-align: center;
+        color: #fff3f3;
+      }
+
+      .description-text {
+        font-weight: 400;
+        font-size: 15px;
+        line-height: 100%;
+        text-align: center;
+        color: #cfcfcf;
+      }
+    </style>
   </body>
 </html>
-
-<style lang="scss" is:global>
-  * {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-  }
-
-  body {
-    background-color: #171717;
-  }
-
-  :root {
-    --font-family: "Mona Sans", sans-serif;
-    --second-family: "Uni Neue-Trial", sans-serif;
-  }
-
-  html {
-    font-family: system-ui, sans-serif;
-  }
-
-
-  code {
-    font-family:
-      Menlo,
-      Monaco,
-      Lucida Console,
-      Liberation Mono,
-      DejaVu Sans Mono,
-      Bitstream Vera Sans Mono,
-      Courier New,
-      monospace;
-  }
-
-  .h2-title {
-    font-style: italic;
-    font-weight: 400;
-    font-size: 34px;
-    letter-spacing: 0.01em;
-    text-transform: uppercase;
-    text-align: center;
-    color: #fff3f3;
-  }
-
-  .h5-title {
-    font-weight: 500;
-    font-size: 20px;
-    line-height: 140%;
-    text-align: center;
-    color: #fff3f3;
-  }
-
-  .description-text {
-    font-weight: 400;
-    font-size: 15px;
-    line-height: 100%;
-    text-align: center;
-    color: #cfcfcf;
-  }
-</style>
