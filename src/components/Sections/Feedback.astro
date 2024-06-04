@@ -1,0 +1,145 @@
+---
+import MainButton from "@components/Buttons/MainButton.astro";
+---
+
+<section id="feedback">
+  <div class="feedback__container">
+    <div class="feedback__container_left">
+      <div class="feedback__container_left-title">
+        <h3 class="feedback__title">оставить заявку</h3>
+        <p class="description-text">мы вам позвоним</p>
+      </div>
+
+      <form action="">
+        <input type="text" placeholder="Ваше имя" />
+        <input type="text" placeholder="Вид работы" />
+        <input type="text" placeholder="Номер телефона" />
+      </form>
+      <p class="text-center form__description">
+        При нажатии на кнопку “Отправить” вы соглашаетесь с <br />
+        <a href="#">политикой обработки персональных данных</a>
+      </p>
+      <MainButton content="Отправить" />
+    </div>
+
+    <div class="feedback__container_right">
+      <h5 class="feedback__title">мы в мессенджерах</h5>
+      <div class="content_right">
+        <div class="right-telegram">
+          <div class="right-telegram_title">Telegram</div>
+          <img
+            class="telegram__icon"
+            src="telegram.svg"
+            alt=""
+            width="40px"
+            height="35px"
+          />
+          <img class="telegram__qrcode" src="telegramqr.png" alt="" />
+        </div>
+        <div class="right-whatsapp">
+          <div class="right-whatsapp_title">WhatsApp</div>
+          <img
+            class="whatsapp__icon"
+            src="whatsapp.svg"
+            alt=""
+            width="35px"
+            height="35px"
+          />
+          <img class="whatsapp__qrcode" src="whatsappqr.png" alt="" />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style lang="scss" scoped>
+  #feedback {
+    margin-top: 140px;
+    height: 100vh;
+  }
+
+  .feedback__container {
+    display: flex;
+    gap: 202px;
+    align-content: center;
+    justify-content: center;
+
+    &_left {
+      max-width: 408px;
+
+      &-title {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        justify-content: center;
+        align-items: center;
+      }
+
+      width: 50%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 30px;
+
+      form {
+        display: flex;
+        flex-direction: column;
+        gap: 35px;
+        input {
+          width: 408px;
+          height: 27px;
+          background-color: transparent;
+          border: none;
+          border-bottom: 1px solid #b9b9b9;
+        }
+      }
+
+      .form__description {
+        font-weight: 400;
+        font-size: 13px;
+        line-height: 140%;
+        text-align: center;
+        color: #b9b9b9;
+      }
+    }
+
+    &_right {
+      max-width: 366px;
+      display: flex;
+      flex-direction: column;
+      gap: 53px;
+
+      .content_right {
+        display: flex;
+        gap: 32px;
+        justify-content: center;
+
+        .right-telegram {
+          display: flex;
+          flex-direction: column;
+          gap: 30px;
+          align-items: center;
+        }
+
+        .right-whatsapp {
+          display: flex;
+          flex-direction: column;
+          gap: 30px;
+          align-items: center;
+        }
+      }
+    }
+  }
+
+  .feedback__title {
+    font-style: italic;
+    font-weight: 400;
+    font-size: 34px;
+    line-height: 100%;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+    text-align: center;
+    color: #fff3f3;
+  }
+</style>
