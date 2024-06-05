@@ -11,7 +11,12 @@ import location from "public/location.svg";
 
 <footer>
   <div class="footer__container">
-    <Image src={logo} alt={"Логотип автосервиса RemZona для footer"} />
+    <img
+      src="logo.svg"
+      alt="Логотип автосервиса RemZona"
+      decoding="async"
+      loading="lazy"
+    />
     <div class="footer__container-links">
       <p class="links-text">
         Desing by <a href="#" class="link">Svetlana Maksimovich</a>
@@ -76,17 +81,6 @@ import location from "public/location.svg";
       </div>
     </div>
   </div>
-  <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "PostalAddress",
-      "streetAddress": "ул. Тульская, д. 24A",
-      "addressLocality": "Москва",
-      "addressRegion": "Московская область",
-      "postalCode": "123456",
-      "addressCountry": "Россия"
-    }
-  </script>
 </footer>
 
 <style lang="scss" scoped>
