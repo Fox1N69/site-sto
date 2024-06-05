@@ -1,5 +1,10 @@
 ---
 import MainButton from "@components/Buttons/MainButton.astro";
+import { Image } from "astro:assets";
+import telegram from "public/telegram.svg";
+import telegramqr from "public/telegramqr.png";
+import whatsapp from "public/whatsapp.svg";
+import whatsappqr from "public/whatsappqr.png";
 ---
 
 <section id="feedback">
@@ -27,25 +32,33 @@ import MainButton from "@components/Buttons/MainButton.astro";
       <div class="content_right">
         <div class="right-telegram">
           <div class="right-telegram_title">Telegram</div>
-          <img
-            class="telegram__icon"
-            src="telegram.svg"
-            alt=""
-            width="40px"
-            height="35px"
+          <Image
+            class={"telegram__icon"}
+            src={telegram}
+            alt={"Иконка телеграмма для ссылки на телеграм автосервиса"}
+            width={40}
+            height={35}
           />
-          <img class="telegram__qrcode" src="telegramqr.png" alt="" />
+          <Image
+            class={"telegram__qrcode"}
+            src={telegramqr}
+            alt={"Изображение QR кода для телеграмма"}
+          />
         </div>
         <div class="right-whatsapp">
           <div class="right-whatsapp_title">WhatsApp</div>
-          <img
-            class="whatsapp__icon"
-            src="whatsapp.svg"
-            alt=""
-            width="35px"
-            height="35px"
+          <Image
+            class={"whatsapp__icon"}
+            src={whatsapp}
+            alt="Иконка whatsapp для ссылки на whatsapp автосервиса"
+            width={35}
+            height={35}
           />
-          <img class="whatsapp__qrcode" src="whatsappqr.png" alt="" />
+          <Image
+            class={"whatsapp__qrcode"}
+            src={whatsappqr}
+            alt={"Изображение QR кода whatsapp"}
+          />
         </div>
       </div>
     </div>

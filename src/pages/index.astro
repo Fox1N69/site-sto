@@ -7,6 +7,8 @@ import Services from "@components/Sections/Services.astro";
 import Promotion from "@components/Sections/Promotion.astro";
 import Feedback from "@components/Sections/Feedback.astro";
 import Footer from "@components/Footer/Footer.astro";
+
+export const prerender = true;
 ---
 
 <Layout title="Автосервис - RemZona || Мариупаль">
@@ -43,7 +45,7 @@ import Footer from "@components/Footer/Footer.astro";
     background-image: url("/main-backgound.png");
     background-size: contain;
     background-repeat: no-repeat;
-    height: 800px;
+    min-height: 800px;
   }
 
   @media (min-width: 1500px) {

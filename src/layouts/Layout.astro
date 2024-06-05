@@ -20,6 +20,28 @@ const { title } = Astro.props;
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
     <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "RemZona",
+        "url": "https://www.yourwebsite.com",
+        "logo": "https://www.yourwebsite.com/logo.png",
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "telephone": "+7-908-875-53-47",
+          "contactType": "customer service"
+        },
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "ул. Тульская",
+          "addressLocality": "Мариуполь",
+          "addressRegion": "Донецкая область",
+          "postalCode": "287526",
+          "addressCountry": "Россия"
+        }
+      }
+    </script>
     <title>{title}</title>
   </head>
   <body>

@@ -1,14 +1,16 @@
 ---
+import { Image } from "astro:assets";
 import "./header.scss";
+import logo from "public/logo.svg";
+import underline from "public/underline-nav.png";
 ---
 
 <header class="h-90 flex justify-between p-30">
-  <img
-    class="w-[156px] h-[42px]"
-    src="logo.svg"
-    alt="Логотип автосервиса"
-    decoding="async"
-    loading="eager"
+  <Image
+    src={logo}
+    alt={"Логотип автосервиса RemZona"}
+    loading={"eager"}
+    decoding={"async"}
   />
   <nav class="nav__menu flex flex-col gap-[30px]">
     <ul class="menu__list flex flex-row gap-[12%] justify-center">
@@ -17,11 +19,10 @@ import "./header.scss";
       <li class="menu-item"><a href="#">Акции</a></li>
       <li class="menu-item"><a href="#">Контакты</a></li>
     </ul>
-    <img
-      src="underline-nav.png"
-      alt="Изображение линии подчеркивающей навигацию сайта"
-      decoding="async"
-      loading="eager"
+    <Image
+      src={underline}
+      alt={"Изображение линии подчеркивающей линии навигацию сайта"}
+      loading={"eager"}
     />
   </nav>
   <div class="info">
