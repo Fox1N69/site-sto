@@ -1,7 +1,141 @@
 ---
-import "./footer.scss";
+import { Image } from "astro:assets";
+
+import logo from "public/logo.svg";
+import number from "public/phone.svg";
+import telegram from "public/telegram-footer.svg";
+import whatsapp from "public/whatsapp-footer.svg";
+import timework from "public/time.svg";
+import location from "public/location.svg";
 ---
 
-<footer></footer>
+<footer>
+  <div class="footer__container">
+    <Image src={logo} alt={"Логотип автосервиса RemZona для footer"} />
+    <div class="footer__container-links">
+      <p class="links-text">
+        Desing by <a href="#" class="link">Svetlana Maksimovich</a>
+      </p>
+      <p class="links-text">
+        Developed by <a href="#" class="link">Pavel Maksimovich</a>
+      </p>
+    </div>
+    <div class="footer__container-nav text-center">
+      <div class="flex flex-col gap-5">
+        <a href="#">О нас</a>
+        <a href="#">Услуги</a>
+      </div>
+      <div class="flex flex-col gap-5 text-center">
+        <a href="#">Акции</a>
+        <a href="#">Контакты</a>
+      </div>
+    </div>
+    <div class="footer__container-contacts">
+      <div class="number flex gap-5">
+        <Image
+          src={number}
+          alt={"Иконка телефона для конактного номера телефона footer сайта"}
+        />
+        <p>8-908-875-53-47</p>
+      </div>
+      <div class="contacts-socialy flex gap-6">
+        <div class="telegram flex gap-[10px]">
+          <Image
+            src={telegram}
+            alt={"Иконка для ссылки на телеграмм в footer сайта"}
+          />
+          <p>Telegram</p>
+        </div>
+        <div class="whatsapp flex gap-[10px]">
+          <Image
+            src={whatsapp}
+            alt={"Иконка для ссылки на whatsapp в footer сайта"}
+          />
+          <p>WhatsApp</p>
+        </div>
+      </div>
+    </div>
+    <div class="information flex flex-col gap-5">
+      <div class="information__timework flex gap-[34px]">
+        <Image
+          src={timework}
+          alt={"Иконка часов для времени работы автосервиса в footer сайта"}
+        />
+        <a href="tel:8-908-875-53-47">8-908-875-53-47</a>
+      </div>
+      <div
+        class="information__location flex gap-[22px]"
+        itemscope
+        itemtype="https://schema.org/PostalAddress"
+      >
+        <Image
+          src={location}
+          alt={"Иконка местоположения для адреса автосервиса в footer сайта"}
+        />
+        <p itemprop="streetAddress">ул. Тульская, д. 24A</p>
+      </div>
+    </div>
+  </div>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "PostalAddress",
+      "streetAddress": "ул. Тульская, д. 24A",
+      "addressLocality": "Москва",
+      "addressRegion": "Московская область",
+      "postalCode": "123456",
+      "addressCountry": "Россия"
+    }
+  </script>
+</footer>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+  footer {
+    height: 172px;
+    padding: 48px 99px;
+
+    .links-text {
+      font-weight: 400;
+      font-size: 12px;
+      line-height: 140%;
+      text-align: center;
+      color: #b9b9b9;
+    }
+
+    .link {
+      text-decoration: underline;
+      text-decoration-skip-ink: none;
+    }
+  }
+
+  .footer__container {
+    display: flex;
+    gap: 74px;
+
+    &-links {
+      padding: 18px 0;
+
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    &-nav {
+      padding: 12px 0;
+
+      display: flex;
+      gap: 52px;
+    }
+
+    &-contacts {
+      padding: 7px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    &-information {
+      padding: 3px 0;
+    }
+  }
+</style>
