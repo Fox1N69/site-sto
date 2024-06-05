@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"server/internal/database"
 	"server/internal/server"
 	"strconv"
 
@@ -11,6 +12,7 @@ import (
 
 func main() {
 
+	database.GetGormDB()
 	server := server.New()
 
 	server.RegisterFiberRoutes()
