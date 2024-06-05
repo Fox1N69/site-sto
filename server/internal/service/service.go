@@ -8,12 +8,14 @@ import (
 )
 
 type Services struct {
-	repo *repository.Repositorys
+	repo  *repository.Repositorys
+	Order *OrderService
 }
 
 func NewServices(repo *repository.Repositorys) *Services {
 	return &Services{
-		repo: repo,
+		repo:  repo,
+		Order: NewOrderService(repo.Order),
 	}
 }
 
