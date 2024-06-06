@@ -5,32 +5,54 @@ import srcLogo from "public/logo.svg";
 import underline from "public/underline-nav.png";
 ---
 
-<header class="h-90 flex justify-between p-30">
-  <img src="logo.svg" alt="" decoding="async" loading="eager" />
-  <nav class="nav__menu flex flex-col gap-[30px]">
-    <ul class="menu__list flex flex-row gap-[12%] justify-center">
-      <li class="menu-item"><a href="#">О нас</a></li>
-      <li class="menu-item"><a href="#">Услуги</a></li>
-      <li class="menu-item"><a href="#">Акции</a></li>
-      <li class="menu-item"><a href="#">Контакты</a></li>
-    </ul>
+<header id="#header">
+  <div class="header__container flex justify-between p-30">
+    <Image src={srcLogo} alt={"Логотип автосервиса RemZona"} loading="eager" />
+    <nav class="nav__menu flex flex-col gap-[30px]">
+      <ul class="menu__list flex flex-row gap-[20%] justify-center">
+        <li class="menu-item"><a href="#">О нас</a></li>
+        <li class="menu-item"><a href="#">Услуги</a></li>
+        <li class="menu-item"><a href="#">Акции</a></li>
+        <li class="menu-item"><a href="#">Контакты</a></li>
+      </ul>
+    </nav>
+    <div class="info">
+      <div class="info-number">8-908-875-53-47</div>
+      <div class="info-time">9.00-20.00 пн-вс</div>
+    </div>
+  </div>
+  <div class="underline__image flex justify-center">
     <Image
+      class={"underline"}
       src={underline}
-      alt={"Изображение линии подчеркивающей линии навигацию сайта"}
-      loading={"eager"}
+      alt="Изображение линии, подчеркивающей навигацию сайта"
+      loading="eager"
     />
-  </nav>
-  <div class="info">
-    <div class="info-number">8-908-875-53-47</div>
-    <div class="info-time">9.00-20.00 пн-вс</div>
   </div>
 </header>
 
 <style lang="scss" scoped>
-  header {
+  #header {
     color: #fff3f3;
   }
 
-  @media (max-width: 1400px) {
+  .nav__menu {
+    width: 41%;
+  }
+
+  @media (max-width: 1380px) {
+    .nav__menu {
+      .menu__list {
+        gap: 15%;
+      }
+    }
+  }
+
+  @media (max-width: 1020px) {
+    .nav__menu {
+      .menu__list {
+        gap: 8%;
+      }
+    }
   }
 </style>
