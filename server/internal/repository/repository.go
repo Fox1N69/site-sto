@@ -7,12 +7,14 @@ import (
 type Repositorys struct {
 	db    *gorm.DB
 	Order *OrderRepository
+	User  *UserRepository
 }
 
 func NewRepositorys(db *gorm.DB) *Repositorys {
 	return &Repositorys{
 		db:    db,
 		Order: NewOrderRepository(db),
+		User:  NewUserRepository(db),
 	}
 }
 

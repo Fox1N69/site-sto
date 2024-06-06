@@ -65,5 +65,7 @@ func (ac *AuthController) Register(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
 
+	
+
 	return nil
 }
