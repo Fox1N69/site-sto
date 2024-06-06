@@ -45,7 +45,7 @@ func generateJWTToken(user *models.User) (string, error) {
 	return tokenString, nil
 }
 
-func hashPassword(password []byte) ([]byte, error) {
+func (ac *AuthController) HashPassword(password []byte) ([]byte, error) {
 	hashedPassword, err := bcrypt.GenerateFromPassword(password, bcrypt.DefaultCost)
 	if err != nil {
 		return nil, err
@@ -65,7 +65,6 @@ func (ac *AuthController) Register(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
 
-	
 
 	return nil
 }
