@@ -1,9 +1,7 @@
 package handler
 
 import (
-	"server/internal/controller"
 	"server/internal/repository"
-	"server/internal/service"
 )
 
 type Handler struct {
@@ -12,12 +10,11 @@ type Handler struct {
 	User       *UserHandler
 }
 
-func NewHandlers(repo *repository.Repositorys, authController *controller.AuthController) *Handler {
-	useService := service.NewServices(repo, authController)
+func NewHandlers(repo *repository.Repositorys) *Handler {
 
 	return &Handler{
 		repository: repo,
-		Order:      NewOrderHandler(repo, service.NewOrderService(repo.Order)),
-		User:       NewUserHandler(useService),
+		Order:      NewOrderHandler(repo),
+		User:       NewUserHandler(),
 	}
 }

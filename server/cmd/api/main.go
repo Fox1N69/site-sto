@@ -3,12 +3,10 @@ package main
 import (
 	"fmt"
 	"os"
-	"server/internal/controller"
 	"server/internal/database"
 	"server/internal/handler"
 	"server/internal/repository"
 	"server/internal/server"
-	"server/internal/service"
 	"strconv"
 
 	_ "github.com/joho/godotenv/autoload"
@@ -17,11 +15,9 @@ import (
 func main() {
 	db := database.GetGormDB()
 	repos := repository.NewRepositorys(db)
-	authController := controller.NewAuthController(repos)
-	services := service.NewServices(repos, authController)
-	handlers := handler.NewHandlers(repos, authController)
+	handlers := handler.NewHandlers(repos)
 
-	server := server.New(handlers, repos, services)
+	server := server.New(handlers, repos)
 	server.RegisterFiberRoutes()
 
 	port, _ := strconv.Atoi(os.Getenv("PORT"))

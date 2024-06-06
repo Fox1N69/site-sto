@@ -24,6 +24,5 @@ func GetGormDB() *gorm.DB {
 	}
 
 	AutoMigrateModels(DB)
-
 	return DB
 }
