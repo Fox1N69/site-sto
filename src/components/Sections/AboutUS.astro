@@ -85,27 +85,24 @@ import manImage from "public/man.png";
     color: #e53e49;
   }
 
-  .text {
-    h3 {
-      font-family: var(--font-family);
-      font-weight: 500;
-      font-size: 20px;
-      line-height: 140%;
-      text-align: center;
-      color: #fff3f3;
-    }
+  .text h3 {
+    font-family: var(--font-family);
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 140%;
+    text-align: center;
+    color: #fff3f3;
+  }
 
-    p {
-      font-weight: 400;
-      font-size: 16px;
-      line-height: 140%;
-      color: #b9b9b9;
-    }
+  .text p {
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 140%;
+    color: #b9b9b9;
   }
 
   .grid-container {
     height: 449px;
-
     display: grid;
     grid-template-columns: 1.5fr 2fr 1.5fr;
     grid-template-rows: 1fr 2fr 1fr;
@@ -137,20 +134,44 @@ import manImage from "public/man.png";
   .left-two,
   .right-one,
   .right-two {
-    & {
-      grid-row: 1 / span 3;
-      grid-column: 1 / span 3;
-    }
+    grid-row: 1 / span 3;
+    grid-column: 1 / span 3;
   }
 
   .left-two,
   .right-two {
-    & {
-      grid-row: 3;
-    }
+    grid-row: 3;
   }
 
   .center {
     grid-area: center;
+  }
+
+  @media (min-width: 1500px) {
+    #about-us {
+      padding: 0 20%;
+    }
+  }
+
+  @media (max-width: 1440px) {
+    #about-us {
+      padding: 0 10%;
+    }
+
+    .about-title {
+      font-size: 2.5vw;
+    }
+
+    .number {
+      font-size: 3vw;
+    }
+
+    .text h3 {
+      font-size: 1.5vw;
+    }
+
+    .text p {
+      font-size: 1.2vw;
+    }
   }
 </style>
