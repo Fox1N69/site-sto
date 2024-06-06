@@ -50,6 +50,20 @@ func hashPassword(password []byte) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-
 	return hashedPassword, nil
+}
+
+func checkHashPassword(hashedPassword, password string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
+	return err == nil
+}
+
+func (ac *AuthController) Register(c *fiber.Ctx) error {
+	var regdata models.RegisterData
+
+	if err := c.BodyParser(&regdata); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+	}
+
+	return nil
 }
