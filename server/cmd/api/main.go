@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"os"
 	"server/internal/database"
+	"server/internal/handler"
 	"server/internal/repository"
 	"server/internal/server"
-	"server/internal/service"
 	"strconv"
 
 	_ "github.com/joho/godotenv/autoload"
@@ -16,8 +16,8 @@ func main() {
 
 	db := database.GetGormDB()
 	repo := repository.NewRepositorys(db)
-	service := service.NewServices(repo)
-	server := server.New(service, repo)
+	hand := handler.NewHandlers(repo)
+	server := server.New(hand, repo)
 
 	server.RegisterFiberRoutes()
 	port, _ := strconv.Atoi(os.Getenv("PORT"))

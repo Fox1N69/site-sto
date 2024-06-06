@@ -1,4 +1,4 @@
-package service
+package handler
 
 import (
 	"net/http"
@@ -8,24 +8,22 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-type OrderService struct {
-	repository *repository.OrderRepository
+type OrderHandler struct {
+	repository *repository.Repositorys
 }
 
-func NewOrderService(repo *repository.OrderRepository) *OrderService {
-	return &OrderService{
-		repository: repo,
-	}
+func NewOrderHandler(repo *repository.Repositorys) *OrderHandler {
+	return &OrderHandler{repository: repo}
 }
 
-func (s *OrderService) CreateOrder(c *fiber.Ctx) error {
+func (h *OrderHandler) CreateOrder(c *fiber.Ctx) error {
 	order := new(models.Order)
 
 	if err := c.BodyParser(order); err != nil {
 		return c.SendStatus(http.StatusInternalServerError)
 	}
 
-	if err := s.repository.CreateOrder(order); err != nil {
+	if err := h.repository.Order.CreateOrder(order); err != nil {
 		return c.SendStatus(http.StatusInternalServerError)
 	}
 
