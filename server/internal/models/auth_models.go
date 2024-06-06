@@ -9,22 +9,21 @@ type RegisterData struct {
 }
 
 type User struct {
-	UserID         uint     `json:"id"`
-	Username       string   `json:"username"`
-	Password       []byte   `json:"password"`
-	IsActivated    bool     `json:"is_activated"`
-	ActivationLink string   `json:"activation_link"`
-	FullName       string   `json:"full_name"`
-	Email          string   `json:"email"`
-	DateOfBirth    string   `json:"date_of_birth"`
-	Location       string   `json:"location"`
-	ProfilePicture string   `json:"profile_picture"`
-	Role           string   `json:"role"` // Например: "admin", "user", "moderator" и т.д.
-	Permissions    []string `json:"permissions"`
+	UserID         uint   `json:"id" gorm:"primaryKey;autoIncrement" `
+	Username       string `json:"username"`
+	Password       []byte `json:"password"`
+	IsActivated    bool   `json:"is_activated"`
+	ActivationLink string `json:"activation_link"`
+	FullName       string `json:"full_name"`
+	Email          string `json:"email"`
+	DateOfBirth    string `json:"date_of_birth"`
+	Location       string `json:"location"`
+	Role           string `json:"role"` // Например: "admin", "user", "moderator" и т.д.
+	Permissions    string `json:"permissions"`
 }
 
 type Token struct {
-	User         User   `json:"user" gorm:"foreignKey:UserID"`
+	UserID       uint   `json:"id" gorm:"foreignKey:UserID;references:UserID"`
 	RefreshToken []byte `json:"refreshToken"`
 }
 

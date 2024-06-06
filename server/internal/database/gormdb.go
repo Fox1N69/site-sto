@@ -23,5 +23,7 @@ func GetGormDB() *gorm.DB {
 		logrus.Info("Database migrated!")
 	}
 
+	AutoMigrateModels(DB)
+
 	return DB
 }

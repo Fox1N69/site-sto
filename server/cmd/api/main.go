@@ -16,12 +16,12 @@ import (
 
 func main() {
 	db := database.GetGormDB()
-	repo := repository.NewRepositorys(db)
-	hand := handler.NewHandlers(repo)
-	authController := controller.NewAuthController(repo)
-	services := service.NewServices(repo, authController)
+	repos := repository.NewRepositorys(db)
+	authController := controller.NewAuthController(repos)
+	services := service.NewServices(repos, authController)
+	handlers := handler.NewHandlers(repos, authController)
 
-	server := server.New(hand, repo, services)
+	server := server.New(handlers, repos, services)
 	server.RegisterFiberRoutes()
 
 	port, _ := strconv.Atoi(os.Getenv("PORT"))
