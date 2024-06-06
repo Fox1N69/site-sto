@@ -19,7 +19,11 @@ const { content, style, w, h } = Astro.props;
     height: 51px;
 
     background-color: #d02a35;
-    box-shadow: 0 0 30px 0 rgba(242, 109, 109, 0.4);
     border-radius: 5px;
+
+    &:hover {
+      box-shadow: 0 0 30px 0 rgba(242, 109, 109, 0.4);
+      transition: box-shadow 0.6s ease;
+    }
   }
 </style>
