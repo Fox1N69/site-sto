@@ -1,6 +1,9 @@
 package handler
 
-import "server/internal/repository"
+import (
+	"server/internal/repository"
+	"server/internal/service"
+)
 
 type Handler struct {
 	repository *repository.Repositorys
@@ -10,6 +13,7 @@ type Handler struct {
 func NewHandlers(repo *repository.Repositorys) *Handler {
 	return &Handler{
 		repository: repo,
-		Order:      NewOrderHandler(repo),
+		Order:      NewOrderHandler(repo, service.NewOrderService(repo.Order)),
 	}
 }
+
