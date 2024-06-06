@@ -32,13 +32,15 @@ import whatsappqr from "public/whatsappqr.png";
       <div class="content_right">
         <div class="right-telegram">
           <div class="right-telegram_title">Telegram</div>
-          <Image
-            class={"telegram__icon"}
-            src={telegram}
-            alt={"Иконка телеграмма для ссылки на телеграм автосервиса"}
-            width={40}
-            height={35}
-          />
+          <a href="#" class="telegram__link">
+            <Image
+              class={"telegram__icon"}
+              src={telegram}
+              alt={"Иконка телеграмма для ссылки на телеграм автосервиса"}
+              width={40}
+              height={35}
+            />
+          </a>
           <Image
             class={"telegram__qrcode"}
             src={telegramqr}
@@ -47,13 +49,15 @@ import whatsappqr from "public/whatsappqr.png";
         </div>
         <div class="right-whatsapp">
           <div class="right-whatsapp_title">WhatsApp</div>
-          <Image
-            class={"whatsapp__icon"}
-            src={whatsapp}
-            alt="Иконка whatsapp для ссылки на whatsapp автосервиса"
-            width={35}
-            height={35}
-          />
+          <a href="#" class="whatsapp__link">
+            <Image
+              class={"whatsapp__icon"}
+              src={whatsapp}
+              alt="Иконка whatsapp для ссылки на whatsapp автосервиса"
+              width={35}
+              height={35}
+            />
+          </a>
           <Image
             class={"whatsapp__qrcode"}
             src={whatsappqr}

@@ -41,7 +41,7 @@ import location from "public/location.svg";
           src={number}
           alt={"Иконка телефона для конактного номера телефона footer сайта"}
         />
-        <p>8-908-875-53-47</p>
+        <a href="tel:8-908-875-53-47">8-908-875-53-47</a>
       </div>
       <div class="contacts-socialy flex gap-6">
         <div class="telegram flex gap-[10px]">
@@ -61,12 +61,16 @@ import location from "public/location.svg";
       </div>
     </div>
     <div class="information flex flex-col gap-5">
-      <div class="information__timework flex gap-[34px]">
+      <div
+        class="information__timework flex gap-[34px]"
+        itemscope
+        itemtype="https://schema.org/AutoRepair"
+      >
         <Image
           src={timework}
           alt={"Иконка часов для времени работы автосервиса в footer сайта"}
         />
-        <a href="tel:8-908-875-53-47">8-908-875-53-47</a>
+        <div itemprop="openingHours">Пн-Вс: 9:00-20:00</div>
       </div>
       <div
         class="information__location flex gap-[22px]"
