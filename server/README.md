@@ -1,49 +1,45 @@
-# Project server
+# Authentication
 
-One Paragraph of project description goes here
+## Clean Architecture in Go with gin-gonic and Unit Testing
 
-## Getting Started
+This is an example of implementation clean code architecture in Go with gin-gonic framework with some unit testing on the project.
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+## Run the project
 
-## MakeFile
+Run dependency manager
 
-run all make commands with clean tests
-```bash
-make all build
+```console
+make dep
 ```
 
-build the application
-```bash
-make build
-```
+Run local deployment
 
-run the application
-```bash
+```console
 make run
 ```
 
-Create DB container
-```bash
-make docker-run
-```
+Run local unit test
 
-Shutdown DB container
-```bash
-make docker-down
-```
-
-live reload the application
-```bash
-make watch
-```
-
-run the test suite
-```bash
+```console
 make test
 ```
 
-clean up binary from the last build
-```bash
-make clean
+Run build project
+
+```console
+make build
 ```
+
+## Core library
+
+Library | Usage
+-- | --
+gin | Base framework
+gorm | ORM library
+postgres | Database
+jwt-go | JWT authorization
+go-sqlmock | Database mock
+logrus | Logger library
+viper | Config library
+
+And others library are listed on `go.mod` file
