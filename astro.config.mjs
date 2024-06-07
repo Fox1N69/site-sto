@@ -8,5 +8,13 @@ export default defineConfig({
   image: {
     service: passthroughImageService(),
   },
+  experiments: {
+    react: true,
+  },
   integrations: [tailwind(), react(), compress()],
+  buildOptions: {
+    htmlOutput: {
+      trailingSlash: "always",
+    },
+  },
 });

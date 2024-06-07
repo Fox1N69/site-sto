@@ -1,5 +1,6 @@
 ---
 import Button from "@components/Buttons/ServiceButton.astro";
+import LinkButton from "@components/Buttons/LinkButton.tsx";
 import { Image } from "astro:assets";
 
 import dvs from "public/dvs.svg";
@@ -19,7 +20,11 @@ import motul from "public/motul.svg";
         <div class="card__content">
           <div class="card-title h5-title">Ремонт ходовой</div>
           <div class="card-description description-text">от 1500</div>
-          <Button content="Подробнее" style={"services-btn"} />
+          <Button
+            content="Подробнее"
+            style={"services-btn"}
+            serviceID={"hodov"}
+          />
         </div>
       </article>
 
@@ -33,7 +38,11 @@ import motul from "public/motul.svg";
         <div class="card__content">
           <div class="card-title h5-title">Шиномонтаж</div>
           <div class="card-description description-text">от 5000</div>
-          <Button content="Подробнее" style={"services-btn"} />
+          <Button
+            content="Подробнее"
+            style={"services-btn"}
+            serviceID="tires"
+          />
         </div>
       </article>
 
@@ -45,7 +54,11 @@ import motul from "public/motul.svg";
         <div class="card__content">
           <div class="card-title h5-title">Диагностика</div>
           <div class="card-description description-text">от 1990</div>
-          <Button content="Подробнее" style={"services-btn"} />
+          <Button
+            content="Подробнее"
+            style={"services-btn"}
+            serviceID="monitor"
+          />
         </div>
       </article>
     </div>
@@ -56,7 +69,7 @@ import motul from "public/motul.svg";
         <div class="card__content">
           <div class="card-title h5-title">Ремонт ДВС</div>
           <div class="card-description description-text">от 10000</div>
-          <Button content="Подробнее" style={"services-btn"} />
+          <Button content="Подробнее" style={"services-btn"} serviceID="dvs" />
         </div>
       </article>
 
@@ -68,7 +81,11 @@ import motul from "public/motul.svg";
         <div class="card__content">
           <div class="card-title h5-title">Ремонт подвески</div>
           <div class="card-description description-text">от 1950</div>
-          <Button content="Подробнее" style={"services-btn"} />
+          <Button
+            content="Подробнее"
+            style={"services-btn"}
+            serviceID="podveska"
+          />
         </div>
       </article>
 
@@ -80,7 +97,11 @@ import motul from "public/motul.svg";
         <div class="card__content">
           <div class="card-title h5-title">ТО Автомобиля</div>
           <div class="card-description description-text">от 1000</div>
-          <Button content="Подробнее" style={"services-btn"} />
+          <Button
+            content="Подробнее"
+            style={"services-btn"}
+            serviceID="motule"
+          />
         </div>
       </article>
     </div>

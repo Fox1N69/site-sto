@@ -1,16 +1,17 @@
 ---
-import { propsToFilename } from "astro/assets/utils";
-
 interface Props {
   content: string;
   style?: string;
+  serviceID: string;
 }
 
-const { content, style } = Astro.props;
+const { content, style, serviceID } = Astro.props;
 ---
 
 <button class={style}>
-  {content}
+  <a href=`service/${serviceID}`>
+    {content}
+  </a>
 </button>
 
 <style lang="scss">

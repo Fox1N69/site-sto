@@ -1,0 +1,23 @@
+.services__card {
+  width: 320px;
+  height: 160px;
+
+  display: flex;
+  align-items: center;
+  gap: 20px;
+
+  background-color: #222222;
+  border-radius: 5px;
+}
+
+.active {
+  background-color: #d02a35;
+}
+
+.card-list {
+  &__container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+}

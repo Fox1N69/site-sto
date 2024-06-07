@@ -1,0 +1,39 @@
+---
+import Layout from "@layouts/Layout.astro";
+import { services } from "@components/MoreServices/data";
+import Header from "@components/Header/Header.astro";
+import CardList from "@components/MoreServices/CardList";
+
+const { serviceID } = Astro.params;
+const service = services.find((s) => s.serviceID === serviceID);
+
+export async function getStaticPaths() {
+  return services.map((service) => ({
+    params: { serviceID: service.serviceID },
+  }));
+}
+---
+
+<Layout
+  title="Услуги автосервиса в Мариуполе: все виды работы - RemZona"
+  description="Познакомьтесь с полным списком услуг автосервиса RemZona в Мариуполе. Мы предлагаем широкий спектр услуг, используя новейшее оборудование для быстрой и качественной работы"
+>
+  <Header />
+  <main>
+    <CardList selectedServiceID={serviceID} />
+    {
+      service ? (
+        <div class="service-detail">
+          <h1>{service.title}</h1>
+          <p>{service.description}</p>
+          <p>Цена: {service.price}</p>
+        </div>
+      ) : (
+        <div class="service-not-found">
+          <h1>Услуга не найдена</h1>
+          <p>К сожалению, услуга с указанным идентификатором не найдена.</p>
+        </div>
+      )
+    }
+  </main>
+</Layout>
