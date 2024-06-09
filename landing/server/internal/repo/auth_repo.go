@@ -1,7 +1,7 @@
 package repo
 
 import (
-	"authentication/model"
+	"shop-server/internal/model"
 
 	"gorm.io/gorm"
 )

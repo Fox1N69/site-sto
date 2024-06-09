@@ -1,9 +1,9 @@
 package main
 
 import (
-	"authentication/api"
-	"authentication/infra"
-	"authentication/model"
+	"shop-server/cmd/api"
+	"shop-server/infra"
+	"shop-server/internal/model"
 )
 
 func main() {

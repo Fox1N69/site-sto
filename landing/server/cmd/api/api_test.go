@@ -5,7 +5,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"authentication/common/http/request"
+	"shop-server/common/http/request"
 
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"

@@ -1,11 +1,11 @@
 package api
 
 import (
-	v1 "authentication/api/v1"
-	"authentication/common/http/middleware"
-	"authentication/common/http/request"
-	"authentication/infra"
-	"authentication/manager"
+	v1 "shop-server/cmd/api/v1"
+	"shop-server/common/http/middleware"
+	"shop-server/common/http/request"
+	"shop-server/infra"
+	"shop-server/internal/manager"
 
 	"github.com/gin-gonic/gin"
 )

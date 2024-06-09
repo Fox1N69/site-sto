@@ -1,10 +1,9 @@
 package repo_test
 
 import (
+	"shop-server/internal/model"
+	"shop-server/internal/repo"
 	"testing"
-
-	"authentication/model"
-	"authentication/repo"
 
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/sirupsen/logrus"

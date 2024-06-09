@@ -1,7 +1,7 @@
 package mocks
 
 import (
-	"authentication/model"
+	"shop-server/internal/model"
 
 	"github.com/stretchr/testify/mock"
 )

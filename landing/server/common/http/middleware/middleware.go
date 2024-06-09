@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"strings"
 
-	"authentication/common/http/response"
-	"authentication/common/util/token"
+	"shop-server/common/http/response"
+	"shop-server/common/util/token"
 
 	"github.com/gin-gonic/gin"
 )

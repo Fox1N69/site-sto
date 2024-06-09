@@ -8,10 +8,10 @@ import (
 	"testing"
 	"time"
 
-	v1 "authentication/api/v1"
-	"authentication/infra"
-	"authentication/mocks"
-	"authentication/model"
+	v1 "shop-server/cmd/api/v1"
+	"shop-server/infra"
+	"shop-server/internal/model"
+	"shop-server/pkg/mocks"
 
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
@@ -21,7 +21,7 @@ import (
 var mockUser = model.User{
 	Username: "erwindo",
 	Password: "password",
-	FIO:     "Erwindo Sianipar",
+	FIO:      "Erwindo Sianipar",
 }
 
 func TestRegister(t *testing.T) {

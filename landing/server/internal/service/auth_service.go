@@ -1,8 +1,8 @@
 package service
 
 import (
-	"authentication/model"
-	"authentication/repo"
+	"shop-server/internal/model"
+	"shop-server/internal/repo"
 )
 
 type AuthService interface {

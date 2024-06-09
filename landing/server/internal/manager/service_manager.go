@@ -3,8 +3,8 @@ package manager
 import (
 	"sync"
 
-	"authentication/infra"
-	"authentication/service"
+	"shop-server/infra"
+	"shop-server/internal/service"
 )
 
 type ServiceManager interface {

@@ -1,4 +1,4 @@
-# Authentication
+# shop-server
 
 ## Clean Architecture in Go with gin-gonic and Unit Testing
 
@@ -32,14 +32,14 @@ make build
 
 ## Core library
 
-Library | Usage
--- | --
-gin | Base framework
-gorm | ORM library
-postgres | Database
-jwt-go | JWT authorization
-go-sqlmock | Database mock
-logrus | Logger library
-viper | Config library
+| Library    | Usage             |
+| ---------- | ----------------- |
+| gin        | Base framework    |
+| gorm       | ORM library       |
+| postgres   | Database          |
+| jwt-go     | JWT authorization |
+| go-sqlmock | Database mock     |
+| logrus     | Logger library    |
+| viper      | Config library    |
 
 And others library are listed on `go.mod` file

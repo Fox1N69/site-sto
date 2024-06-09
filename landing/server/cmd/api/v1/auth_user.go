@@ -7,12 +7,12 @@ import (
 	"regexp"
 	"strconv"
 
-	"authentication/common/http/response"
-	"authentication/common/util/regex"
-	"authentication/common/util/token"
-	"authentication/infra"
-	"authentication/model"
-	"authentication/service"
+	"shop-server/common/http/response"
+	"shop-server/common/util/regex"
+	"shop-server/common/util/token"
+	"shop-server/infra"
+	"shop-server/internal/model"
+	"shop-server/internal/service"
 
 	"github.com/gin-gonic/gin"
 	validation "github.com/go-ozzo/ozzo-validation"

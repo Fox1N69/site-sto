@@ -2,9 +2,9 @@ package response
 
 import (
 	"net/http"
+	"shop-server/internal/model"
 
 	"github.com/gin-gonic/gin"
-	"github.com/golang/mock/mockgen/model"
 )
 
 type Wrapper interface {

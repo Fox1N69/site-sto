@@ -3,8 +3,8 @@ package manager
 import (
 	"sync"
 
-	"authentication/infra"
-	"authentication/repo"
+	"shop-server/infra"
+	"shop-server/internal/repo"
 )
 
 type RepoManager interface {
