@@ -9,7 +9,7 @@ import (
 
 type RepoManager interface {
 	AuthRepo() repo.AuthRepo
-	ShopRepo() repo.ShopRepo
+	AutoPRepo() repo.AutoPRepo
 }
 
 type repoManager struct {
@@ -21,18 +21,18 @@ func NewRepoManager(infra infra.Infra) RepoManager {
 }
 
 var (
-	authRepoOnce sync.Once
-	authRepo     repo.AuthRepo
-	shopRepoOnce sync.Once
-	shopRepo     repo.ShopRepo
+	authRepoOnce  sync.Once
+	authRepo      repo.AuthRepo
+	autoPRepoOnce sync.Once
+	autoPRepo     repo.AutoPRepo
 )
 
-func (rm *repoManager) ShopRepo() repo.ShopRepo {
-	shopRepoOnce.Do(func() {
-		shopRepo = repo.NewShopRepo(rm.infra.GormDB())
+func (rm *repoManager) AutoPRepo() repo.AutoPRepo {
+	autoPRepoOnce.Do(func() {
+		autoPRepo = repo.NewAutoPRepo(rm.infra.GormDB())
 	})
 
-	return shopRepo
+	return autoPRepo
 }
 
 func (rm *repoManager) AuthRepo() repo.AuthRepo {

@@ -24,18 +24,18 @@ func NewServiceManager(infra infra.Infra) ServiceManager {
 }
 
 var (
-	authServiceOnce  sync.Once
-	authService      service.AuthService
-	shopServiceOnece sync.Once
-	shopService      service.ShopService
+	authServiceOnce   sync.Once
+	authService       service.AuthService
+	autoPServiceOnece sync.Once
+	autoPService      service.AutoPService
 )
 
-func (sm *serviceManager) ShopService() service.ShopService {
-	shopServiceOnece.Do(func() {
-		shopService = sm.repo.ShopRepo()
+func (sm *serviceManager) AutoPService() service.AutoPService {
+	autoPServiceOnece.Do(func() {
+		autoPService = sm.repo.AutoPRepo()
 	})
 
-	return shopService
+	return autoPService
 }
 
 func (sm *serviceManager) AuthService() service.AuthService {
