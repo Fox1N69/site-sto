@@ -10,7 +10,7 @@ import (
 type ServiceManager interface {
 	AuthService() service.AuthService
 }
-
+	
 type serviceManager struct {
 	infra infra.Infra
 	repo  RepoManager
