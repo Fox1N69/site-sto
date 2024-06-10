@@ -31,9 +31,9 @@ func (r *basketRepo) GetBasketByUserID(userID uint) (*model.Basket, error) {
 	return &basket, nil
 }
 
-// AddItemToBasket добавляет товар в корзину пользователя
+// Добавление товара в корзину пользователя
 func (r *basketRepo) AddItemToBasket(userID uint, item model.BasketItem) error {
-	// Проверяем, существует ли корзина пользователя
+	// Проверка, существует ли корзина пользователя
 	var basket model.Basket
 	if err := r.db.Where("user_id = ?", userID).First(&basket).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
@@ -47,22 +47,22 @@ func (r *basketRepo) AddItemToBasket(userID uint, item model.BasketItem) error {
 		}
 	}
 
-	// Добавляем товар в корзину
+	// Добавление товар в корзину
 	item.BasketID = basket.ID
 	return r.db.Create(&item).Error
 }
 
-// UpdateBasketItem обновляет информацию о товаре в корзине
+// Обновление информации о товаре в корзине
 func (r *basketRepo) UpdateBasketItem(itemID uint, newItem model.BasketItem) error {
 	return r.db.Model(&model.BasketItem{}).Where("id = ?", itemID).Updates(newItem).Error
 }
 
-// RemoveItemFromBasket удаляет товар из корзины
+// Удаление  товара  из корзины по ID
 func (r *basketRepo) RemoveItemFromBasket(itemID uint) error {
 	return r.db.Delete(&model.BasketItem{}, itemID).Error
 }
 
-// ClearBasket очищает корзину пользователя, удаляя все товары
+// Очистка корзины пользователя, удаляя все товары
 func (r *basketRepo) ClearBasket(basketID uint) error {
 	return r.db.Where("basket_id = ?", basketID).Delete(&model.BasketItem{}).Error
 }
