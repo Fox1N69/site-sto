@@ -27,14 +27,16 @@ type AuthUserHandler interface {
 }
 
 type authUserHandler struct {
-	authService service.AuthService
-	infra       infra.Infra
+	authService   service.AuthService
+	basketService service.BasketService
+	infra         infra.Infra
 }
 
-func NewAuthHandler(authService service.AuthService, infra infra.Infra) AuthUserHandler {
+func NewAuthHandler(authService service.AuthService, infra infra.Infra, basketService service.BasketService) AuthUserHandler {
 	return &authUserHandler{
-		authService: authService,
-		infra:       infra,
+		authService:   authService,
+		infra:         infra,
+		basketService: basketService,
 	}
 }
 
@@ -71,6 +73,15 @@ func (h *authUserHandler) Register(c *gin.Context) {
 		}
 
 		response.New(c).Write(http.StatusCreated, "success: user registered")
+		return
+	}
+
+	newBasket := model.Basket{
+		UserID: data.ID,
+	}
+
+	if err := h.basketService.Create(newBasket); err != nil {
+		response.New(c).Error(http.StatusInternalServerError, err)
 		return
 	}
 

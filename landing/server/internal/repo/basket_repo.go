@@ -7,6 +7,8 @@ import (
 )
 
 type BasketRepo interface {
+	Create(basket model.Basket) error
+	CreateForUser(userID uint) error
 	GetBasketByUserID(userID uint) (*model.Basket, error)
 	AddItemToBasket(userID uint, item model.BasketItem) error
 	UpdateBasketItem(itemID uint, newItem model.BasketItem) error
@@ -20,6 +22,16 @@ type basketRepo struct {
 
 func NewBasketRepo(db *gorm.DB) BasketRepo {
 	return &basketRepo{db: db}
+}
+
+func (r *basketRepo) Create(basket model.Basket) error {
+	return r.db.Create(&basket).Error
+}
+
+func (r *basketRepo) CreateForUser(userID uint) error {
+	basket := model.Basket{UserID: userID}
+	result := r.db.Create(&basket)
+	return result.Error
 }
 
 func (r *basketRepo) GetBasketByUserID(userID uint) (*model.Basket, error) {

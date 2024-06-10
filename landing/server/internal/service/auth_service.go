@@ -14,11 +14,12 @@ type AuthService interface {
 }
 
 type authService struct {
-	authRepo repo.AuthRepo
+	authRepo   repo.AuthRepo
+	basketRepo repo.BasketRepo
 }
 
-func NewAuthService(authRepo repo.AuthRepo) AuthService {
-	return &authService{authRepo: authRepo}
+func NewAuthService(authRepo repo.AuthRepo, basketRepo repo.BasketRepo) AuthService {
+	return &authService{authRepo: authRepo, basketRepo: basketRepo}
 }
 
 func (s *authService) CheckUsername(username string) bool {
@@ -27,6 +28,14 @@ func (s *authService) CheckUsername(username string) bool {
 
 func (s *authService) Register(user *model.User) error {
 	if err := s.authRepo.Register(user); err != nil {
+		return err
+	}
+
+	newBasket := model.Basket{
+		UserID: user.ID,
+	}
+
+	if err := s.basketRepo.Create(newBasket); err != nil {
 		return err
 	}
 
