@@ -10,10 +10,12 @@ type AutoPRepo interface {
 	Create(product model.AutoPart) error
 	GetAll() ([]model.AutoPart, error)
 	GetByID(id uint) (*model.AutoPart, error)
-	Update(product model.AutoPart) (*model.AutoPart, error)
-	Delete(product model.AutoPart) error
-	GetByCategory(category string) ([]model.AutoPart, error)
-	GetSortedByPrice() ([]model.AutoPart, error)
+	Update(product model.AutoPart) error
+	Delete(id uint) error
+	GetByCategory(categoryID uint) ([]model.AutoPart, error)
+	GetSortedByPrice(order string) ([]model.AutoPart, error)
+	GetByBrand(brandID uint) ([]model.AutoPart, error)
+	GetAvailable() ([]model.AutoPart, error)
 }
 
 type autoPRepo struct {
@@ -25,36 +27,59 @@ func NewAutoPRepo(db *gorm.DB) AutoPRepo {
 }
 
 func (s *autoPRepo) Create(product model.AutoPart) error {
-	return s.db.Create(product).Error
+	return s.db.Create(&product).Error
 }
 
 func (s *autoPRepo) GetAll() ([]model.AutoPart, error) {
-	return nil, nil
-}
-
-func (s *autoPRepo) GetByID(id uint) (*model.AutoPart, error) {
-	return nil, nil
-}
-
-func (s *autoPRepo) Update(product model.AutoPart) (*model.AutoPart, error) {
-	return nil, nil
-}
-
-func (s *autoPRepo) Delete(product model.AutoPart) error {
-	return s.db.Delete(product).Error
-}
-
-func (s *autoPRepo) GetByCategory(category string) ([]model.AutoPart, error) {
 	var products []model.AutoPart
-	if err := s.db.Where("category = ?", category).Find(&products).Error; err != nil {
+	if err := s.db.Find(&products).Error; err != nil {
 		return nil, err
 	}
 	return products, nil
 }
 
-func (s *autoPRepo) GetSortedByPrice() ([]model.AutoPart, error) {
+func (s *autoPRepo) GetByID(id uint) (*model.AutoPart, error) {
+	var product model.AutoPart
+	if err := s.db.First(&product, id).Error; err != nil {
+		return nil, err
+	}
+	return &product, nil
+}
+
+func (s *autoPRepo) Update(product model.AutoPart) error {
+	return s.db.Save(&product).Error
+}
+
+func (s *autoPRepo) Delete(id uint) error {
+	return s.db.Delete(&model.AutoPart{}, id).Error
+}
+
+func (s *autoPRepo) GetByCategory(categoryID uint) ([]model.AutoPart, error) {
 	var products []model.AutoPart
-	if err := s.db.Order("price").Find(&products).Error; err != nil {
+	if err := s.db.Where("category_id = ?", categoryID).Find(&products).Error; err != nil {
+		return nil, err
+	}
+	return products, nil
+}
+
+func (s *autoPRepo) GetSortedByPrice(order string) ([]model.AutoPart, error) {
+	var products []model.AutoPart
+	if err := s.db.Order("price " + order).Find(&products).Error; err != nil {
+		return nil, err
+	}
+	return products, nil
+}
+
+func (s *autoPRepo) GetByBrand(brandID uint) ([]model.AutoPart, error) {
+	var products []model.AutoPart
+	if err := s.db.Where("brand_id = ?", brandID).Find(&products).Error; err != nil {
+		return nil, err
+	}
+	return products, nil
+}
+func (s *autoPRepo) GetAvailable() ([]model.AutoPart, error) {
+	var products []model.AutoPart
+	if err := s.db.Where("deleted_at IS NULL").Find(&products).Error; err != nil {
 		return nil, err
 	}
 	return products, nil
