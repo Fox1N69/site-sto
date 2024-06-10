@@ -9,7 +9,7 @@ import (
 
 type RepoManager interface {
 	AuthRepo() repo.AuthRepo
-	AutoPRepo() repo.AutoPRepo
+	AutoPartRepo() repo.AutoPartRepo
 	BasketRepo() repo.BasketRepo
 }
 
@@ -24,18 +24,18 @@ func NewRepoManager(infra infra.Infra) RepoManager {
 var (
 	authRepoOnce   sync.Once
 	authRepo       repo.AuthRepo
-	autoPRepoOnce  sync.Once
-	autoPRepo      repo.AutoPRepo
+	autoPartRepoOnce  sync.Once
+	autoPartRepo      repo.AutoPartRepo
 	basketRepoOnce sync.Once
 	basketRepo     repo.BasketRepo
 )
 
-func (rm *repoManager) AutoPRepo() repo.AutoPRepo {
-	autoPRepoOnce.Do(func() {
-		autoPRepo = repo.NewAutoPRepo(rm.infra.GormDB())
+func (rm *repoManager) AutoPartRepo() repo.AutoPartRepo {
+	autoPartRepoOnce.Do(func() {
+		autoPartRepo = repo.NewAutoPartRepo(rm.infra.GormDB())
 	})
 
-	return autoPRepo
+	return autoPartRepo
 }
 
 func (rm *repoManager) AuthRepo() repo.AuthRepo {

@@ -9,8 +9,10 @@ import (
 
 type ServiceManager interface {
 	AuthService() service.AuthService
+	AutoPartService() service.AutoPartService
+	BasketService() service.BasketService
 }
-	
+
 type serviceManager struct {
 	infra infra.Infra
 	repo  RepoManager
@@ -27,19 +29,20 @@ var (
 	authServiceOnce sync.Once
 	authService     service.AuthService
 
-	autoPServiceOnece sync.Once
-	autoPService      service.AutoPService
+	autoPartServiceOnece sync.Once
+	autoPartService      service.AutoPartService
 
 	basketServiceOnce sync.Once
 	basketService     service.BasketService
 )
 
-func (sm *serviceManager) AutoPService() service.AutoPService {
-	autoPServiceOnece.Do(func() {
-		autoPService = sm.repo.AutoPRepo()
+func (sm *serviceManager) AutoPartService() service.AutoPartService {
+	autoPartServiceOnece.Do(func() {
+		autoPartRepo := sm.repo.AutoPartRepo()                     // Получаем экземпляр репозитория
+		autoPartService = service.NewAutoPartService(autoPartRepo) // Используем его для создания сервиса
 	})
 
-	return autoPService
+	return autoPartService
 }
 
 func (sm *serviceManager) AuthService() service.AuthService {
