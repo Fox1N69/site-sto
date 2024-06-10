@@ -5,6 +5,7 @@ import Header from "@components/Header/Header.astro";
 import AboutUS from "@components/Sections/AboutUS.astro";
 import Services from "@components/Sections/Services.astro";
 import Promotion from "@components/Sections/Promotion.astro";
+import Map from "@components/Map/Map.astro";
 import Feedback from "@components/Sections/Feedback.astro";
 import Footer from "@components/Footer/Footer.astro";
 
@@ -21,7 +22,7 @@ export const prerender = true;
       <div class="main__content flex flex-col items-center gap-9">
         <img
           src="title.svg"
-          alt="Heading"
+          alt="Логотип для заголовка"
           loading="eager"
           decoding="async"
           class="w-[568px] h-[57px]"
@@ -34,6 +35,7 @@ export const prerender = true;
     <Services />
     <Promotion />
     <Feedback />
+    <Map />
     <Footer />
   </main>
 </Layout>
