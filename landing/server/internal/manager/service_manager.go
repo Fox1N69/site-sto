@@ -24,10 +24,14 @@ func NewServiceManager(infra infra.Infra) ServiceManager {
 }
 
 var (
-	authServiceOnce   sync.Once
-	authService       service.AuthService
+	authServiceOnce sync.Once
+	authService     service.AuthService
+
 	autoPServiceOnece sync.Once
 	autoPService      service.AutoPService
+
+	basketServiceOnce sync.Once
+	basketService     service.BasketService
 )
 
 func (sm *serviceManager) AutoPService() service.AutoPService {
@@ -44,4 +48,12 @@ func (sm *serviceManager) AuthService() service.AuthService {
 	})
 
 	return authService
+}
+
+func (sm *serviceManager) BasketService() service.BasketService {
+	basketServiceOnce.Do(func() {
+		basketService = sm.repo.BasketRepo()
+	})
+
+	return basketService
 }

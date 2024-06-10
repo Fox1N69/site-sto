@@ -10,6 +10,7 @@ import (
 type RepoManager interface {
 	AuthRepo() repo.AuthRepo
 	AutoPRepo() repo.AutoPRepo
+	BasketRepo() repo.BasketRepo
 }
 
 type repoManager struct {
@@ -21,10 +22,12 @@ func NewRepoManager(infra infra.Infra) RepoManager {
 }
 
 var (
-	authRepoOnce  sync.Once
-	authRepo      repo.AuthRepo
-	autoPRepoOnce sync.Once
-	autoPRepo     repo.AutoPRepo
+	authRepoOnce   sync.Once
+	authRepo       repo.AuthRepo
+	autoPRepoOnce  sync.Once
+	autoPRepo      repo.AutoPRepo
+	basketRepoOnce sync.Once
+	basketRepo     repo.BasketRepo
 )
 
 func (rm *repoManager) AutoPRepo() repo.AutoPRepo {
@@ -41,4 +44,12 @@ func (rm *repoManager) AuthRepo() repo.AuthRepo {
 	})
 
 	return authRepo
+}
+
+func (rm *repoManager) BasketRepo() repo.BasketRepo {
+	basketRepoOnce.Do(func() {
+		basketRepo = repo.NewBasketRepo(rm.infra.GormDB())
+	})
+
+	return basketRepo
 }
