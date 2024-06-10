@@ -18,9 +18,9 @@ type User struct {
 	Password    string `json:"password"`
 	FIO         string `json:"fio"`
 	Email       string `json:"email" gorm:"unique"`
-	Role        string `json:"role" gorm:"defult:'user'"`
+	Role        string `json:"role" gorm:"default:'user'"`
 	PhoneNumber string `json:"phone_number"`
-	Basket      Basket `gorm:"foreignKey:UserID"`
+	Basket      *Basket `gorm:"foreignKey:UserID"`
 }
 
 type Login struct {
