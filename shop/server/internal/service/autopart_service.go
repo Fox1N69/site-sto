@@ -1,6 +1,7 @@
 package service
 
 import (
+	"errors"
 	"shop-server/internal/model"
 	"shop-server/internal/repo"
 )
@@ -11,6 +12,8 @@ type AutoPartService interface {
 	GetAutoPartByID(id uint) (*model.AutoPart, error)
 	UpdateAutoPart(autoPart *model.AutoPart) error
 	DeleteAutoPart(id uint) error
+	CheckStock(id uint) (int, error)
+	ReduceStock(id uint, quantity int) error
 }
 
 type autoPartService struct {
@@ -43,4 +46,29 @@ func (s *autoPartService) UpdateAutoPart(autoPart *model.AutoPart) error {
 
 func (s *autoPartService) DeleteAutoPart(id uint) error {
 	return s.autoPartRepo.Delete(id)
+}
+
+func (s *autoPartService) CheckStock(id uint) (int, error) {
+	stock, err := s.autoPartRepo.GetStock(id)
+	if err != nil {
+		return 0, err
+	}
+	if stock > 0 {
+		return int(stock), nil
+	}
+
+	return int(stock), nil
+}
+
+func (s *autoPartService) ReduceStock(id uint, quantity int) error {
+	stock, err := s.autoPartRepo.GetStock(id)
+	if err != nil {
+		return err
+	}
+	stockUint := uint(stock) // Преобразование типа int в uint
+	if stockUint < uint(quantity) {
+		return errors.New("not enough stock")
+	}
+	newStock := int(stockUint - uint(quantity)) // Преобразование обратно в int
+	return s.autoPartRepo.UpdateStock(id, newStock)
 }
