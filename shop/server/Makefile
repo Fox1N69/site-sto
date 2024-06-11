@@ -2,7 +2,7 @@ dep:
 	go mod tidy
 
 run:
-	go run app/main.go
+	go run cmd/app/main.go
 
 test:
 	go test -short -cover ./...
