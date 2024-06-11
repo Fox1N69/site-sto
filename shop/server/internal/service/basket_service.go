@@ -7,6 +7,7 @@ import (
 
 type BasketService interface {
 	Create(user model.User) error
+	AddItem(userID uint, item model.BasketItem) error
 }
 
 type basketService struct {
@@ -27,4 +28,8 @@ func (s *basketService) Create(user model.User) error {
 	}
 
 	return nil
+}
+
+func (s *basketService) AddItem(userID uint, item model.BasketItem) error {
+	return s.basketRepo.AddItemToBasket(userID, item)
 }

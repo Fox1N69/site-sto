@@ -57,17 +57,14 @@ func (r *basketRepo) AddItemToBasket(userID uint, item model.BasketItem) error {
 	return r.db.Create(&item).Error
 }
 
-// Обновление информации о товаре в корзине
 func (r *basketRepo) UpdateBasketItem(itemID uint, newItem model.BasketItem) error {
 	return r.db.Model(&model.BasketItem{}).Where("id = ?", itemID).Updates(newItem).Error
 }
 
-// Удаление  товара  из корзины по ID
 func (r *basketRepo) RemoveItemFromBasket(itemID uint) error {
 	return r.db.Delete(&model.BasketItem{}, itemID).Error
 }
 
-// Очистка корзины пользователя, удаляя все товары
 func (r *basketRepo) ClearBasket(basketID uint) error {
 	return r.db.Where("basket_id = ?", basketID).Delete(&model.BasketItem{}).Error
 }
