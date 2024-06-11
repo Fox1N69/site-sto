@@ -9,6 +9,7 @@ type ShopCustom struct {
 	DeletedAt sql.NullTime `json:"deleted_at" gorm:"index"`
 }
 
+
 type Basket struct {
 	ShopCustom
 	UserID      uint         `json:"user_id" gorm:"unique"`

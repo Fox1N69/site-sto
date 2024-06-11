@@ -110,7 +110,7 @@ func (h *authUserHandler) Login(c *gin.Context) {
 		return
 	}
 
-	expired, token := token.NewToken(h.infra.Config().GetString("secret.key")).GenerateToken(data.Username, "USER")
+	expired, token := token.NewToken(h.infra.Config().GetString("secret.key")).GenerateToken(data.Username, "admin")
 	response.New(c).Token(expired, token)
 }
 

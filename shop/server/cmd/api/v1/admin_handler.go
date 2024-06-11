@@ -4,24 +4,45 @@ import (
 	"net/http"
 	"shop-server/common/http/response"
 	"shop-server/infra"
+	"shop-server/internal/model"
+	"shop-server/internal/service"
 
 	"github.com/gin-gonic/gin"
 )
 
 type AdminHandler interface {
 	Test(c *gin.Context)
+	CreateAutoPart(c *gin.Context)
 }
 
 type adminHandler struct {
-	infra infra.Infra
+	service service.AutoPartService
+	infra   infra.Infra
 }
 
-func NewAdminHandler(infra infra.Infra) AdminHandler {
+func NewAdminHandler(infra infra.Infra, autopartService service.AutoPartService) AdminHandler {
 	return &adminHandler{
-		infra: infra,
+		infra:   infra,
+		service: autopartService,
 	}
 }
 
 func (h *adminHandler) Test(c *gin.Context) {
+	response.New(c).Write(http.StatusOK, "success")
+}
+
+func (h *adminHandler) CreateAutoPart(c *gin.Context) {
+	data := new(model.AutoPart)
+
+	if err := c.BindJSON(data); err != nil {
+		response.New(c).Error(http.StatusBadRequest, err)
+		return
+	}
+
+	if err := h.service.Create(data); err != nil {
+		response.New(c).Error(http.StatusInternalServerError, err)
+		return
+	}
+
 	response.New(c).Write(http.StatusOK, "success")
 }

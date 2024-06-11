@@ -14,16 +14,17 @@ type GormCustom struct {
 
 type User struct {
 	GormCustom
-	Username    string `json:"username" gorm:"unique"`
-	Password    string `json:"password"`
-	FIO         string `json:"fio"`
-	Email       string `json:"email" gorm:"unique"`
-	Role        string `json:"role" gorm:"default:'user'"`
-	PhoneNumber string `json:"phone_number"`
+	Username    string  `json:"username" gorm:"unique"`
+	Password    string  `json:"password"`
+	FIO         string  `json:"fio"`
+	Email       string  `json:"email" gorm:"unique"`
+	Role        string  `json:"role" gorm:"default:'user'"`
+	PhoneNumber string  `json:"phone_number"`
 	Basket      *Basket `gorm:"foreignKey:UserID"`
 }
 
 type Login struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
+	Role     string `json:"role"`
 }

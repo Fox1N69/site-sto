@@ -47,12 +47,13 @@ func (c *server) handlers() {
 
 func (c *server) v1() {
 	authHandler := v1.NewAuthHandler(c.service.AuthService(), c.infra, c.service.BasketService())
-	adminHandler := v1.NewAdminHandler(c.infra)
+	adminHandler := v1.NewAdminHandler(c.infra, c.service.AutoPartService())
 
 	admin := c.gin.Group("/admin")
 	{
 		admin.Use(c.middleware.Role("admin"))
 		admin.GET("/test", adminHandler.Test)
+		admin.POST("/create", adminHandler.CreateAutoPart)
 	}
 
 	v1 := c.gin.Group("v1/account")

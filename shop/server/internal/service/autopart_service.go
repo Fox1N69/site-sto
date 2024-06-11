@@ -6,11 +6,11 @@ import (
 )
 
 type AutoPartService interface {
+	Create(autoPart *model.AutoPart) error
 	GetAllAutoParts() ([]model.AutoPart, error)
 	GetAutoPartByID(id uint) (*model.AutoPart, error)
 	UpdateAutoPart(autoPart *model.AutoPart) error
 	DeleteAutoPart(id uint) error
-	// Можете добавить дополнительные методы по необходимости
 }
 
 type autoPartService struct {
@@ -19,6 +19,10 @@ type autoPartService struct {
 
 func NewAutoPartService(autoPartRepo repo.AutoPartRepo) AutoPartService {
 	return &autoPartService{autoPartRepo: autoPartRepo}
+}
+
+func (s *autoPartService) Create(autoPart *model.AutoPart) error {
+	return s.autoPartRepo.Create(*autoPart)
 }
 
 func (s *autoPartService) GetAllAutoParts() ([]model.AutoPart, error) {
