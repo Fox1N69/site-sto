@@ -21,7 +21,7 @@ type BasketItem struct {
 	Basket     Basket   `gorm:"foreignKey:BasketID"`
 	AutoPartID uint     `json:"autopart_id"`
 	AutoPart   AutoPart `gorm:"foreignKey:AutoPartID"`
-	Quantity   uint      `json:"quantity"`
+	Quantity   uint     `json:"quantity"`
 }
 
 type AutoPart struct {
@@ -29,6 +29,7 @@ type AutoPart struct {
 	Name         string         `json:"name"`
 	Price        int            `json:"price"`
 	Img          string         `json:"img"`
+	ModelName    string         `json:"model_name"`
 	CategoryID   uint           `json:"category_id"`
 	Category     Category       `gorm:"foreignKey:CategoryID"`
 	BrandID      uint           `json:"brand_id"`
