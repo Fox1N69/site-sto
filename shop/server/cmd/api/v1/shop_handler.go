@@ -1,21 +1,43 @@
 package v1
 
 import (
+	"net/http"
+	"shop-server/common/http/response"
 	"shop-server/infra"
 	"shop-server/internal/service"
+
+	"github.com/gin-gonic/gin"
 )
 
 type ShopHandler interface {
+	GetAllAutoPart(c *gin.Context)
 }
 
 type shopHandler struct {
-	basketService service.BasketService
-	infra         infra.Infra
+	basketService   service.BasketService
+	autopartService service.AutoPartService
+	infra           infra.Infra
 }
 
-func NewShopHandler(basketService service.BasketService, infra infra.Infra) ShopHandler {
+func NewShopHandler(basketService service.BasketService, autopartService service.AutoPartService, infra infra.Infra) ShopHandler {
 	return &shopHandler{
-		basketService: basketService,
-		infra:         infra,
+		basketService:   basketService,
+		autopartService: autopartService,
+		infra:           infra,
 	}
+}
+
+func (h *shopHandler) GetAllAutoPart(c *gin.Context) {
+	autoparts, err := h.autopartService.GetAllAutoParts()
+	if err != nil {
+		response.New(c).Write(http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	// Загрузка связанных категорий и брендов
+	for i := range autoparts {
+		h.infra.GormDB().Preload("Category").Preload("Brand").Find(&autoparts[i])
+	}
+
+	c.JSON(http.StatusOK, autoparts)
 }

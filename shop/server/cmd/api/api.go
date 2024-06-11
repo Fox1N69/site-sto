@@ -51,6 +51,12 @@ func (c *server) v1() {
 	categoryHandler := v1.NewCategoryHandler(c.service.CategoryService())
 	brandHandler := v1.NewBrandHandler(c.service.BrandService())
 	basketHnalder := v1.NewBasketHandler(c.service.BasketService())
+	shopHandler := v1.NewShopHandler(c.service.BasketService(), c.service.AutoPartService(), c.infra)
+
+	shop := c.gin.Group("/shop")
+	{
+		shop.GET("/autoparts", shopHandler.GetAllAutoPart)
+	}
 
 	admin := c.gin.Group("/admin")
 	{
