@@ -45,3 +45,4 @@ func (h *adminHandler) CreateAutoPart(c *gin.Context) {
 
 	c.JSON(http.StatusCreated, "autopart create success")
 }
+

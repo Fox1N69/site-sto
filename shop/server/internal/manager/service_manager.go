@@ -64,7 +64,7 @@ func (sm *serviceManager) AuthService() service.AuthService {
 func (sm *serviceManager) BasketService() service.BasketService {
 	basketServiceOnce.Do(func() {
 		basketRepo = sm.repo.BasketRepo()
-		basketService = service.NewBasketService(basketRepo)
+		basketService = service.NewBasketService(basketRepo, autoPartRepo)
 	})
 
 	return basketService

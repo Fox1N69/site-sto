@@ -1,6 +1,7 @@
 package service
 
 import (
+	"errors"
 	"shop-server/internal/model"
 	"shop-server/internal/repo"
 )
@@ -11,11 +12,12 @@ type BasketService interface {
 }
 
 type basketService struct {
-	basketRepo repo.BasketRepo
+	basketRepo   repo.BasketRepo
+	autoPartRepo repo.AutoPartRepo
 }
 
-func NewBasketService(basketRepo repo.BasketRepo) BasketService {
-	return &basketService{basketRepo: basketRepo}
+func NewBasketService(basketRepo repo.BasketRepo, autoPartRepo repo.AutoPartRepo) BasketService {
+	return &basketService{basketRepo: basketRepo, autoPartRepo: autoPartRepo}
 }
 
 func (s *basketService) Create(user model.User) error {
@@ -32,4 +34,28 @@ func (s *basketService) Create(user model.User) error {
 
 func (s *basketService) AddItem(userID uint, item model.BasketItem) error {
 	return s.basketRepo.AddItemToBasket(userID, item)
+}
+
+func (s *basketService) AddItemToBasket(userID uint, item model.BasketItem) error {
+	// Проверить существование AutoPart и его наличие на складе
+	exists, err := s.autoPartRepo.Exists(item.AutoPartID)
+	if err != nil {
+		return err
+	}
+	if !exists {
+		return errors.New("auto part does not exist")
+	}
+
+	stock, err := s.autoPartRepo.GetStock(item.AutoPartID)
+	if err != nil {
+		return err
+	}
+	if stock < item.Quantity {
+		return errors.New("insufficient stock")
+	}
+
+	if err := s.basketRepo.AddItemToBasket(userID, item); err != nil {
+		return err
+	}
+	return s.autoPartRepo.UpdateStock(item.AutoPartID, -int(item.Quantity))
 }
