@@ -11,6 +11,8 @@ type CategoryRepo interface {
 	GetCategoryByID(categoryID uint) (*model.Category, error)
 	UpdateCategory(category *model.Category) error
 	DeleteCategory(categoryID uint) error
+	AssociateCategoryToBrand(categoryID, BrandID uint) error
+	RemoveBrandFromCategory(categoryID, brandID uint) error
 }
 
 type categoryRepo struct {
@@ -37,4 +39,12 @@ func (cp *categoryRepo) UpdateCategory(category *model.Category) error {
 
 func (cp *categoryRepo) DeleteCategory(categoryID uint) error {
 	return cp.db.Delete(categoryID).Error
+}
+
+func (cp *categoryRepo) AssociateCategoryToBrand(categoryID, BrandID uint) error {
+	return nil
+}
+
+func (cp *categoryRepo) RemoveBrandFromCategory(categoryID, brandID uint) error {
+	return nil
 }
