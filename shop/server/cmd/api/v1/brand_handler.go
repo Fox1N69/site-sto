@@ -10,6 +10,7 @@ import (
 )
 
 type BrandHandler interface {
+	CreateBrand(c *gin.Context)
 }
 
 type brandHandler struct {

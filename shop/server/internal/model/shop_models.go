@@ -9,7 +9,6 @@ type ShopCustom struct {
 	DeletedAt sql.NullTime `json:"deleted_at" gorm:"index"`
 }
 
-
 type Basket struct {
 	ShopCustom
 	UserID      uint         `json:"user_id" gorm:"unique"`
@@ -33,7 +32,7 @@ type AutoPart struct {
 	Category     Category       `gorm:"foreignKey:CategoryID"`
 	BrandID      uint           `json:"brand_id"`
 	Brand        Brand          `gorm:"foreignKey:BrandID"`
-	AutoPartInfo []AutoPartInfo `gorm:"foreignKey:AutoPartID"`
+	AutoPartInfo []AutoPartInfo `json:"auto_part_info" gorm:"foreignKey:AutoPartID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 }
 
 type AutoPartInfo struct {

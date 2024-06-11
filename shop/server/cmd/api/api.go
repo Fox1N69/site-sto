@@ -49,12 +49,18 @@ func (c *server) v1() {
 	authHandler := v1.NewAuthHandler(c.service.AuthService(), c.infra, c.service.BasketService())
 	adminHandler := v1.NewAdminHandler(c.infra, c.service.AutoPartService())
 	categoryHandler := v1.NewCategoryHandler(c.service.CategoryService())
+	brandHandler := v1.NewBrandHandler(c.service.BrandService())
 
 	admin := c.gin.Group("/admin")
 	{
 		admin.Use(c.middleware.Role("admin"))
 		admin.GET("/test", adminHandler.Test)
 		admin.POST("/create", adminHandler.CreateAutoPart)
+
+		brand := admin.Group("/brand")
+		{
+			brand.POST("/create", brandHandler.CreateBrand)
+		}
 
 		category := admin.Group("/category")
 		{

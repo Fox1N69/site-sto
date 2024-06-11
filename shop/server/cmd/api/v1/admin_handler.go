@@ -32,17 +32,16 @@ func (h *adminHandler) Test(c *gin.Context) {
 }
 
 func (h *adminHandler) CreateAutoPart(c *gin.Context) {
-	data := new(model.AutoPart)
-
-	if err := c.BindJSON(data); err != nil {
-		response.New(c).Error(http.StatusBadRequest, err)
+	var autoPart model.AutoPart
+	if err := c.ShouldBindJSON(&autoPart); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	if err := h.service.Create(data); err != nil {
-		response.New(c).Error(http.StatusInternalServerError, err)
+	if err := h.service.Create(&autoPart); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	response.New(c).Write(http.StatusOK, "success")
+	c.JSON(http.StatusCreated, "autopart create success")
 }

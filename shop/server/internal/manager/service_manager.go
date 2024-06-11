@@ -12,6 +12,7 @@ type ServiceManager interface {
 	AutoPartService() service.AutoPartService
 	BasketService() service.BasketService
 	CategoryService() service.CategoryService
+	BrandService() service.BrandService
 }
 
 type serviceManager struct {
