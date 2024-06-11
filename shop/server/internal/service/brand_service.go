@@ -5,7 +5,7 @@ import (
 	"shop-server/internal/repo"
 )
 
-type BrendService interface {
+type BrandService interface {
 	CreateBrand(brand *model.Brand) error
 	GetBrandByID(id uint) (*model.Brand, error)
 	UpdateBrand(brand *model.Brand) error
@@ -18,7 +18,7 @@ type brandService struct {
 	brandRepo repo.BrandRepo
 }
 
-func NewBrandService(brandRepo repo.BrandRepo) BrendService {
+func NewBrandService(brandRepo repo.BrandRepo) BrandService {
 	return &brandService{brandRepo: brandRepo}
 }
 

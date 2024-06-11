@@ -38,6 +38,9 @@ var (
 
 	categoryServiceOnce sync.Once
 	categoryService     service.CategoryService
+
+	brandServiceOnce sync.Once
+	brandService     service.BrandService
 )
 
 func (sm *serviceManager) AutoPartService() service.AutoPartService {
@@ -73,4 +76,13 @@ func (sm *serviceManager) CategoryService() service.CategoryService {
 	})
 
 	return categoryService
+}
+
+func (sm *serviceManager) BrandService() service.BrandService {
+	brandServiceOnce.Do(func() {
+		brandRepo = sm.repo.BrandRepo()
+		brandService = service.NewBrandService(brandRepo)
+	})
+
+	return brandService
 }
