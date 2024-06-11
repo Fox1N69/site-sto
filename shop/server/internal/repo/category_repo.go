@@ -8,9 +8,9 @@ import (
 
 type CategoryRepo interface {
 	CreateCategory(newCategory *model.Category) error
-	GetCategoryByID(categoryID uint) (*model.Category, error)
+	GetCategoryByID(id uint) (*model.Category, error)
 	UpdateCategory(category *model.Category) error
-	DeleteCategory(categoryID uint) error
+	DeleteCategory(id uint) error
 	AssociateCategoryToBrand(categoryID, BrandID uint) error
 	RemoveBrandFromCategory(categoryID, brandID uint) error
 }
@@ -25,26 +25,34 @@ func NewCategoryRepo(db *gorm.DB) CategoryRepo {
 	}
 }
 
-func (cp *categoryRepo) CreateCategory(newCategory *model.Category) error {
-	return cp.db.Create(newCategory).Error
+func (cr *categoryRepo) CreateCategory(newCategory *model.Category) error {
+	return cr.db.Create(newCategory).Error
 }
 
-func (cp *categoryRepo) GetCategoryByID(categoryID uint) (*model.Category, error) {
-	return nil, nil
+func (repo *categoryRepo) GetCategoryByID(id uint) (*model.Category, error) {
+	var category model.Category
+
+	err := repo.db.Preload("Brand").First(&category, id).Error
+
+	return &category, err
 }
 
-func (cp *categoryRepo) UpdateCategory(category *model.Category) error {
-	return nil
+func (cr *categoryRepo) UpdateCategory(category *model.Category) error {
+	return cr.db.Save(category).Error
 }
 
-func (cp *categoryRepo) DeleteCategory(categoryID uint) error {
-	return cp.db.Delete(categoryID).Error
+func (cr *categoryRepo) DeleteCategory(id uint) error {
+	return cr.db.Delete(id).Error
 }
 
-func (cp *categoryRepo) AssociateCategoryToBrand(categoryID, BrandID uint) error {
-	return nil
+func (cr *categoryRepo) AssociateCategoryToBrand(categoryID, brandID uint) error {
+	category := &model.Category{ShopCustom: model.ShopCustom{ID: categoryID}}
+	brand := &model.Brand{ShopCustom: model.ShopCustom{ID: brandID}}
+	return cr.db.Model(category).Association("Brands").Append(brand)
 }
 
-func (cp *categoryRepo) RemoveBrandFromCategory(categoryID, brandID uint) error {
-	return nil
+func (cr *categoryRepo) RemoveBrandFromCategory(categoryID, brandID uint) error {
+	category := &model.Category{ShopCustom: model.ShopCustom{ID: categoryID}}
+	brand := &model.Brand{ShopCustom: model.ShopCustom{ID: brandID}}
+	return cr.db.Model(category).Association("Brands").Delete(brand)
 }
