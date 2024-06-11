@@ -50,6 +50,7 @@ func (c *server) v1() {
 	adminHandler := v1.NewAdminHandler(c.infra, c.service.AutoPartService())
 	categoryHandler := v1.NewCategoryHandler(c.service.CategoryService())
 	brandHandler := v1.NewBrandHandler(c.service.BrandService())
+	basketHnalder := v1.NewBasketHandler(c.service.BasketService())
 
 	admin := c.gin.Group("/admin")
 	{
@@ -79,6 +80,7 @@ func (c *server) v1() {
 		user := v1.Group("/user")
 		user.Use(c.middleware.AUTH())
 		{
+			user.POST("/:user_id/basket/items", basketHnalder.AddItemToBasket)
 			user.DELETE("/delete", authHandler.Delete)
 		}
 	}
