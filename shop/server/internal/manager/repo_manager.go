@@ -12,6 +12,7 @@ type RepoManager interface {
 	AutoPartRepo() repo.AutoPartRepo
 	BasketRepo() repo.BasketRepo
 	CategoryRepo() repo.CategoryRepo
+	BrandRepo() repo.BrandRepo
 }
 
 type repoManager struct {
@@ -34,6 +35,9 @@ var (
 
 	categoryRepoOnce sync.Once
 	categoryRepo     repo.CategoryRepo
+
+	brandRepoOnce sync.Once
+	brandRepo     repo.BrandRepo
 )
 
 func (rm *repoManager) AutoPartRepo() repo.AutoPartRepo {
@@ -65,4 +69,11 @@ func (rm *repoManager) CategoryRepo() repo.CategoryRepo {
 		categoryRepo = repo.NewCategoryRepo(rm.infra.GormDB())
 	})
 	return categoryRepo
+}
+
+func (rm *repoManager) BrandRepo() repo.BrandRepo {
+	brandRepoOnce.Do(func() {
+		brandRepo = repo.NewBrandRepo(rm.infra.GormDB())
+	})
+	return brandRepo
 }
