@@ -10,7 +10,9 @@ type BrandRepo interface {
 	CreateBrand(brand *model.Brand) error
 	GetBrandByID(id uint) (*model.Brand, error)
 	UpdateBrand(brand *model.Brand) error
-	DeleteBrand(id uint) error
+	DeleteBrand(brandID uint) error
+	AssociateCategoryFromBrand(brandID uint, categoryID uint) error
+	RemoveCategoryFromBrand(brandID uint, categoryID uint) error
 }
 
 type brandRepo struct {
@@ -22,17 +24,32 @@ func NewBrandRepo(db *gorm.DB) BrandRepo {
 }
 
 func (br *brandRepo) CreateBrand(brand *model.Brand) error {
-	return nil
+	return br.db.Create(brand).Error
 }
 
 func (br *brandRepo) GetBrandByID(id uint) (*model.Brand, error) {
-	return nil, nil
+	var brand model.Brand
+	err := br.db.First(&brand, id).Error
+	return &brand, err
 }
 
 func (br *brandRepo) UpdateBrand(brand *model.Brand) error {
-	return nil
+	return br.db.Save(brand).Error
 }
 
-func (br *brandRepo) DeleteBrand(id uint) error {
-	return nil
+func (repo *brandRepo) DeleteBrand(brandID uint) error {
+	brand := &model.Brand{ShopCustom: model.ShopCustom{ID: brandID}}
+	return repo.db.Delete(brand).Error
+}
+
+func (br *brandRepo) AssociateCategoryFromBrand(brandID uint, categoryID uint) error {
+	brand := &model.Brand{ShopCustom: model.ShopCustom{ID: brandID}}
+	category := &model.Category{ShopCustom: model.ShopCustom{ID: categoryID}}
+	return br.db.Model(brand).Association("Categories").Append(category)
+}
+
+func (br *brandRepo) RemoveCategoryFromBrand(brandID uint, categoryID uint) error {
+	brand := &model.Brand{ShopCustom: model.ShopCustom{ID: brandID}}
+	category := &model.Category{ShopCustom: model.ShopCustom{ID: categoryID}}
+	return br.db.Model(brand).Association("Categories").Delete(category)
 }
