@@ -6,19 +6,12 @@ import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { TrashIcon } from "../icons/accounts/trash-icon";
 import { ProductsIcon } from "../icons/sidebar/products-icon";
+import { AuthProvider, useAuth } from "../context/authContext";
 
 export const Header = () => {
   const route = useRouter();
-  const [isAuth, setIsAuth] = useState(false);
 
-  useEffect(() => {
-    const token = Cookies.get("token");
-    if (token) {
-      setIsAuth(true);
-    } else {
-      setIsAuth(false);
-    }
-  }, []);
+  const { isAuth } = useAuth();
 
   const handler = () => {
     route.push("/auth/login");
