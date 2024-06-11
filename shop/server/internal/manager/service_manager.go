@@ -11,6 +11,7 @@ type ServiceManager interface {
 	AuthService() service.AuthService
 	AutoPartService() service.AutoPartService
 	BasketService() service.BasketService
+	CategoryService() service.CategoryService
 }
 
 type serviceManager struct {
@@ -34,6 +35,9 @@ var (
 
 	basketServiceOnce sync.Once
 	basketService     service.BasketService
+
+	categoryServiceOnce sync.Once
+	categoryService     service.CategoryService
 )
 
 func (sm *serviceManager) AutoPartService() service.AutoPartService {
@@ -60,4 +64,13 @@ func (sm *serviceManager) BasketService() service.BasketService {
 	})
 
 	return basketService
+}
+
+func (sm *serviceManager) CategoryService() service.CategoryService {
+	categoryServiceOnce.Do(func() {
+		categoryRepo = sm.repo.CategoryRepo()
+		categoryService = service.NewCategoryService(categoryRepo)
+	})
+
+	return categoryService
 }
