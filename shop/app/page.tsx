@@ -8,6 +8,7 @@ import axios from "axios";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { AuthProvider } from "@/components/context/authContext";
+import { Navbar } from "@nextui-org/navbar";
 
 export default function Home() {
   const [autoParts, setAutoParts] = useState<AutoPart[]>([]);
