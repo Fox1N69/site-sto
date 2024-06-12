@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { TrashIcon } from "../icons/accounts/trash-icon";
 import { ProductsIcon } from "../icons/sidebar/products-icon";
-import { AuthProvider, useAuth } from "../context/authContext";
+import { useAuth } from "../context/authContext";
 
 export const Header = () => {
   const route = useRouter();
@@ -17,7 +17,7 @@ export const Header = () => {
     route.push("/auth/login");
   };
 
-  const handlerLogout = () => {
+  const handlerLogout = async () => {
     Cookies.remove("token");
     route.push("/");
   };
