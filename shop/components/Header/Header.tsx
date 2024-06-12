@@ -17,6 +17,11 @@ export const Header = () => {
     route.push("/auth/login");
   };
 
+  const handlerLogout = () => {
+    Cookies.remove("token");
+    route.push("/");
+  };
+
   return (
     <header className="flex justify-between w-[100%] items-center">
       <Image src={"/next.svg"} alt={"logo"} width={100} height={100} />
@@ -31,6 +36,7 @@ export const Header = () => {
         className="w-[600px]"
         variant="bordered"
       />
+      <Button onClick={handlerLogout}>LogOUt</Button>
       {!isAuth && (
         <Button
           onClick={handler}

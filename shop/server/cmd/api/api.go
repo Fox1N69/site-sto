@@ -81,6 +81,7 @@ func (c *server) v1() {
 		{
 			auth.POST("/register", authHandler.Register)
 			auth.POST("/login", authHandler.Login)
+			auth.POST("/logout", authHandler.Logout)
 		}
 
 		user := v1.Group("/user")

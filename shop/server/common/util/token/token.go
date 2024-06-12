@@ -51,3 +51,4 @@ func (t *token) ValidateToken(encodedToken string) (*jwt.Token, error) {
 		return []byte(t.secretKey), nil
 	})
 }
+

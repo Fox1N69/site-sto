@@ -24,6 +24,7 @@ type AuthUserHandler interface {
 	Register(c *gin.Context)
 	Login(c *gin.Context)
 	Delete(c *gin.Context)
+	Logout(c *gin.Context)
 }
 
 type authUserHandler struct {
@@ -132,4 +133,11 @@ func (h *authUserHandler) Delete(c *gin.Context) {
 	}
 
 	response.New(c).Error(http.StatusBadRequest, errors.New("id: not found"))
+}
+
+func (h *authUserHandler) Logout(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{
+		"token":   "",
+		"message": "User logged out successfully.",
+	})
 }
