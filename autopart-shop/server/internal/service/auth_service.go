@@ -11,7 +11,7 @@ type AuthService interface {
 	Login(username string) (string, error)
 	CheckID(id int) bool
 	Delete(id int) error
-	GetUserByID(id int) (*model.User, error)
+	GetUserByID(id uint) (string, error)
 }
 
 type authService struct {
@@ -22,7 +22,7 @@ func NewAuthService(authRepo repo.AuthRepo) AuthService {
 	return &authService{authRepo: authRepo}
 }
 
-func (s *authService) GetUserByID(id int) (*model.User, error) {
+func (s *authService) GetUserByID(id uint) (string, error) {
 	return s.authRepo.GetUserByID(id)
 }
 

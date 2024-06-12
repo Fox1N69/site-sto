@@ -27,7 +27,7 @@ type AuthUserHandler interface {
 	Login(c *gin.Context)
 	Delete(c *gin.Context)
 	Logout(c *gin.Context)
-	GetUserByID(c *gin.Context)
+	GetUsernameByID(c *gin.Context)
 }
 
 type authUserHandler struct {
@@ -46,16 +46,24 @@ func NewAuthHandler(authService service.AuthService, infra infra.Infra, basketSe
 	}
 }
 
-func (h *authUserHandler) GetUserByID(c *gin.Context) {
-	id, err := strconv.Atoi(c.Query("id"))
-	if id < 1 || err != nil {
-		response.New(c).Error(http.StatusBadRequest, errors.New("id must be filled and valid number"))
+// GetUserByID retrieves a user by their ID.
+func (h *authUserHandler) GetUsernameByID(c *gin.Context) {
+	id := c.Param("id")
+
+	if id == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "ID is empty"})
 		return
 	}
 
-	user, err := h.authService.GetUserByID(id)
+	userID, err := strconv.ParseUint(id, 10, 0)
 	if err != nil {
-		response.New(c).Error(http.StatusBadRequest, err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	user, err := h.authService.GetUserByID(uint(userID))
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
 		return
 	}
 

@@ -89,7 +89,7 @@ func (c *server) v1() {
 		{
 			user.POST("/:user_id/basket/items", basketHnalder.AddItemToBasket)
 			user.DELETE("/delete", authHandler.Delete)
-			user.GET("/:user_id", authHandler.GetUserByID)
+			user.GET("/:id", authHandler.GetUsernameByID)
 		}
 	}
 }
