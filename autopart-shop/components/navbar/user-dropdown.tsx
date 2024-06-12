@@ -15,9 +15,10 @@ import { ThemeSwitch } from "../theme-switch";
 import { UserInfo } from "os";
 import { User } from "@/types";
 import axios from "axios";
+import { fetchData } from "next-auth/client/_utils";
 
 interface Props {
-  user: User;
+  user: string;
 }
 
 export const UserDropdown: React.FC<Props> = ({ user }) => {
@@ -29,30 +30,19 @@ export const UserDropdown: React.FC<Props> = ({ user }) => {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchUserData = async () => {
       try {
-        const token = Cookies.get("token");
-
-        const config = {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        };
-
-        const response = await axios.get<string>(
-          `http://localhost:4000/v1/account/user/${user.id}`,
-          config
+        const response = await axios.get(
+          `http://localhost:4000/v1/account/user/${user}`
         );
-        const data = response.data;
-
-        setUsername(data);
+        setUsername(response.data.username);
       } catch (error) {
-        console.error("Error fetching auto parts data:", error);
+        console.error("Error fetching user data:", error);
       }
     };
 
-    fetchData();
-  }, []);
+    fetchUserData();
+  }, [user]);
 
   return (
     <Dropdown>

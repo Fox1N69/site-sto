@@ -30,14 +30,13 @@ import {
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import { UserDropdown } from "./user-dropdown";
+import { useSession } from "next-auth/react";
+import { Session } from "inspector";
 
 export const Navbar = () => {
-  const [isAuth, setIsAuth] = useState(false);
+  const session = useSession();
 
-  useEffect(() => {
-    const token = Cookies.get("token");
-    setIsAuth(!!token);
-  }, []);
+  console.log(session);
 
   const searchInput = (
     <Input
@@ -96,10 +95,10 @@ export const Navbar = () => {
         </NavbarItem>
         <NavbarItem className="hidden lg:flex">{searchInput}</NavbarItem>
         <NavbarItem className="hidden md:flex">
-          {isAuth ? (
-            <UserDropdown user={{ id: 11 }} />
+          {session.data ? (
+            <UserDropdown user={session.data.user.id} />
           ) : (
-            <Button as={NextLink} href="/login">
+            <Button as={NextLink} href="/auth/login">
               Login
             </Button>
           )}
