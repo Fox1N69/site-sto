@@ -27,6 +27,7 @@ type AuthUserHandler interface {
 	Login(c *gin.Context)
 	Delete(c *gin.Context)
 	Logout(c *gin.Context)
+	GetUserByID(c *gin.Context)
 }
 
 type authUserHandler struct {
@@ -43,6 +44,22 @@ func NewAuthHandler(authService service.AuthService, infra infra.Infra, basketSe
 		basketService: basketService,
 		blacklistSrv:  blacklistService,
 	}
+}
+
+func (h *authUserHandler) GetUserByID(c *gin.Context) {
+	id, err := strconv.Atoi(c.Query("id"))
+	if id < 1 || err != nil {
+		response.New(c).Error(http.StatusBadRequest, errors.New("id must be filled and valid number"))
+		return
+	}
+
+	user, err := h.authService.GetUserByID(id)
+	if err != nil {
+		response.New(c).Error(http.StatusBadRequest, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, user)
 }
 
 func (h *authUserHandler) Register(c *gin.Context) {

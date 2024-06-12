@@ -12,8 +12,14 @@ import React from "react";
 import Cookies from "js-cookie";
 import { Switch } from "@nextui-org/switch";
 import { ThemeSwitch } from "../theme-switch";
+import { UserInfo } from "os";
+import { User } from "@/types";
 
-export const UserDropdown = () => {
+interface Props {
+  user: User;
+}
+
+export const UserDropdown: React.FC<Props> = ({ user }) => {
   const route = useRouter();
   const handlerLogout = () => {
     Cookies.remove("token");
@@ -41,7 +47,7 @@ export const UserDropdown = () => {
           className="flex flex-col justify-start w-full items-start"
         >
           <p>Авторизован как</p>
-          <p>zoey@example.com</p>
+          <p>{user.username}</p>
         </DropdownItem>
         <DropdownItem key="settings">Настройки</DropdownItem>
         <DropdownItem key="system">Система</DropdownItem>

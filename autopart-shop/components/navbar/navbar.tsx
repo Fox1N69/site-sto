@@ -60,8 +60,6 @@ export const Navbar = () => {
     />
   );
 
-  ;
-
   return (
     <NextUINavbar maxWidth="xl" position="sticky">
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
@@ -99,7 +97,7 @@ export const Navbar = () => {
         <NavbarItem className="hidden lg:flex">{searchInput}</NavbarItem>
         <NavbarItem className="hidden md:flex">
           {isAuth ? (
-            <UserDropdown />
+            <UserDropdown user={{ username: "test" }} />
           ) : (
             <Button as={NextLink} href="/login">
               Login
