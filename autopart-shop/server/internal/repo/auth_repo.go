@@ -12,7 +12,7 @@ type AuthRepo interface {
 	Login(username string) (string, error)
 	CheckID(id int) bool
 	Delete(id int) error
-	GetUserByID(id uint) (string, error)
+	GetUserByID(id uint) (*model.User, error)
 }
 
 type authRepo struct {
@@ -23,12 +23,12 @@ func NewAuthRepo(db *gorm.DB) AuthRepo {
 	return &authRepo{db: db}
 }
 
-func (r *authRepo) GetUserByID(id uint) (string, error) {
+func (r *authRepo) GetUserByID(id uint) (*model.User, error) {
 	var user model.User
 	if err := r.db.Table("users").Where("id = ?", id).First(&user).Error; err != nil {
-		return "", err
+		return nil, err
 	}
-	return user.Username, nil
+	return &user, nil
 }
 func (r *authRepo) CheckUsername(username string) bool {
 	var count int64
