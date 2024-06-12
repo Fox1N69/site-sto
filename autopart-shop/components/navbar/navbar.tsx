@@ -29,6 +29,7 @@ import {
 } from "@/components/icons";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
+import { UserDropdown } from "./user-dropdown";
 
 export const Navbar = () => {
   const [isAuth, setIsAuth] = useState(false);
@@ -59,10 +60,7 @@ export const Navbar = () => {
     />
   );
 
-  const handlerLogout = () => {
-    Cookies.remove("token");
-    setIsAuth(false);
-  };
+  ;
 
   return (
     <NextUINavbar maxWidth="xl" position="sticky">
@@ -101,7 +99,7 @@ export const Navbar = () => {
         <NavbarItem className="hidden lg:flex">{searchInput}</NavbarItem>
         <NavbarItem className="hidden md:flex">
           {isAuth ? (
-            <Button onClick={handlerLogout}>Logout</Button>
+            <UserDropdown />
           ) : (
             <Button as={NextLink} href="/login">
               Login

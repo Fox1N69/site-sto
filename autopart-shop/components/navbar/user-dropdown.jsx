@@ -4,13 +4,14 @@ import {
   DropdownItem,
   DropdownMenu,
   DropdownTrigger,
-  Navbar,
   NavbarItem,
 } from "@nextui-org/react";
 
 import { useRouter } from "next/navigation";
 import React from "react";
 import Cookies from "js-cookie";
+import { Switch } from "@nextui-org/switch";
+import { ThemeSwitch } from "../theme-switch";
 
 export const UserDropdown = () => {
   const route = useRouter();
@@ -56,7 +57,6 @@ export const UserDropdown = () => {
         >
           Выйти
         </DropdownItem>
-        <DropdownItem key="switch">test</DropdownItem>
       </DropdownMenu>
     </Dropdown>
   );
