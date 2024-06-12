@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"regexp"
 	"strconv"
+	"strings"
+	"time"
 
 	"shop-server/common/http/response"
 	"shop-server/common/util/regex"
@@ -30,14 +32,16 @@ type AuthUserHandler interface {
 type authUserHandler struct {
 	authService   service.AuthService
 	basketService service.BasketService
+	blacklistSrv  service.BlacklistService
 	infra         infra.Infra
 }
 
-func NewAuthHandler(authService service.AuthService, infra infra.Infra, basketService service.BasketService) AuthUserHandler {
+func NewAuthHandler(authService service.AuthService, infra infra.Infra, basketService service.BasketService, blacklistService service.BlacklistService) AuthUserHandler {
 	return &authUserHandler{
 		authService:   authService,
 		infra:         infra,
 		basketService: basketService,
+		blacklistSrv:  blacklistService,
 	}
 }
 
@@ -136,8 +140,32 @@ func (h *authUserHandler) Delete(c *gin.Context) {
 }
 
 func (h *authUserHandler) Logout(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{
-		"token":   "",
-		"message": "User logged out successfully.",
-	})
+	tokenString := extractTokenFromHeader(c)
+	if tokenString == "" {
+		response.New(c).Error(http.StatusUnauthorized, errors.New("no token provided"))
+		return
+	}
+
+	// Добавить токен в черный список
+	err := h.blacklistSrv.AddToBlacklist(tokenString, time.Hour*2)
+	if err != nil {
+		response.New(c).Error(http.StatusInternalServerError, err)
+		return
+	}
+
+	response.New(c).Write(http.StatusOK, "success: user logged out")
+}
+
+// Вспомогательная функция для извлечения токена из заголовка запроса
+func extractTokenFromHeader(c *gin.Context) string {
+	authHeader := c.GetHeader("Authorization")
+	if authHeader == "" {
+		return ""
+	}
+	// Пример значения заголовка: "Bearer <token>"
+	splitToken := strings.Split(authHeader, "Bearer ")
+	if len(splitToken) != 2 {
+		return ""
+	}
+	return splitToken[1]
 }

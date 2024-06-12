@@ -46,7 +46,7 @@ func (c *server) handlers() {
 }
 
 func (c *server) v1() {
-	authHandler := v1.NewAuthHandler(c.service.AuthService(), c.infra, c.service.BasketService())
+	authHandler := v1.NewAuthHandler(c.service.AuthService(), c.infra, c.service.BasketService(), c.service.Blacklist())
 	adminHandler := v1.NewAdminHandler(c.infra, c.service.AutoPartService())
 	categoryHandler := v1.NewCategoryHandler(c.service.CategoryService())
 	brandHandler := v1.NewBrandHandler(c.service.BrandService())

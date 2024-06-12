@@ -13,6 +13,7 @@ type ServiceManager interface {
 	BasketService() service.BasketService
 	CategoryService() service.CategoryService
 	BrandService() service.BrandService
+	Blacklist() service.BlacklistService
 }
 
 type serviceManager struct {
@@ -42,6 +43,9 @@ var (
 
 	brandServiceOnce sync.Once
 	brandService     service.BrandService
+
+	blacklistServiceOnce sync.Once
+	blacklistService     service.BlacklistService
 )
 
 func (sm *serviceManager) AutoPartService() service.AutoPartService {
@@ -86,4 +90,12 @@ func (sm *serviceManager) BrandService() service.BrandService {
 	})
 
 	return brandService
+}
+
+func (sm *serviceManager) Blacklist() service.BlacklistService {
+	blacklistServiceOnce.Do(func() {
+		blacklistService = service.NewBlacklistService()
+	})
+
+	return blacklistService
 }
