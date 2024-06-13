@@ -154,7 +154,16 @@ func (h *authUserHandler) Login(c *gin.Context) {
 	session.Save()
 
 	expired, token := token.NewToken(h.infra.Config().GetString("secret.key")).GenerateToken(data.Username, user.Role)
-	response.New(c).Token(expired, token)
+	c.JSON(http.StatusOK, gin.H{
+		"user": gin.H{
+			"id":       user.ID,
+			"username": user.Username,
+			"fio":      user.FIO,
+			"role":     user.Role,
+		},
+		"token":   token,
+		"expired": expired,
+	})
 }
 
 func (h *authUserHandler) Delete(c *gin.Context) {
@@ -184,26 +193,33 @@ func (h *authUserHandler) Logout(c *gin.Context) {
 		return
 	}
 
-	// Добавить токен в черный список
 	err := h.blacklistSrv.AddToBlacklist(tokenString, time.Hour*2)
 	if err != nil {
 		response.New(c).Error(http.StatusInternalServerError, err)
 		return
 	}
 
+	session := sessions.Default(c)
+	session.Clear()
+	err = session.Save()
+	if err != nil {
+		response.New(c).Error(http.StatusInternalServerError, errors.New("failed to clear session"))
+		return
+	}
+
 	response.New(c).Write(http.StatusOK, "success: user logged out")
 }
 
-// Вспомогательная функция для извлечения токена из заголовка запроса
 func extractTokenFromHeader(c *gin.Context) string {
 	authHeader := c.GetHeader("Authorization")
 	if authHeader == "" {
 		return ""
 	}
-	// Пример значения заголовка: "Bearer <token>"
-	splitToken := strings.Split(authHeader, "Bearer ")
-	if len(splitToken) != 2 {
+
+	parts := strings.Split(authHeader, " ")
+	if len(parts) != 2 || parts[0] != "Bearer" {
 		return ""
 	}
-	return splitToken[1]
+
+	return parts[1]
 }

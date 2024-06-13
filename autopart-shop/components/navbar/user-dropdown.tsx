@@ -16,6 +16,7 @@ import { UserInfo } from "os";
 import { User } from "@/types";
 import axios from "axios";
 import { fetchData } from "next-auth/client/_utils";
+import { signOut } from "next-auth/react";
 
 interface Props {
   user: string;
@@ -24,9 +25,8 @@ interface Props {
 export const UserDropdown: React.FC<Props> = ({ user }) => {
   const [username, setUsername] = useState<string>("");
   const route = useRouter();
-  const handlerLogout = () => {
-    Cookies.remove("token");
-    route.push("/auth/login");
+  const handleLogout = async () => {
+    signOut({ callbackUrl: "/auth/login" });
   };
 
   useEffect(() => {
@@ -77,7 +77,7 @@ export const UserDropdown: React.FC<Props> = ({ user }) => {
           key="logout"
           color="danger"
           className="text-danger"
-          onClick={handlerLogout}
+          onClick={handleLogout}
         >
           Выйти
         </DropdownItem>

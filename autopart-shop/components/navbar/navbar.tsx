@@ -30,8 +30,9 @@ import {
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import { UserDropdown } from "./user-dropdown";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { Session } from "inspector";
+import axios from "axios";
 
 export const Navbar = () => {
   const session = useSession();
@@ -58,6 +59,8 @@ export const Navbar = () => {
       type="search"
     />
   );
+
+ ;
 
   return (
     <NextUINavbar maxWidth="xl" position="sticky">
