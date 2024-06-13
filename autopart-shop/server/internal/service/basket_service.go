@@ -10,6 +10,8 @@ type BasketService interface {
 	Create(user model.User) error
 	AddItem(userID uint, item model.BasketItem) error
 	GetBasketByUserID(userID uint) (*model.Basket, error)
+	UpdateBasketItem(id uint, item model.BasketItem) error
+	UpdateBasketItemQuantity(id uint, quantity uint) error
 }
 
 type basketService struct {
@@ -63,4 +65,12 @@ func (s *basketService) AddItemToBasket(userID uint, item model.BasketItem) erro
 		return err
 	}
 	return s.autoPartRepo.UpdateStock(item.AutoPartID, -int(item.Quantity))
+}
+
+func (s *basketService) UpdateBasketItem(id uint, item model.BasketItem) error {
+	return s.basketRepo.UpdateBasketItem(id, item)
+}
+
+func (s *basketService) UpdateBasketItemQuantity(id uint, quantity uint) error {
+	return s.basketRepo.UpdateBasketItemQuantity(id, quantity)
 }

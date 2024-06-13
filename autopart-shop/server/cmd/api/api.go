@@ -95,7 +95,8 @@ func (c *server) v1() {
 		user.Use(c.middleware.AUTH())
 		{
 			user.GET("/:id/basket", basketHnalder.GetBasket)
-			user.POST("/:user_id/basket/items", basketHnalder.AddItemToBasket)
+			user.POST("/:id/update_basket", basketHnalder.UpdateBasketItemQuantity)
+			user.POST("/:id/basket/items", basketHnalder.AddItemToBasket)
 			user.DELETE("/delete", authHandler.Delete)
 			user.GET("/:id", authHandler.GetUsernameByID)
 		}

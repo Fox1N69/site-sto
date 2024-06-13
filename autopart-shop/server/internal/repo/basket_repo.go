@@ -13,6 +13,7 @@ type BasketRepo interface {
 	UpdateBasketItem(itemID uint, newItem model.BasketItem) error
 	RemoveItemFromBasket(itemID uint) error
 	ClearBasket(basketID uint) error
+	UpdateBasketItemQuantity(id uint, quantity uint) error
 }
 
 type basketRepo struct {
