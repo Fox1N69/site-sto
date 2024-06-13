@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Dialog,
   DialogPanel,
@@ -9,47 +9,81 @@ import {
 } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { Button } from "@nextui-org/button";
+import { Icon } from "@iconify/react";
+import Cookies from "js-cookie";
+import { useSession } from "next-auth/react";
+import CartCouter from "./CartCouter";
 
-const products = [
-  {
-    id: 1,
-    name: "Throwback Hip Bag",
-    href: "#",
-    color: "Salmon",
-    price: "$90.00",
-    quantity: 1,
-    imageSrc:
-      "https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-01.jpg",
-    imageAlt:
-      "Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt.",
-  },
-  {
-    id: 2,
-    name: "Medium Stuff Satchel",
-    href: "#",
-    color: "Blue",
-    price: "$32.00",
-    quantity: 1,
-    imageSrc:
-      "https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-02.jpg",
-    imageAlt:
-      "Front of satchel with blue canvas body, black straps and handle, drawstring top, and front zipper pouch.",
-  },
-];
+// Define the Product type
+interface Product {
+  id: number;
+  name: string;
+  href: string;
+  color: string;
+  price: string;
+  quantity: number;
+  imageSrc: string;
+  imageAlt: string;
+}
 
 export default function CartModal() {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState<boolean>(false);
+  const [products, setProducts] = useState<Product[]>([]);
+  const { data: session } = useSession();
 
   const handleOpen = () => {
     setOpen(true);
   };
 
+  const fetchCartItems = async () => {
+    try {
+      const userId = "11"; // Replace with the actual user ID
+      const response = await fetch(
+        `http://localhost:4000/v1/account/user/${userId}/basket`,
+        {
+          headers: {
+            Authorization: `Bearer ${session?.user.token}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json();
+
+      const extractedProducts: Product[] = data.BasketItems.map(
+        (item: any) => ({
+          id: item.AutoPart.id,
+          name: item.AutoPart.name,
+          href: "#",
+          color: item.AutoPart.model_name,
+          price: item.AutoPart.price.toString(),
+          quantity: item.quantity,
+          imageSrc: item.AutoPart.img,
+          imageAlt: item.AutoPart.name,
+        })
+      );
+
+      setProducts(extractedProducts);
+    } catch (error) {
+      console.error("Failed to fetch cart items", error);
+    }
+  };
+
+  useEffect(() => {
+    if (open) {
+      fetchCartItems();
+    }
+  }, [open]);
+
   return (
     <>
-      <Button onPress={handleOpen}>open</Button>
+      <Button isIconOnly onPress={handleOpen} variant="bordered">
+        <Icon icon={"carbon:shopping-cart"} />
+      </Button>
 
       <Transition show={open}>
-        <Dialog className="relative z-10" onClose={setOpen}>
+        <Dialog className="relative z-10" onClose={() => setOpen(false)}>
           <TransitionChild
             enter="ease-in-out duration-500"
             enterFrom="opacity-0"
@@ -127,7 +161,7 @@ export default function CartModal() {
                                     </div>
                                     <div className="flex flex-1 items-end justify-between text-sm">
                                       <p className="text-gray-500">
-                                        Qty {product.quantity}
+                                        Кол-во {product.quantity}
                                       </p>
 
                                       <div className="flex">
@@ -135,6 +169,7 @@ export default function CartModal() {
                                           type="button"
                                           className="font-medium text-indigo-600 hover:text-indigo-500"
                                         >
+                                          <CartCouter />
                                           Remove
                                         </button>
                                       </div>
@@ -149,29 +184,29 @@ export default function CartModal() {
 
                       <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
                         <div className="flex justify-between text-base font-medium text-gray-900">
-                          <p>Subtotal</p>
-                          <p>$262.00</p>
+                          <p>Общая цена:</p>
+                          <p>262₽</p>
                         </div>
                         <p className="mt-0.5 text-sm text-gray-500">
-                          Shipping and taxes calculated at checkout.
+                          Стоимость доставки расчитывается при оформление заказа
                         </p>
                         <div className="mt-6">
                           <a
                             href="#"
                             className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
                           >
-                            Checkout
+                            Оплатить
                           </a>
                         </div>
                         <div className="mt-6 flex justify-center text-center text-sm text-gray-500">
                           <p>
-                            or{" "}
+                            или{" "}
                             <button
                               type="button"
                               className="font-medium text-indigo-600 hover:text-indigo-500"
                               onClick={() => setOpen(false)}
                             >
-                              Continue Shopping
+                              Продолжить покупки
                               <span aria-hidden="true"> &rarr;</span>
                             </button>
                           </p>

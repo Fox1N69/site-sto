@@ -60,6 +60,7 @@
 		"typescript": "5.0.4"
 	},
 	"devDependencies": {
+		"@iconify/react": "^5.0.1",
 		"@types/react": "18.3.3"
 	}
 }

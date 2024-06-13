@@ -9,6 +9,7 @@ import (
 type BasketService interface {
 	Create(user model.User) error
 	AddItem(userID uint, item model.BasketItem) error
+	GetBasketByUserID(userID uint) (*model.Basket, error)
 }
 
 type basketService struct {
@@ -18,6 +19,10 @@ type basketService struct {
 
 func NewBasketService(basketRepo repo.BasketRepo, autoPartRepo repo.AutoPartRepo) BasketService {
 	return &basketService{basketRepo: basketRepo, autoPartRepo: autoPartRepo}
+}
+
+func (s *basketService) GetBasketByUserID(userID uint) (*model.Basket, error) {
+	return s.basketRepo.GetBasketByUserID(userID)
 }
 
 func (s *basketService) Create(user model.User) error {

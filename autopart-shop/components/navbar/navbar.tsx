@@ -104,10 +104,10 @@ export const Navbar = () => {
               <Lottie animationData={Loaded} />
             </div>
           ) : session ? (
-            <>
+            <div className="flex gap-3">
               <CartModal />
               <UserDropdown user={session?.user.id} />
-            </>
+            </div>
           ) : (
             <Button as={NextLink} href="/auth/login">
               Login

@@ -94,6 +94,7 @@ func (c *server) v1() {
 		user := v1.Group("/user")
 		user.Use(c.middleware.AUTH())
 		{
+			user.GET("/:id/basket", basketHnalder.GetBasket)
 			user.POST("/:user_id/basket/items", basketHnalder.AddItemToBasket)
 			user.DELETE("/delete", authHandler.Delete)
 			user.GET("/:id", authHandler.GetUsernameByID)
