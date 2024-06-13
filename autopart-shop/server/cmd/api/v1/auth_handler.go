@@ -150,6 +150,7 @@ func (h *authUserHandler) Login(c *gin.Context) {
 	session := sessions.Default(c)
 	session.Set("user_id", user.ID)
 	session.Set("role", user.Role)
+	session.Set("fio", user.FIO)
 	session.Save()
 
 	expired, token := token.NewToken(h.infra.Config().GetString("secret.key")).GenerateToken(data.Username, user.Role)
