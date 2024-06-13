@@ -13,6 +13,7 @@ type AuthRepo interface {
 	CheckID(id int) bool
 	Delete(id int) error
 	GetUserByID(id uint) (*model.User, error)
+	GetUserByUsername(username string) (*model.User, error)
 }
 
 type authRepo struct {
@@ -21,6 +22,16 @@ type authRepo struct {
 
 func NewAuthRepo(db *gorm.DB) AuthRepo {
 	return &authRepo{db: db}
+}
+
+func (r *authRepo) GetUserByUsername(username string) (*model.User, error) {
+	var user model.User
+
+	if err := r.db.Table("users").Where("username = ?").First(&user).Error; err != nil {
+		return nil, err
+	}
+
+	return &user, nil
 }
 
 func (r *authRepo) GetUserByID(id uint) (*model.User, error) {

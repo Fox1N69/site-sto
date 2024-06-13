@@ -7,6 +7,7 @@ import (
 	"shop-server/infra"
 	"shop-server/internal/manager"
 
+	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
 )
 
@@ -19,14 +20,18 @@ type server struct {
 	gin        *gin.Engine
 	service    manager.ServiceManager
 	middleware middleware.Middleware
+	store      sessions.Store
 }
 
 func NewServer(infra infra.Infra) Server {
+	store := sessions.NewCookieStore([]byte(infra.Config().GetString("secret.key")))
+
 	return &server{
 		infra:      infra,
 		gin:        gin.Default(),
 		service:    manager.NewServiceManager(infra),
 		middleware: middleware.NewMiddleware(infra.Config().GetString("secret.key")),
+		store:      store,
 	}
 }
 
@@ -52,6 +57,8 @@ func (c *server) v1() {
 	brandHandler := v1.NewBrandHandler(c.service.BrandService())
 	basketHnalder := v1.NewBasketHandler(c.service.BasketService())
 	shopHandler := v1.NewShopHandler(c.service.BasketService(), c.service.AutoPartService(), c.infra)
+
+	c.gin.Use(sessions.Sessions("user", c.store))
 
 	shop := c.gin.Group("/shop")
 	{

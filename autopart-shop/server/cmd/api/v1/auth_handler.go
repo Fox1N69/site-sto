@@ -16,6 +16,7 @@ import (
 	"shop-server/internal/model"
 	"shop-server/internal/service"
 
+	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
 	validation "github.com/go-ozzo/ozzo-validation"
 	"github.com/go-ozzo/ozzo-validation/is"
@@ -140,7 +141,18 @@ func (h *authUserHandler) Login(c *gin.Context) {
 		return
 	}
 
-	expired, token := token.NewToken(h.infra.Config().GetString("secret.key")).GenerateToken(data.Username, "admin")
+	user, err := h.authService.GetUserByUsername(data.Username)
+	if err != nil {
+		response.New(c).Error(http.StatusBadRequest, errors.New("username not match"))
+		return
+	}
+
+	session := sessions.Default(c)
+	session.Set("user_id", user.ID)
+	session.Set("role", user.Role)
+	session.Save()
+
+	expired, token := token.NewToken(h.infra.Config().GetString("secret.key")).GenerateToken(data.Username, user.Role)
 	response.New(c).Token(expired, token)
 }
 
