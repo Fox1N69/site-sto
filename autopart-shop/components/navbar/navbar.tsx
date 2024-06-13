@@ -35,6 +35,7 @@ import { Session } from "inspector";
 import axios from "axios";
 import Loaded from "@icons/lottie/loaded.json";
 import Lottie from "lottie-react";
+import CartModal from "../cart/CartModal";
 
 export const Navbar = () => {
   const { data: session, status } = useSession();
@@ -103,7 +104,10 @@ export const Navbar = () => {
               <Lottie animationData={Loaded} />
             </div>
           ) : session ? (
-            <UserDropdown user={session?.user.id} />
+            <>
+              <CartModal />
+              <UserDropdown user={session?.user.id} />
+            </>
           ) : (
             <Button as={NextLink} href="/auth/login">
               Login

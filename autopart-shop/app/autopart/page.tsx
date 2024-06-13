@@ -1,6 +1,7 @@
 "use client";
 
 import Banner from "@/components/Banner/banner";
+import Example from "@/components/cart/CartModal";
 import { title } from "@/components/primitives";
 import Card from "@/components/product/ProductCard/Card";
 import { useFetchAutoParts } from "@/config/fetching";
