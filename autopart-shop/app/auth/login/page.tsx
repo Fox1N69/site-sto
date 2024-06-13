@@ -2,6 +2,8 @@
 import React, { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { Button, Input } from "@nextui-org/react";
+import { EyeFilledIcon, EyeSlashFilledIcon } from "@/components/icons/eye/Eye";
 
 const SignInPage: React.FC = () => {
   const [username, setUsername] = useState("");
@@ -24,31 +26,61 @@ const SignInPage: React.FC = () => {
     }
   };
 
+  const [isVisible, setIsVisible] = React.useState(false);
+
+  const toggleVisibility = () => setIsVisible(!isVisible);
+
   return (
-    <div>
-      <h1>Sign In</h1>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <form onSubmit={handleSignIn}>
-        <div>
-          <label htmlFor="username">Username:</label>
-          <input
-            type="text"
-            id="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-        </div>
-        <div>
-          <label htmlFor="password">Password:</label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
-        <button type="submit">Sign In</button>
-      </form>
+    <div className="flex justify-center">
+      <div className="w-[1px]"></div>
+      <div className="flex items-center mt-7">
+        {error && <p style={{ color: "red" }}>{error}</p>}
+        <form
+          onSubmit={handleSignIn}
+          className="flex flex-col gap-4 border-1 rounded-lg p-4"
+        >
+          <h1 className="text-center">Авторизация</h1>
+          <div>
+            <Input
+              label="Логин"
+              labelPlacement="outside"
+              placeholder="Введите логин"
+              variant="bordered"
+              type="text"
+              id="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="max-w-xs bg-transparent"
+            />
+          </div>
+          <div>
+            <Input
+              label="Пароль"
+              labelPlacement="outside"
+              variant="bordered"
+              placeholder="Введите пароль"
+              endContent={
+                <button
+                  className="focus:outline-none"
+                  type="button"
+                  onClick={toggleVisibility}
+                >
+                  {isVisible ? (
+                    <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                  ) : (
+                    <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                  )}
+                </button>
+              }
+              type={isVisible ? "text" : "password"}
+              className="max-w-xs"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+          <Button type="submit">Войти</Button>
+        </form>
+      </div>
     </div>
   );
 };

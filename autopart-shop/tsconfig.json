@@ -31,6 +31,6 @@
     ".next/types/**/*.ts",
     "components/navbar/user-dropdown.tsx",
     "components/withAdmin.jsx"
-  ],
+, "components/icons/eye/eyesplashfilled.jsx"  ],
   "exclude": ["node_modules"]
 }
