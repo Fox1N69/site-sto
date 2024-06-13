@@ -7,7 +7,7 @@ import {
   NavbarItem,
 } from "@nextui-org/react";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { Switch } from "@nextui-org/switch";
@@ -16,33 +16,44 @@ import { UserInfo } from "os";
 import { User } from "@/types";
 import axios from "axios";
 import { fetchData } from "next-auth/client/_utils";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 
 interface Props {
   user: string;
 }
 
 export const UserDropdown: React.FC<Props> = ({ user }) => {
-  const [username, setUsername] = useState<string>("");
+  const { data: session } = useSession();
+  const [fio, setFio] = useState<string>("");
   const route = useRouter();
+
   const handleLogout = async () => {
     signOut({ callbackUrl: "/auth/login" });
   };
 
   useEffect(() => {
     const fetchUserData = async () => {
+      if (!session || !session.user || !session.user.token) {
+        console.log("No user token found in session");
+        return;
+      }
       try {
         const response = await axios.get(
-          `http://localhost:4000/v1/account/user/${user}`
+          `http://localhost:4000/v1/account/user/${user}`,
+          {
+            headers: {
+              Authorization: `Bearer ${session.user.token}`,
+            },
+          }
         );
-        setUsername(response.data.username);
+        setFio(response.data.fio);
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
     };
 
     fetchUserData();
-  }, [user]);
+  }, [user, session]);
 
   return (
     <Dropdown>
@@ -64,8 +75,7 @@ export const UserDropdown: React.FC<Props> = ({ user }) => {
           key="profile"
           className="flex flex-col justify-start w-full items-start"
         >
-          <p>Авторизован как</p>
-          <p>{username}</p>
+          <p>{fio}</p>
         </DropdownItem>
         <DropdownItem key="settings">Настройки</DropdownItem>
         <DropdownItem key="system">Система</DropdownItem>

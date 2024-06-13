@@ -35,7 +35,7 @@ import { Session } from "inspector";
 import axios from "axios";
 
 export const Navbar = () => {
-  const session = useSession();
+  const { data: session, status } = useSession();
 
   console.log(session);
 
@@ -59,8 +59,6 @@ export const Navbar = () => {
       type="search"
     />
   );
-
- ;
 
   return (
     <NextUINavbar maxWidth="xl" position="sticky">
@@ -98,8 +96,10 @@ export const Navbar = () => {
         </NavbarItem>
         <NavbarItem className="hidden lg:flex">{searchInput}</NavbarItem>
         <NavbarItem className="hidden md:flex">
-          {session.data ? (
-            <UserDropdown user={session.data.user.id} />
+          {status === "loading" ? (
+            <div>Loading...</div>
+          ) : session ? (
+            <UserDropdown user={session?.user.id} />
           ) : (
             <Button as={NextLink} href="/auth/login">
               Login

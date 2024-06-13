@@ -30,6 +30,7 @@ export interface Brand {
 
 export interface User {
   id: number;
+  fio?: string;
   username?: string;
-  role?: string; 
+  role?: string;
 }
