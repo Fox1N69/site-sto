@@ -78,7 +78,7 @@ const SignInPage: React.FC = () => {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          <Button type="submit" variant="ghost" color="danger">
+          <Button type="submit" variant="ghost" color="success">
             Войти
           </Button>
         </form>

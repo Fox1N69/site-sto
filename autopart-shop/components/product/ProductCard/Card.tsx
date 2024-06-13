@@ -6,6 +6,7 @@ import styles from "./Card.module.scss";
 import { AutoPart } from "@/types";
 import ProductModal from "../ProductModal";
 import { useRouter } from "next/navigation";
+import { Button } from "@nextui-org/button";
 
 interface CardProps {
   part: AutoPart;
@@ -18,9 +19,14 @@ const Card: React.FC<CardProps> = ({ part }) => {
     router.push(`/autopart/${part.id}`);
   };
 
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.stopPropagation;
+    console.log("add to basket");
+  };
+
   return (
-    <article className={styles.card} onClick={handleRouteToCard}>
-      <div className={styles.card__container}>
+    <article className={styles.card}>
+      <div className={styles.card__container} onClick={handleRouteToCard}>
         <img src={part.img} alt="" style={{ borderRadius: 10, height: 180 }} />
         <div className="card__content flex flex-col justify-between h-[45%] p-2">
           <div className="card__title">
@@ -31,8 +37,8 @@ const Card: React.FC<CardProps> = ({ part }) => {
             <p>Описание</p>
           </div>
           <div className="info flex justify-between font-light">
-            <p>{part.Brand?.name}</p>
-            <p>{part.Category?.name}</p>
+            <p>{part.price}</p>
+            <Button onClick={handleAddToCart}></Button>
           </div>
         </div>
       </div>
