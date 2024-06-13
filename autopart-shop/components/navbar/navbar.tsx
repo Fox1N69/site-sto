@@ -33,6 +33,8 @@ import { UserDropdown } from "./user-dropdown";
 import { signOut, useSession } from "next-auth/react";
 import { Session } from "inspector";
 import axios from "axios";
+import Loaded from "@icons/lottie/loaded.json";
+import Lottie from "lottie-react";
 
 export const Navbar = () => {
   const { data: session, status } = useSession();
@@ -97,7 +99,9 @@ export const Navbar = () => {
         <NavbarItem className="hidden lg:flex">{searchInput}</NavbarItem>
         <NavbarItem className="hidden md:flex">
           {status === "loading" ? (
-            <div>Loading...</div>
+            <div className=" w-[75px] h-[75px]">
+              <Lottie animationData={Loaded} />
+            </div>
           ) : session ? (
             <UserDropdown user={session?.user.id} />
           ) : (

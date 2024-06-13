@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Button, Input } from "@nextui-org/react";
-import { EyeFilledIcon, EyeSlashFilledIcon } from "@/components/icons/eye/Eye";
+import { EyeFilledIcon, EyeSlashFilledIcon } from "@icons/eye/Eye";
 
 const SignInPage: React.FC = () => {
   const [username, setUsername] = useState("");
@@ -78,7 +78,9 @@ const SignInPage: React.FC = () => {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          <Button type="submit">Войти</Button>
+          <Button type="submit" variant="ghost" color="danger">
+            Войти
+          </Button>
         </form>
       </div>
     </div>

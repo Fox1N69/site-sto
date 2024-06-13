@@ -21,7 +21,9 @@
     ],
     "paths": {
       "@/*": ["./*"],
-      "@config/*": ["./config/*"]
+      "@config/*": ["./config/*"],
+      "@components/*": ["./components/*"],
+      "@icons/*": ["./components/icons/*"]
     }
   },
   "include": [
@@ -30,7 +32,8 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "components/navbar/user-dropdown.tsx",
-    "components/withAdmin.jsx"
-, "components/icons/eye/eyesplashfilled.jsx"  ],
+    "components/withAdmin.jsx",
+    "components/icons/eye/eyesplashfilled.jsx"
+  ],
   "exclude": ["node_modules"]
 }
