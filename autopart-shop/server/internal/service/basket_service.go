@@ -9,9 +9,11 @@ import (
 type BasketService interface {
 	Create(user model.User) error
 	AddItem(userID uint, item model.BasketItem) error
+	RemoveItem(itemID uint) error
 	GetBasketByUserID(userID uint) (*model.Basket, error)
 	UpdateBasketItem(id uint, item model.BasketItem) error
 	UpdateBasketItemQuantity(userID, autoPartID, quantity uint) error
+	RemoveAllItems(basketID uint) error
 }
 
 type basketService struct {
@@ -41,6 +43,10 @@ func (s *basketService) Create(user model.User) error {
 
 func (s *basketService) AddItem(userID uint, item model.BasketItem) error {
 	return s.basketRepo.AddItemToBasket(userID, item)
+}
+
+func (s *basketService) RemoveItem(itemID uint) error {
+	return s.basketRepo.RemoveItemFromBasket(itemID)
 }
 
 func (s *basketService) AddItemToBasket(userID uint, item model.BasketItem) error {
@@ -73,4 +79,8 @@ func (s *basketService) UpdateBasketItem(id uint, item model.BasketItem) error {
 
 func (s *basketService) UpdateBasketItemQuantity(userID, autoPartID, quantity uint) error {
 	return s.basketRepo.UpdateBasketItemQuantity(userID, autoPartID, quantity)
+}
+
+func (s *basketService) RemoveAllItems(basketID uint) error {
+	return s.basketRepo.RemoveAllItems(basketID)
 }

@@ -96,6 +96,8 @@ func (c *server) v1() {
 		{
 			user.GET("/:id/basket", basketHnalder.GetBasket)
 			user.PUT("/:id/update_basket/:autopart_id", basketHnalder.UpdateBasketItemQuantity)
+			user.POST("/remove_items/:id", basketHnalder.RemoveItemByID)
+			user.POST("/:id/remove_all_items", basketHnalder.RemoveAllItems)
 			user.POST("/:id/basket/items", basketHnalder.AddItemToBasket)
 			user.DELETE("/delete", authHandler.Delete)
 			user.GET("/:id", authHandler.GetUsernameByID)
