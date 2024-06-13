@@ -7,13 +7,13 @@ import { User } from "next-auth";
 // Определяем расширенные интерфейсы для пользователя и JWT
 interface ExtendedUser extends User {
   id: string;
-  username: string;
+  name: string;
   role: string;
 }
 
 interface ExtendedJWT extends JWT {
   id: string;
-  username: string;
+  name: string;
   role: string;
 }
 
@@ -22,7 +22,7 @@ declare module "next-auth" {
   interface Session {
     user: {
       id: string;
-      username: string;
+      name: string;
       role: string;
     };
   }
@@ -33,28 +33,27 @@ export const authConfig: AuthOptions = {
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        username: { label: "Username", type: "text" },
+        username: { label: "Username", type: "text", placeholder: "jsmith" },
         password: { label: "Password", type: "password" },
       },
-      authorize: async (credentials) => {
-        try {
-          const response = await axios.post(
-            "http://localhost:4000/v1/account/auth/login",
-            {
-              username: credentials?.username,
-              password: credentials?.password,
-            }
-          );
+      async authorize(credentials, req) {
+        // Add logic here to look up the user from the credentials supplied
 
-          const user = response.data;
+        const res = await fetch("http://localhost:4000/v1/account/auth/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username: credentials?.username,
+            password: credentials?.password,
+          }),
+        });
+        const user = await res.json();
 
-          if (user) {
-            return user as ExtendedUser;
-          } else {
-            return null;
-          }
-        } catch (error) {
-          console.error("Error during authorization:", error);
+        if (user) {
+          return user;
+        } else {
           return null;
         }
       },
@@ -62,28 +61,21 @@ export const authConfig: AuthOptions = {
   ],
   callbacks: {
     async jwt({ token, user }) {
-      if (user) {
-        const { id, username, role } = user as ExtendedUser;
-        token.id = id;
-        token.username = username;
-        token.roles = role;
-      }
-      return token;
+      // Обновляем токен с данными пользователя
+      return {
+        ...token,
+        name: user.name,
+        id: user.id,
+      };
     },
     async session({ session, token }) {
-      const { id, username, role } = token as ExtendedJWT;
-      session.user = { id, username, role };
-      return session;
+      // Обновляем сессию с данными пользователя из токена
+      const updatedSession = { ...session };
+      updatedSession.user = {
+        id: token.id as string,
+        name: token.name,
+      };
+      return updatedSession;
     },
-  },
-  session: {
-    strategy: "jwt",
-  },
-  jwt: {
-    secret: process.env.JWT_SECRET,
-  },
-  pages: {
-    signIn: "/auth/signin",
-    error: "/auth/error",
   },
 };
