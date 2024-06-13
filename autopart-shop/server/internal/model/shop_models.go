@@ -64,3 +64,10 @@ type BrandCategory struct {
 	BrandID    uint
 	CategoryID uint
 }
+
+type Order struct {
+	GormCustom
+	Status string `json:"status"`
+	Total  int    `json:"total"`
+	UserID uint   `json:"user_id" gorm:"foreignKey:ID"`
+}

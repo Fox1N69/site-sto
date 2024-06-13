@@ -19,6 +19,7 @@ func main() {
 		&model.BasketItem{},
 		&model.AutoPartInfo{},
 		&model.BrandCategory{},
+		&model.Order{},
 	)
 
 	api.NewServer(i).Run()
