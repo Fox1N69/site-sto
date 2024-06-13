@@ -13,7 +13,7 @@ type BasketRepo interface {
 	UpdateBasketItem(itemID uint, newItem model.BasketItem) error
 	RemoveItemFromBasket(itemID uint) error
 	ClearBasket(basketID uint) error
-	UpdateBasketItemQuantity(id uint, quantity uint) error
+	UpdateBasketItemQuantity(userID, autoPartID uint, quantity uint) error
 }
 
 type basketRepo struct {
@@ -68,4 +68,19 @@ func (r *basketRepo) RemoveItemFromBasket(itemID uint) error {
 
 func (r *basketRepo) ClearBasket(basketID uint) error {
 	return r.db.Where("basket_id = ?", basketID).Delete(&model.BasketItem{}).Error
+}
+
+func (r *basketRepo) UpdateBasketItemQuantity(userID, autoPartID uint, quantity uint) error {
+	var basket model.Basket
+	if err := r.db.Where("user_id = ?", userID).First(&basket).Error; err != nil {
+		return err
+	}
+
+	var basketItem model.BasketItem
+	if err := r.db.Where("basket_id = ? AND auto_part_id = ?", basket.ID, autoPartID).First(&basketItem).Error; err != nil {
+		return err
+	}
+
+	basketItem.Quantity = quantity
+	return r.db.Save(&basketItem).Error
 }

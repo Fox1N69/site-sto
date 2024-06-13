@@ -12,7 +12,7 @@ import (
 type BasketHandler interface {
 	GetBasket(c *gin.Context)
 	AddItemToBasket(c *gin.Context)
-	UpdateBasketItem(c *gin.Context)
+	UpdateBasketItemQuantity(c *gin.Context)
 }
 
 type basketHandler struct {
@@ -48,7 +48,7 @@ func (h *basketHandler) AddItemToBasket(c *gin.Context) {
 		return
 	}
 
-	userID, err := strconv.Atoi(c.Param("user_id"))
+	userID, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
 		return
@@ -62,21 +62,24 @@ func (h *basketHandler) AddItemToBasket(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Item added to basket"})
 }
 
-func (h *basketHandler) UpdateBasketItem(c *gin.Context) {
-	userID, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
+func (h *basketHandler) UpdateBasketItemQuantity(c *gin.Context) {
+	userID, _ := strconv.ParseUint(c.Param("id"), 10, 32)
+	autoPartID, _ := strconv.ParseUint(c.Param("autopart_id"), 10, 32)
+
+	type UpdateQuantityRequest struct {
+		Quantity uint `json:"quantity"`
+	}
+
+	var req UpdateQuantityRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	var data model.BasketItem
-
-	c.BindJSON(data)
-
-	if err := h.service.UpdateBasketItem(uint(userID), data); err != nil {
+	if err := h.service.UpdateBasketItemQuantity(uint(userID), uint(autoPartID), req.Quantity); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "Basket item updated", "data": data})
+	c.JSON(http.StatusOK, gin.H{"status": "quantity updated"})
 }

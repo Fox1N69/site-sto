@@ -37,7 +37,7 @@ export default function CartModal() {
 
   const fetchCartItems = async () => {
     try {
-      const userId = "11"; // Replace with the actual user ID
+      const userId = session?.user.id; // Replace with the actual user ID
       const response = await fetch(
         `http://localhost:4000/v1/account/user/${userId}/basket`,
         {
@@ -169,7 +169,11 @@ export default function CartModal() {
                                           type="button"
                                           className="font-medium text-indigo-600 hover:text-indigo-500"
                                         >
-                                          <CartCouter />
+                                          <CartCouter
+                                            key={product.id}
+                                            autoPartID={product.id}
+                                            initialQuantity={product.quantity}
+                                          />
                                           Remove
                                         </button>
                                       </div>
