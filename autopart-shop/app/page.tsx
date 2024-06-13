@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import { Navbar } from "@nextui-org/navbar";
 import { AuthProvider } from "@/components/context/authContext";
 import { useRouter } from "next/navigation";
-import { useFetchAutoParts } from "@/config/fetching";
+import { useFetchAutoParts } from "@/hooks/fetching";
 import Example from "@/components/cart/CartModal";
 import { Button } from "@nextui-org/button";
 

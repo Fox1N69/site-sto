@@ -12,6 +12,17 @@ export interface AutoPart {
   model_name?: string;
 }
 
+interface Product {
+  id: number;
+  name: string;
+  href: string;
+  color: string;
+  price: string;
+  quantity: number;
+  imageSrc: string;
+  imageAlt: string;
+}
+
 export interface AutoPartInfo {
   id: number;
   title: string;

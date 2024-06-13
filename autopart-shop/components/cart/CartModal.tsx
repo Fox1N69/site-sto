@@ -13,18 +13,7 @@ import { Icon } from "@iconify/react";
 import Cookies from "js-cookie";
 import { useSession } from "next-auth/react";
 import CartCouter from "./CartCouter";
-
-// Define the Product type
-interface Product {
-  id: number;
-  name: string;
-  href: string;
-  color: string;
-  price: string;
-  quantity: number;
-  imageSrc: string;
-  imageAlt: string;
-}
+import { Product } from "@/types";
 
 export default function CartModal() {
   const [open, setOpen] = useState<boolean>(false);
@@ -67,6 +56,50 @@ export default function CartModal() {
       setProducts(extractedProducts);
     } catch (error) {
       console.error("Failed to fetch cart items", error);
+    }
+  };
+
+  const removeAllItemFromBasket = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:4000/v1/account/user/${session?.user.id}/remove_all_items`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${session?.user.token}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to remove item");
+      }
+      // Удаляем элемент из состояния products после успешного удаления на сервере
+      setProducts((prevProducts) => prevProducts.slice(0, 0));
+    } catch (error) {
+      console.error("Failed to remove item from server", error);
+    }
+  };
+
+  const removeItemFromBasket = async (itemId: number) => {
+    try {
+      const response = await fetch(
+        `http://localhost:4000/v1/account/user/remove_items/${itemId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${session?.user.token}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to remove item");
+      }
+      // Удаляем элемент из состояния products после успешного удаления на сервере
+      setProducts((prevProducts) =>
+        prevProducts.filter((product) => product.id !== itemId)
+      );
+    } catch (error) {
+      console.error("Failed to remove item from server", error);
     }
   };
 
@@ -160,20 +193,22 @@ export default function CartModal() {
                                       </p>
                                     </div>
                                     <div className="flex flex-1 items-end justify-between text-sm">
-                                      <p className="text-gray-500">
-                                        Кол-во {product.quantity}
+                                      <p className="text-indigo-600">
+                                        <CartCouter
+                                          key={product.id}
+                                          autoPartID={product.id}
+                                          initialQuantity={product.quantity}
+                                        />
                                       </p>
 
                                       <div className="flex">
                                         <button
                                           type="button"
                                           className="font-medium text-indigo-600 hover:text-indigo-500"
+                                          onClick={() =>
+                                            removeItemFromBasket(product.id)
+                                          }
                                         >
-                                          <CartCouter
-                                            key={product.id}
-                                            autoPartID={product.id}
-                                            initialQuantity={product.quantity}
-                                          />
                                           Remove
                                         </button>
                                       </div>
