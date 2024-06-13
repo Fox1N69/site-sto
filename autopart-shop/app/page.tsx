@@ -1,16 +1,18 @@
 "use client";
 
 import Banner from "@/components/Banner/banner";
-import Card from "@/components/ProductCard/Card";
+import Card from "@/components/product/ProductCard/Card";
 import { AutoPart } from "@/types";
 import axios from "axios";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Navbar } from "@nextui-org/navbar";
 import { AuthProvider } from "@/components/context/authContext";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
   const [autoParts, setAutoParts] = useState<AutoPart[]>([]);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchData = async () => {

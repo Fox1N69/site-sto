@@ -1,15 +1,25 @@
+"use client";
+
 import React from "react";
 import Image from "next/image";
 import styles from "./Card.module.scss";
 import { AutoPart } from "@/types";
+import ProductModal from "../ProductModal";
+import { useRouter } from "next/navigation";
 
 interface CardProps {
   part: AutoPart;
 }
 
 const Card: React.FC<CardProps> = ({ part }) => {
+  const router = useRouter();
+
+  const handleRouteToCard = () => {
+    router.push(`/autopart/${part.id}`);
+  };
+
   return (
-    <article className={styles.card}>
+    <article className={styles.card} onClick={handleRouteToCard}>
       <div className={styles.card__container}>
         <img src={part.img} alt="" style={{ borderRadius: 10, height: 180 }} />
         <div className="card__content flex flex-col justify-between h-[45%] p-2">
