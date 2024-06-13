@@ -27,7 +27,7 @@ func NewAuthRepo(db *gorm.DB) AuthRepo {
 func (r *authRepo) GetUserByUsername(username string) (*model.User, error) {
 	var user model.User
 
-	if err := r.db.Table("users").Where("username = ?").First(&user).Error; err != nil {
+	if err := r.db.Table("users").Where("username = ?", username).First(&user).Error; err != nil {
 		return nil, err
 	}
 
