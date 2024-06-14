@@ -1,14 +1,12 @@
 "use client";
-
 import React, { useState, useEffect } from "react";
-import Image from "next/image";
-import styles from "./Card.module.scss";
-import { AutoPart } from "@/types";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { Button } from "@nextui-org/button";
 import { Card, CardBody } from "@nextui-org/react";
-import { useSession } from "next-auth/react";
 import { handleAddToCart, checkIfInCart } from "@/hooks/fetching";
+import { useCartStore } from "@/store/cartStore";
+import { AutoPart } from "@/types";
 
 interface CardProps {
   part: AutoPart;
@@ -17,43 +15,53 @@ interface CardProps {
 const FullCard: React.FC<CardProps> = ({ part }) => {
   const router = useRouter();
   const { data: session } = useSession();
-  const [isFollowed, setIsFollowed] = useState(false);
+  const { itemsInCart, addItemToCart, setItemsInCart } = useCartStore();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (session?.user) {
-      (async () => {
+    const fetchCartStatus = async () => {
+      if (session?.user) {
         const inCart = await checkIfInCart(
           session.user.id,
           session.user.token,
           part.id
         );
-        setIsFollowed(inCart);
-      })();
-    }
-  }, [part.id, session?.user]);
+        setItemsInCart({ [part.id]: inCart });
+      }
+    };
+
+    fetchCartStatus();
+  }, [part.id, session?.user, setItemsInCart]);
 
   const handleRouteToCard = () => {
     router.push(`/autopart/${part.id}`);
   };
 
-  const onAddToCart = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation();
+  const onAddToCart = async () => {
     if (session?.user) {
-      await handleAddToCart({
-        userId: session.user.id,
-        token: session.user.token,
-        autopartID: part.id,
-        quantity: 1, // Assuming quantity 1 for now
-        setIsLoading,
-        setError,
-      });
-      setIsFollowed(true);
+      try {
+        setIsLoading(true);
+        await handleAddToCart({
+          userId: session.user.id,
+          token: session.user.token,
+          autopartID: part.id,
+          quantity: 1, // Указываем количество товара для добавления
+          setIsLoading,
+          setError,
+        });
+        addItemToCart(part.id); // Добавляем товар в Zustand Store
+      } catch (error) {
+        setError("Failed to add item to cart");
+      } finally {
+        setIsLoading(false);
+      }
     } else {
       setError("You need to be logged in to add items to the cart");
     }
   };
+
+  const buttonText = itemsInCart[part.id] ? "В корзине" : "В корзину";
 
   return (
     <Card
@@ -92,17 +100,19 @@ const FullCard: React.FC<CardProps> = ({ part }) => {
           <div className="flex items-start justify-center ">
             <Button
               className={
-                isFollowed
+                itemsInCart[part.id]
                   ? "bg-transparent text-foreground border-default-200"
                   : ""
               }
               color="primary"
               radius="full"
               size="sm"
-              variant={isFollowed ? "bordered" : "solid"}
-              onClick={onAddToCart}
+              variant={itemsInCart[part.id] ? "bordered" : "solid"}
+              onPress={onAddToCart}
+              isLoading={isLoading}
+              disabled={isLoading}
             >
-              {isFollowed ? "В корзине" : "В корзину"}
+              {buttonText}
             </Button>
           </div>
         </div>

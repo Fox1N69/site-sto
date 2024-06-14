@@ -130,5 +130,5 @@ func (h *basketHandler) CheckBasket(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"exist": exist})
+	c.JSON(http.StatusOK, gin.H{"inCart": exist})
 }

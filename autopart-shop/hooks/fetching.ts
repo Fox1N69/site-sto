@@ -131,24 +131,23 @@ export const checkIfInCart = async (
 ): Promise<boolean> => {
   try {
     const response = await fetch(
-      `http://localhost:4000/v1/account/user/${userId}/basket/items`,
+      `http://localhost:4000/v1/account/user/${userId}/check/${autopartID}`,
       {
         method: "GET",
         headers: {
-          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
       }
     );
 
     if (!response.ok) {
-      throw new Error("Failed to fetch cart items");
+      throw new Error("Failed to check if item is in cart");
     }
 
     const data = await response.json();
-    return data.some((item: any) => item.autopart_id === autopartID);
+    return data.inCart;
   } catch (error) {
-    console.error(error);
-    return false;
+    console.error("Failed to check if item is in cart:", error);
+    return false; // В случае ошибки возвращаем false
   }
 };
