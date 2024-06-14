@@ -67,8 +67,9 @@ func (h *basketHandler) AddItemToBasket(c *gin.Context) {
 
 func (h *basketHandler) RemoveItemByID(c *gin.Context) {
 	itemID, _ := strconv.ParseUint(c.Param("id"), 10, 30)
+	autopartID, _ := strconv.ParseUint(c.Param("autopart_id"), 10, 30)
 
-	if err := h.service.RemoveItem(uint(itemID)); err != nil {
+	if err := h.service.RemoveItem(uint(itemID), uint(autopartID)); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}

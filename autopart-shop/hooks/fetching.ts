@@ -155,15 +155,17 @@ export const checkIfInCart = async (
 interface ItemFromBasket {
   cartItemID: number;
   token: string;
+  userID: string;
 }
 
 export const handleRemoveFromCart = async ({
   cartItemID,
   token,
+  userID,
 }: ItemFromBasket) => {
   try {
     const response = await fetch(
-      `http://localhost:4000/v1/account/user/remove_items/${cartItemID}`,
+      `http://localhost:4000/v1/account/user/${userID}/remove_items/${cartItemID}`,
       {
         method: "DELETE",
         headers: {

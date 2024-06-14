@@ -11,7 +11,7 @@ type BasketRepo interface {
 	GetBasketByUserID(userID uint) (*model.Basket, error)
 	AddItemToBasket(userID uint, item model.BasketItem) error
 	UpdateBasketItem(itemID uint, newItem model.BasketItem) error
-	RemoveItemFromBasket(itemID uint) error
+	RemoveItemFromBasket(userID, autoPartID uint) error
 	ClearBasket(basketID uint) error
 	UpdateBasketItemQuantity(userID, autoPartID uint, quantity uint) error
 	RemoveAllItems(basketID uint) error
@@ -64,9 +64,19 @@ func (r *basketRepo) UpdateBasketItem(itemID uint, newItem model.BasketItem) err
 	return r.db.Model(&model.BasketItem{}).Where("id = ?", itemID).Updates(newItem).Error
 }
 
-func (r *basketRepo) RemoveItemFromBasket(itemID uint) error {
-	var basketItem model.BasketItem
-	return r.db.Delete(basketItem, itemID).Error
+func (r *basketRepo) RemoveItemFromBasket(userID, autoPartID uint) error {
+	var basket model.Basket
+
+	if err := r.db.Where("user_id = ?", userID).First(&basket).Error; err != nil {
+		return err
+	}
+
+	var basketImtem model.BasketItem
+	if err := r.db.Where("basket_id = ? AND auto_part_id = ?", basket.ID, autoPartID).First(&basketImtem).Error; err != nil {
+		return err
+	}
+
+	return r.db.Delete(&basketImtem).Error
 }
 
 func (r *basketRepo) ClearBasket(basketID uint) error {

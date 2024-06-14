@@ -9,7 +9,7 @@ import (
 type BasketService interface {
 	Create(user model.User) error
 	AddItem(userID uint, item model.BasketItem) error
-	RemoveItem(itemID uint) error
+	RemoveItem(itemID uint, autoPartID uint) error
 	GetBasketByUserID(userID uint) (*model.Basket, error)
 	UpdateBasketItem(id uint, item model.BasketItem) error
 	UpdateBasketItemQuantity(userID, autoPartID, quantity uint) error
@@ -46,8 +46,8 @@ func (s *basketService) AddItem(userID uint, item model.BasketItem) error {
 	return s.basketRepo.AddItemToBasket(userID, item)
 }
 
-func (s *basketService) RemoveItem(itemID uint) error {
-	return s.basketRepo.RemoveItemFromBasket(itemID)
+func (s *basketService) RemoveItem(itemID uint, autoPartID uint) error {
+	return s.basketRepo.RemoveItemFromBasket(itemID, autoPartID)
 }
 
 func (s *basketService) AddItemToBasket(userID uint, item model.BasketItem) error {

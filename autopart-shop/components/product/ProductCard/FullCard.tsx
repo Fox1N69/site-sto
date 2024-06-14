@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { Button } from "@nextui-org/button";
-import { Card, CardBody } from "@nextui-org/react";
+import { Card, CardBody, user } from "@nextui-org/react";
 import {
   handleAddToCart,
   checkIfInCart,
@@ -51,6 +51,7 @@ const FullCard: React.FC<CardProps> = ({ part }) => {
           await handleRemoveFromCart({
             token: session.user.token,
             cartItemID: part.id,
+            userID: session.user.id,
           });
           removeItemFromCart(part.id);
         } else {
