@@ -15,6 +15,7 @@ type BasketRepo interface {
 	ClearBasket(basketID uint) error
 	UpdateBasketItemQuantity(userID, autoPartID uint, quantity uint) error
 	RemoveAllItems(basketID uint) error
+	CheckBasket(basketID, autoPartID uint) (bool, error)
 }
 
 type basketRepo struct {
@@ -89,4 +90,14 @@ func (r *basketRepo) UpdateBasketItemQuantity(userID, autoPartID uint, quantity 
 
 func (r *basketRepo) RemoveAllItems(basketID uint) error {
 	return r.db.Where("basket_id = ?", basketID).Delete(&model.BasketItem{}).Error
+}
+
+func (r *basketRepo) CheckBasket(basketID, autoPartID uint) (bool, error) {
+	var count int64
+	err := r.db.Model(&model.BasketItem{}).Where("basket_id = ? AND auto_part_id = ?", basketID, autoPartID).Count(&count).Error
+	if err != nil {
+		return false, err
+	}
+
+	return count > 0, nil
 }

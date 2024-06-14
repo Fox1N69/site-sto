@@ -14,6 +14,7 @@ type BasketService interface {
 	UpdateBasketItem(id uint, item model.BasketItem) error
 	UpdateBasketItemQuantity(userID, autoPartID, quantity uint) error
 	RemoveAllItems(basketID uint) error
+	CheckBasket(basketID, autoPartID uint) (bool, error)
 }
 
 type basketService struct {
@@ -83,4 +84,8 @@ func (s *basketService) UpdateBasketItemQuantity(userID, autoPartID, quantity ui
 
 func (s *basketService) RemoveAllItems(basketID uint) error {
 	return s.basketRepo.RemoveAllItems(basketID)
+}
+
+func (s *basketService) CheckBasket(basketID, autoPartID uint) (bool, error) {
+	return s.basketRepo.CheckBasket(basketID, autoPartID)
 }

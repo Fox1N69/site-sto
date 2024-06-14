@@ -15,6 +15,7 @@ type BasketHandler interface {
 	UpdateBasketItemQuantity(c *gin.Context)
 	RemoveItemByID(c *gin.Context)
 	RemoveAllItems(c *gin.Context)
+	CheckBasket(c *gin.Context)
 }
 
 type basketHandler struct {
@@ -112,4 +113,22 @@ func (h *basketHandler) UpdateBasketItemQuantity(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"status": "quantity updated"})
+}
+
+func (h *basketHandler) CheckBasket(c *gin.Context) {
+	autoPartID, _ := strconv.ParseUint(c.Param("autopart_id"), 10, 32)
+	userID, _ := strconv.ParseUint(c.Param("id"), 10, 32)
+	basket, err := h.service.GetBasketByUserID(uint(userID))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	exist, err := h.service.CheckBasket(basket.ID, uint(autoPartID))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"exist": exist})
 }
