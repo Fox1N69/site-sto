@@ -10,15 +10,17 @@ import {
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { Button } from "@nextui-org/button";
 import { Icon } from "@iconify/react";
-import Cookies from "js-cookie";
 import { useSession } from "next-auth/react";
 import CartCouter from "./CartCouter";
 import { Product } from "@/types";
+import CartButton from "./CartButton";
+import { useCartStore } from "@/store/cartStore";
 
 export default function CartModal() {
   const [open, setOpen] = useState<boolean>(false);
   const [products, setProducts] = useState<Product[]>([]);
   const { data: session } = useSession();
+  const { setItemsInCart, resetItemCount } = useCartStore();
 
   const handleOpen = () => {
     setOpen(true);
@@ -26,7 +28,7 @@ export default function CartModal() {
 
   const fetchCartItems = async () => {
     try {
-      const userId = session?.user.id; // Replace with the actual user ID
+      const userId = session?.user.id;
       const response = await fetch(
         `http://localhost:4000/v1/account/user/${userId}/basket`,
         {
@@ -55,6 +57,13 @@ export default function CartModal() {
       );
 
       setProducts(extractedProducts);
+
+      // Update Zustand store with the fetched items
+      const itemsInCart = extractedProducts.reduce((acc, product) => {
+        acc[product.id] = true;
+        return acc;
+      }, {} as { [key: number]: boolean });
+      setItemsInCart(itemsInCart);
     } catch (error) {
       console.error("Failed to fetch cart items", error);
     }
@@ -74,8 +83,9 @@ export default function CartModal() {
       if (!response.ok) {
         throw new Error("Failed to remove item");
       }
-      // Удаляем элемент из состояния products после успешного удаления на сервере
-      setProducts((prevProducts) => prevProducts.slice(0, 0));
+      setProducts([]);
+      setItemsInCart({});
+      resetItemCount();
     } catch (error) {
       console.error("Failed to remove item from server", error);
     }
@@ -95,10 +105,11 @@ export default function CartModal() {
       if (!response.ok) {
         throw new Error("Failed to remove item");
       }
-      // Удаляем элемент из состояния products после успешного удаления на сервере
       setProducts((prevProducts) =>
         prevProducts.filter((product) => product.cartItemID !== cartItemID)
       );
+      const { removeItemFromCart } = useCartStore.getState();
+      removeItemFromCart(cartItemID);
     } catch (error) {
       console.error("Failed to remove item from server", error);
     }
@@ -110,11 +121,21 @@ export default function CartModal() {
     }
   }, [open]);
 
+  const calculateTotalPrice = () => {
+    let totalPrice = 0;
+    products.forEach((product) => {
+      const price =
+        typeof product.price === "string"
+          ? product.price
+          : product.price.toString();
+      totalPrice += parseFloat(price) * product.quantity;
+    });
+    return totalPrice.toFixed(2);
+  };
+
   return (
     <>
-      <Button isIconOnly onPress={handleOpen} variant="bordered">
-        <Icon icon={"carbon:shopping-cart"} />
-      </Button>
+      <CartButton onClick={handleOpen} />
 
       <Transition show={open}>
         <Dialog className="relative z-10" onClose={() => setOpen(false)}>
@@ -227,7 +248,7 @@ export default function CartModal() {
                       <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
                         <div className="flex justify-between text-base font-medium text-gray-900">
                           <p>Общая цена:</p>
-                          <p>262₽</p>
+                          <p>{calculateTotalPrice()}₽</p>
                         </div>
                         <p className="mt-0.5 text-sm text-gray-500">
                           Стоимость доставки расчитывается при оформление заказа

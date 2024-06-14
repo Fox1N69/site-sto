@@ -1,9 +1,8 @@
-"use client";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { Button } from "@nextui-org/button";
-import { Card, CardBody, user } from "@nextui-org/react";
+import { Card, CardBody } from "@nextui-org/react";
 import {
   handleAddToCart,
   checkIfInCart,
@@ -63,7 +62,7 @@ const FullCard: React.FC<CardProps> = ({ part }) => {
             setIsLoading,
             setError,
           });
-          addItemToCart(part.id); // Добавляем товар в Zustand Store
+          addItemToCart(part.id);
         }
       } catch (error) {
         setError("Failed to add item to cart");
@@ -84,7 +83,7 @@ const FullCard: React.FC<CardProps> = ({ part }) => {
       shadow="sm"
     >
       <CardBody>
-        <div className="flex gap-10 ">
+        <div className="flex gap-10">
           <div className="relative w-[25%]">
             <img src={part.img} alt="" className="w-full h-full rounded-lg" />
           </div>
@@ -98,20 +97,19 @@ const FullCard: React.FC<CardProps> = ({ part }) => {
                   {part.model_name}
                 </p>
                 <h1 className="text-large font-medium mt-2">{"Описание:"}</h1>
-                <p className=" font-light ">
+                <p className=" font-light">
                   Lorem ipsum dolor sit amet consectetur adipisicing elit.
                   Explicabo cupiditate officiis quisquam reiciendis placeat! Ex
                 </p>
               </div>
             </div>
-
             <div className="flex flex-col mt-3 gap-1">
               <div className="flex justify-between">
                 <p className=" text-small">рейтинг || отзывы</p>
               </div>
             </div>
           </div>
-          <div className="flex items-start justify-center ">
+          <div className="flex items-start justify-center">
             <Button
               className={
                 itemsInCart[part.id]
