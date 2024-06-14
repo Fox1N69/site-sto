@@ -1,0 +1,27 @@
+{
+  "orders": [
+    {
+      "fio": "",
+      "branch": "",
+      "storageCell": "",
+      "diskSize": "",
+      "arrivalDate": "",
+      "deliveryDate": "",
+      "price": "",
+      "isPaid": "",
+      "status": "",
+      "avatar": "",
+      "id": "1"
+    }
+  ],
+  "clients": [
+    {
+      "id": "",
+      "fio": "",
+      "branch": "",
+      "phoneNumber": "",
+      "email": "",
+      "lastVisit": ""
+    }
+  ]
+}
