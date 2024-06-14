@@ -16,11 +16,23 @@ import { Product } from "@/types";
 import CartButton from "./CartButton";
 import { useCartStore } from "@/store/cartStore";
 
+export const calculateTotalPrice = (products: Product[]) => {
+  const totalPrice = products.reduce((acc, product) => {
+    const price =
+      typeof product.price === "string"
+        ? product.price
+        : product.price.toString();
+    return acc + parseFloat(price) * product.quantity;
+  }, 0);
+  useCartStore.getState().setTotalPrice(totalPrice);
+};
+
 export default function CartModal() {
   const [open, setOpen] = useState<boolean>(false);
   const [products, setProducts] = useState<Product[]>([]);
   const { data: session } = useSession();
-  const { setItemsInCart, resetItemCount } = useCartStore();
+  const { setItemsInCart, resetItemCount, setTotalPrice } = useCartStore();
+  const totalPrice = useCartStore((state) => state.totalPrice);
 
   const handleOpen = () => {
     setOpen(true);
@@ -57,8 +69,6 @@ export default function CartModal() {
       );
 
       setProducts(extractedProducts);
-
-      // Update Zustand store with the fetched items
       const itemsInCart = extractedProducts.reduce((acc, product) => {
         acc[product.id] = true;
         return acc;
@@ -86,6 +96,7 @@ export default function CartModal() {
       setProducts([]);
       setItemsInCart({});
       resetItemCount();
+      setTotalPrice(0);
     } catch (error) {
       console.error("Failed to remove item from server", error);
     }
@@ -121,17 +132,20 @@ export default function CartModal() {
     }
   }, [open]);
 
-  const calculateTotalPrice = () => {
-    let totalPrice = 0;
-    products.forEach((product) => {
-      const price =
-        typeof product.price === "string"
-          ? product.price
-          : product.price.toString();
-      totalPrice += parseFloat(price) * product.quantity;
-    });
-    return totalPrice.toFixed(2);
-  };
+  useEffect(() => {
+    const calculateTotalPrice = () => {
+      const totalPrice = products.reduce((acc, product) => {
+        const price =
+          typeof product.price === "string"
+            ? parseFloat(product.price)
+            : product.price;
+        return acc + price * product.quantity;
+      }, 0);
+      setTotalPrice(totalPrice);
+    };
+
+    calculateTotalPrice();
+  }, [products, setTotalPrice]);
 
   return (
     <>
@@ -248,7 +262,7 @@ export default function CartModal() {
                       <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
                         <div className="flex justify-between text-base font-medium text-gray-900">
                           <p>Общая цена:</p>
-                          <p>{calculateTotalPrice()}₽</p>
+                          <p>{totalPrice}₽</p>
                         </div>
                         <p className="mt-0.5 text-sm text-gray-500">
                           Стоимость доставки расчитывается при оформление заказа
