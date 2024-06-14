@@ -4,6 +4,7 @@ import Banner from "@/components/Banner/banner";
 import Example from "@/components/cart/CartModal";
 import { title } from "@/components/primitives";
 import Card from "@/components/product/ProductCard/Card";
+import FullCard from "@/components/product/ProductCard/FullCard";
 import { useFetchAutoParts } from "@/hooks/fetching";
 import { AutoPart } from "@/types";
 import axios from "axios";
@@ -25,13 +26,11 @@ export default function AutoParts() {
   return (
     <main className="flex min-h-screen flex-col items-center p-24 gap-20">
       <div className="main__container">
-        {autoPartChunks.map((chunk) => (
-          <div className="autopart__cards flex gap-5 justify-center mt-20">
-            {chunk.map((part) => (
-              <Card key={part.id} part={part} />
-            ))}
-          </div>
-        ))}
+        <div className="autopart__cards flex gap-5 justify-center mt-20 flex-col">
+          {autoParts.map((part) => (
+            <FullCard key={part.id} part={part} />
+          ))}
+        </div>
       </div>
     </main>
   );

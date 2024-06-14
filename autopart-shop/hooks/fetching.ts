@@ -77,3 +77,78 @@ export const useFetchCartItems = () => {
 
   return products;
 };
+
+interface HandleAddToCartParams {
+  userId: string;
+  token: string;
+  autopartID: number;
+  quantity: number;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  setError: React.Dispatch<React.SetStateAction<string | null>>;
+}
+
+export const handleAddToCart = async ({
+  userId,
+  token,
+  autopartID,
+  quantity,
+  setIsLoading,
+  setError,
+}: HandleAddToCartParams) => {
+  setIsLoading(true);
+  setError(null);
+  try {
+    const response = await fetch(
+      `http://localhost:4000/v1/account/user/${userId}/basket/items`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          autopart_id: autopartID,
+          quantity: quantity,
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to add item to cart");
+    }
+    // Handle successful response if needed
+  } catch (error) {
+    setError("Failed to add item to cart");
+  } finally {
+    setIsLoading(false);
+  }
+};
+
+export const checkIfInCart = async (
+  userId: string,
+  token: string,
+  autopartID: number
+): Promise<boolean> => {
+  try {
+    const response = await fetch(
+      `http://localhost:4000/v1/account/user/${userId}/basket/items`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch cart items");
+    }
+
+    const data = await response.json();
+    return data.some((item: any) => item.autopart_id === autopartID);
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+};
