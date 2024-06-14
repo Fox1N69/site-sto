@@ -14,6 +14,7 @@ type AutoPartService interface {
 	DeleteAutoPart(id uint) error
 	CheckStock(id uint) (int, error)
 	ReduceStock(id uint, quantity int) error
+	Search(query string) ([]model.AutoPart, error)
 }
 
 type autoPartService struct {
@@ -71,4 +72,8 @@ func (s *autoPartService) ReduceStock(id uint, quantity int) error {
 	}
 	newStock := int(stockUint - uint(quantity)) // Преобразование обратно в int
 	return s.autoPartRepo.UpdateStock(id, newStock)
+}
+
+func (s *autoPartService) Search(query string) ([]model.AutoPart, error) {
+	return s.autoPartRepo.Search(query)
 }

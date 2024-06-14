@@ -15,6 +15,7 @@ type AutoPartRepo interface {
 	GetStock(id uint) (uint, error)
 	UpdateStock(id uint, quantity int) error
 	Exists(id uint) (bool, error)
+	Search(query string) ([]model.AutoPart, error)
 }
 
 type autoPartRepo struct {
@@ -71,4 +72,18 @@ func (r *autoPartRepo) Exists(id uint) (bool, error) {
 		return false, err
 	}
 	return count > 0, nil
+}
+
+func (r *autoPartRepo) Search(query string) ([]model.AutoPart, error) {
+	var product []model.AutoPart
+
+	if err := r.db.Table("auto_parts").
+		Select("auto_parts.*, categories.name AS category_name, brands.name AS brand_name").
+		Joins("JOIN categories ON auto_parts.category_id = categories.id").
+		Joins("JOIN brands ON auto_parts.brand_id = brands.id").
+		Where("auto_parts.name LIKE ? OR categories.name LIKE ? OR brands.name LIKE ? OR model_name LIKE ?", "%"+query+"%", "%"+query+"%", "%"+query+"%", "%"+query+"%").
+		Find(&product).Error; err != nil {
+		return nil, err
+	}
+	return product, nil
 }

@@ -63,6 +63,7 @@ func (c *server) v1() {
 	shop := c.gin.Group("/shop")
 	{
 		shop.GET("/autoparts", shopHandler.GetAllAutoPart)
+		shop.GET("/autoparts/search", shopHandler.SearchAutoPart)
 	}
 
 	admin := c.gin.Group("/admin")

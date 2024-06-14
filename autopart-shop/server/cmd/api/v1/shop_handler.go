@@ -11,6 +11,7 @@ import (
 
 type ShopHandler interface {
 	GetAllAutoPart(c *gin.Context)
+	SearchAutoPart(c *gin.Context)
 }
 
 type shopHandler struct {
@@ -40,4 +41,16 @@ func (h *shopHandler) GetAllAutoPart(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, autoparts)
+}
+
+func (h *shopHandler) SearchAutoPart(c *gin.Context) {
+	query := c.Query("query")
+
+	data, err := h.autopartService.Search(query)
+	if err != nil {
+		response.New(c).Write(http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, data)
 }
