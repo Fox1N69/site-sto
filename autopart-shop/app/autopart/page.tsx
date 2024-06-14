@@ -4,7 +4,7 @@ import Banner from "@/components/Banner/banner";
 import Example from "@/components/cart/CartModal";
 import { title } from "@/components/primitives";
 import Card from "@/components/product/ProductCard/Card";
-import { useFetchAutoParts } from "@/config/fetching";
+import { useFetchAutoParts } from "@/hooks/fetching";
 import { AutoPart } from "@/types";
 import axios from "axios";
 import { useEffect, useState } from "react";
