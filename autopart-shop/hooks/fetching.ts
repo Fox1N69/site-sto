@@ -151,3 +151,30 @@ export const checkIfInCart = async (
     return false; // В случае ошибки возвращаем false
   }
 };
+
+interface ItemFromBasket {
+  cartItemID: number;
+  token: string;
+}
+
+export const handleRemoveFromCart = async ({
+  cartItemID,
+  token,
+}: ItemFromBasket) => {
+  try {
+    const response = await fetch(
+      `http://localhost:4000/v1/account/user/remove_items/${cartItemID}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    if (!response.ok) {
+      throw new Error("Failed to remove item");
+    }
+  } catch (error) {
+    console.error("Failed to remove item from server", error);
+  }
+};

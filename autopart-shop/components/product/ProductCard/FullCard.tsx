@@ -4,7 +4,11 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { Button } from "@nextui-org/button";
 import { Card, CardBody } from "@nextui-org/react";
-import { handleAddToCart, checkIfInCart } from "@/hooks/fetching";
+import {
+  handleAddToCart,
+  checkIfInCart,
+  handleRemoveFromCart,
+} from "@/hooks/fetching";
 import { useCartStore } from "@/store/cartStore";
 import { AutoPart } from "@/types";
 
@@ -15,7 +19,8 @@ interface CardProps {
 const FullCard: React.FC<CardProps> = ({ part }) => {
   const router = useRouter();
   const { data: session } = useSession();
-  const { itemsInCart, addItemToCart, setItemsInCart } = useCartStore();
+  const { itemsInCart, addItemToCart, setItemsInCart, removeItemFromCart } =
+    useCartStore();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -38,19 +43,27 @@ const FullCard: React.FC<CardProps> = ({ part }) => {
     router.push(`/autopart/${part.id}`);
   };
 
-  const onAddToCart = async () => {
+  const onToggleCart = async () => {
     if (session?.user) {
       try {
         setIsLoading(true);
-        await handleAddToCart({
-          userId: session.user.id,
-          token: session.user.token,
-          autopartID: part.id,
-          quantity: 1, // Указываем количество товара для добавления
-          setIsLoading,
-          setError,
-        });
-        addItemToCart(part.id); // Добавляем товар в Zustand Store
+        if (itemsInCart[part.id]) {
+          await handleRemoveFromCart({
+            token: session.user.token,
+            cartItemID: part.id,
+          });
+          removeItemFromCart(part.id);
+        } else {
+          await handleAddToCart({
+            userId: session.user.id,
+            token: session.user.token,
+            autopartID: part.id,
+            quantity: 1, // Указываем количество товара для добавления
+            setIsLoading,
+            setError,
+          });
+          addItemToCart(part.id); // Добавляем товар в Zustand Store
+        }
       } catch (error) {
         setError("Failed to add item to cart");
       } finally {
@@ -108,7 +121,7 @@ const FullCard: React.FC<CardProps> = ({ part }) => {
               radius="full"
               size="sm"
               variant={itemsInCart[part.id] ? "bordered" : "solid"}
-              onPress={onAddToCart}
+              onPress={onToggleCart}
               isLoading={isLoading}
               disabled={isLoading}
             >

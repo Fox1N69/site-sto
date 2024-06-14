@@ -6,6 +6,7 @@ type CartStore = {
   itemsInCart: { [key: number]: boolean };
   setItemsInCart: (items: { [key: number]: boolean }) => void;
   addItemToCart: (id: number) => void;
+  removeItemFromCart: (id: number) => void;
 };
 
 export const useCartStore = create<CartStore>()(
@@ -16,6 +17,12 @@ export const useCartStore = create<CartStore>()(
         set((state) => ({ itemsInCart: { ...state.itemsInCart, ...items } })),
       addItemToCart: (id) =>
         set((state) => ({ itemsInCart: { ...state.itemsInCart, [id]: true } })),
+      removeItemFromCart: (id) =>
+        set((state) => {
+          const updatedItems = { ...state.itemsInCart };
+          delete updatedItems[id];
+          return { itemsInCart: updatedItems };
+        }),
     }),
     {
       name: "cart-storage", // Название ключа в LocalStorage
