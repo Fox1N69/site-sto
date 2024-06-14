@@ -50,6 +50,7 @@ export default function CartModal() {
           quantity: item.quantity,
           imageSrc: item.AutoPart.img,
           imageAlt: item.AutoPart.name,
+          cartItemID: item.id,
         })
       );
 
@@ -80,10 +81,10 @@ export default function CartModal() {
     }
   };
 
-  const removeItemFromBasket = async (itemId: number) => {
+  const removeItemFromBasket = async (cartItemID: number) => {
     try {
       const response = await fetch(
-        `http://localhost:4000/v1/account/user/remove_items/${itemId}`,
+        `http://localhost:4000/v1/account/user/remove_items/${cartItemID}`,
         {
           method: "DELETE",
           headers: {
@@ -96,7 +97,7 @@ export default function CartModal() {
       }
       // Удаляем элемент из состояния products после успешного удаления на сервере
       setProducts((prevProducts) =>
-        prevProducts.filter((product) => product.id !== itemId)
+        prevProducts.filter((product) => product.cartItemID !== cartItemID)
       );
     } catch (error) {
       console.error("Failed to remove item from server", error);
@@ -206,7 +207,9 @@ export default function CartModal() {
                                           type="button"
                                           className="font-medium text-indigo-600 hover:text-indigo-500"
                                           onClick={() =>
-                                            removeItemFromBasket(product.id)
+                                            removeItemFromBasket(
+                                              product.cartItemID
+                                            )
                                           }
                                         >
                                           Remove

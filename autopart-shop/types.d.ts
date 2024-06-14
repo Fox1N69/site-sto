@@ -21,6 +21,7 @@ interface Product {
   quantity: number;
   imageSrc: string;
   imageAlt: string;
+  cartItemID: number;
 }
 
 export interface AutoPartInfo {
