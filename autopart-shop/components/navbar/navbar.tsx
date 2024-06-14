@@ -36,11 +36,30 @@ import axios from "axios";
 import Loaded from "@icons/lottie/loaded.json";
 import Lottie from "lottie-react";
 import CartModal from "../cart/CartModal";
+import { isConstructorDeclaration } from "typescript";
+import { AutoPart } from "@/types";
 
 export const Navbar = () => {
   const { data: session, status } = useSession();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<AutoPart[]>([]);
 
-  console.log(session);
+  const handleSearchInputChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const query = event.target.value;
+    setSearchQuery(query);
+
+    try {
+      const response = await axios.get(
+        `http://localhost:4000/shop/autoparts/search?query=${query}`
+      );
+      setSearchResults(response.data); // Предположим, что сервер возвращает массив найденных товаров
+    } catch (error) {
+      console.error("Failed to fetch search results", error);
+      setSearchResults([]); // Обработка ошибки, если запрос не удался
+    }
+  };
 
   const searchInput = (
     <Input
@@ -49,6 +68,8 @@ export const Navbar = () => {
         inputWrapper: "bg-default-100",
         input: "text-sm",
       }}
+      onChange={handleSearchInputChange}
+      value={searchQuery}
       endContent={
         <Kbd className="hidden lg:inline-block" keys={["command"]}>
           K
@@ -127,20 +148,10 @@ export const Navbar = () => {
       <NavbarMenu>
         {searchInput}
         <div className="mx-4 mt-2 flex flex-col gap-2">
-          {siteConfig.navMenuItems.map((item, index) => (
-            <NavbarMenuItem key={`${item}-${index}`}>
-              <Link
-                color={
-                  index === 2
-                    ? "primary"
-                    : index === siteConfig.navMenuItems.length - 1
-                    ? "danger"
-                    : "foreground"
-                }
-                href="#"
-                size="lg"
-              >
-                {item.label}
+          {searchResults.map((result) => (
+            <NavbarMenuItem key={result.id}>
+              <Link href={`/autoparts/${result.id}`} size="lg">
+                {result.name}
               </Link>
             </NavbarMenuItem>
           ))}
