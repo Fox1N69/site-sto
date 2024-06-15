@@ -23,7 +23,7 @@ const PriceFilter: React.FC<PriceFilterProps> = ({ onFilter }) => {
   };
 
   return (
-    <div className="flex flex-col gap-4 p-4" >
+    <div className="flex flex-col gap-4 p-4">
       <h2 className="text-lg font-medium">Фильтр по цене</h2>
       <div className="flex flex-row gap-2 w-[260px]">
         <Input
