@@ -44,54 +44,6 @@ export const AddOrders = () => {
     setStatus(value);
   };
 
-  const handleSubmit = async () => {
-    const formatDate = (dateStr: string) => {
-      const [day, month, year] = dateStr.split(".").map(Number);
-      const date = new Date(year, month - 1, day);
-      if (isNaN(date.getTime())) {
-        throw new Error("Invalid date format");
-      }
-      return date.toISOString();
-    };
-
-    const data = {
-      fio,
-      branch,
-      storageCell,
-      diskSize,
-      arrivalDate: formatDate(arrivalDate),
-      deliveryDate: formatDate(deliveryDate),
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      price,
-      isPaid,
-      status: "На Хранении",
-    };
-
-    try {
-      const response = await fetch(
-        "https://api-deplom.onrender.com/api/crequest/set",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-
-      // Handle response here
-      console.log("Data submitted:", data);
-      onClose(); // Close the modal after submission
-    } catch (error) {
-      console.error("Failed to submit data:", error);
-    }
-  };
-
   return (
     <div>
       <Button onPress={onOpen} color="primary">
@@ -193,7 +145,7 @@ export const AddOrders = () => {
           </ModalBody>
           <ModalFooter>
             <Button onPress={onClose}>Отмена</Button>
-            <Button onPress={handleSubmit}>Добавить</Button>
+            <Button onPress={() => {}}>Добавить</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

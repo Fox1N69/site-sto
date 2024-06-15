@@ -15,26 +15,26 @@ import {
 } from "@nextui-org/react";
 import React, { useState } from "react";
 import { EditIcon } from "../icons/table/edit-icon";
-import { clients } from "../table/data";
+import { products } from "../../store/data";
 import { format, parse } from "date-fns";
 
-interface EditClientsProps {
-  selectedClientsId: string;
-  clients: (typeof clients)[number];
+interface EditProductsProps {
+  selectedProductsId: string;
+  products: (typeof products)[number];
 }
 
-export const EditClients: React.FC<EditClientsProps> = ({
-  selectedClientsId,
-  clients,
+export const EditProducts: React.FC<EditProductsProps> = ({
+  selectedProductsId,
+  products,
 }) => {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const [isDropdownOpen, setIsDropDownOpen] = useState(false);
 
   const [editedData, setEditedData] = useState({
-    id: selectedClientsId,
-    fio: clients.fio,
-    phoneNumber: clients.phoneNumber,
-    email: clients.email,
+    id: selectedProductsId,
+    fio: products.fio,
+    phoneNumber: products.phoneNumber,
+    email: products.email,
   });
 
   const handleChange = (e: any) => {
@@ -80,7 +80,7 @@ export const EditClients: React.FC<EditClientsProps> = ({
     try {
       console.log("Sending data to server:", JSON.stringify(editedData)); // Добавлено логирование данных
       await fetch(
-        `https://api-deplom.onrender.com/api/client/${editedData.id}`,
+        `https://api-deplom.onrender.com/api/product/${editedData.id}`,
         {
           method: "PUT",
           headers: {
@@ -124,21 +124,21 @@ export const EditClients: React.FC<EditClientsProps> = ({
                     label="ФИО"
                     variant="bordered"
                     name="fio"
-                    defaultValue={clients.fio}
+                    defaultValue={products.fio}
                     onChange={handleChange}
                   />
                   <Input
                     label="Номер телефона"
                     variant="bordered"
                     name="phoneNumber"
-                    defaultValue={clients.phoneNumber}
+                    defaultValue={products.phoneNumber}
                     onChange={handleChange}
                   />
                   <Input
                     label="Почта"
                     variant="bordered"
                     name="email"
-                    defaultValue={clients.email}
+                    defaultValue={products.email}
                     onChange={handleChange}
                   />
                 </ModalBody>

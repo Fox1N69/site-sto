@@ -2,25 +2,25 @@ import { User, Tooltip, Chip } from "@nextui-org/react";
 import React from "react";
 import { DeleteIcon } from "../../icons/table/delete-icon";
 import { EyeIcon } from "../../icons/table/eye-icon";
-import { clients } from "../../table/data";
-import { EditClients } from "../edit-customer";
+import { products } from "../../../store/data";
+import { EditProducts } from "../edit-product";
 import { Retryer } from "react-query/types/core/retryer";
 import { format } from "date-fns";
 
 interface Props {
-  client: (typeof clients)[number];
+  product: (typeof products)[number];
   columnKey: string | React.Key;
-  onEdit: (client: any) => void;
+  onEdit: (product: any) => void;
 }
 
-export const RenderCell = ({ client, columnKey, onEdit }: Props) => {
+export const RenderCell = ({ product, columnKey, onEdit }: Props) => {
   const handleDelete = () => {
-    fetch(`https://api-deplom.onrender.com/api/client/${client.id}`, {
+    fetch(`https://api-deplom.onrender.com/api/product/${product.id}`, {
       method: "DELETE",
     })
       .then((response) => {
         if (!response.ok) {
-          throw new Error("Failed to delete client");
+          throw new Error("Failed to delete product");
         }
       })
       .catch((error) => {
@@ -29,7 +29,7 @@ export const RenderCell = ({ client, columnKey, onEdit }: Props) => {
   };
 
   // @ts-ignore
-  const cellValue = client[columnKey];
+  const cellValue = product[columnKey];
   switch (columnKey) {
     case "name":
       return <User avatarProps={{}} name={cellValue}></User>;
@@ -45,19 +45,19 @@ export const RenderCell = ({ client, columnKey, onEdit }: Props) => {
         <div className="flex items-center gap-4 ">
           <div>
             <Tooltip content="Подробнее">
-              <button onClick={() => console.log("View user", client.id)}>
+              <button onClick={() => console.log("View user", product.id)}>
                 <EyeIcon size={20} fill="#979797" />
               </button>
             </Tooltip>
           </div>
           <div>
-            <EditClients clients={client} selectedClientsId={client.id} />
+            <EditProducts products={product} selectedProductsId={product.id} />
           </div>
           <div>
             <Tooltip
               content="Удалить"
               color="danger"
-              onClick={() => console.log("Delete user", client.id)}
+              onClick={() => console.log("Delete user", product.id)}
             >
               <button onClick={handleDelete}>
                 <DeleteIcon size={20} fill="#FF0080" />

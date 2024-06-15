@@ -2,7 +2,7 @@ import { User, Tooltip, Chip } from "@nextui-org/react";
 import React from "react";
 import { DeleteIcon } from "../icons/table/delete-icon";
 import { EyeIcon } from "../icons/table/eye-icon";
-import { orders } from "./data";
+import { orders } from "../../store/data";
 import { EditOrders } from "../orders/edit-order";
 import { format, isSameDay } from "date-fns";
 

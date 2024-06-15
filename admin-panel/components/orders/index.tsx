@@ -35,17 +35,7 @@ export const Orders = () => {
   const [items, setItems] = useState<Item[]>([]);
   const [filteredItems, setFilteredItems] = useState<Item[]>([]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const response = await fetch(
-        "https://api-deplom.onrender.com/api/crequest/"
-      );
-      const data: Item[] = await response.json();
-      setItems(data);
-      setFilteredItems(data);
-    };
-    fetchData();
-  }, []);
+  
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);

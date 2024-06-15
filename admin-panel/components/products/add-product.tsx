@@ -14,7 +14,7 @@ import {
   useDisclosure,
 } from "@nextui-org/react";
 
-export const AddClient = () => {
+export const AddProduct = () => {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const [fio, setFio] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -40,7 +40,7 @@ export const AddClient = () => {
 
     try {
       const response = await fetch(
-        "https://api-deplom.onrender.com/api/client/set",
+        "https://api-deplom.onrender.com/api/product/set",
         {
           method: "POST",
           headers: {

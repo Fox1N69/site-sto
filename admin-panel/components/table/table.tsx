@@ -8,7 +8,7 @@ import {
   useDisclosure,
 } from "@nextui-org/react";
 import React, { useEffect, useMemo, useState } from "react";
-import { columns } from "./data";
+import { columns } from "../../store/data";
 import { RenderCell } from "./render-cell";
 import axios from "axios";
 import { useAsyncList } from "@react-stately/data";

@@ -9,12 +9,12 @@ import { TrashIcon } from "@/components/icons/accounts/trash-icon";
 import { UsersIcon } from "@/components/icons/breadcrumb/users-icon";
 import { SettingsIcon } from "@/components/icons/sidebar/settings-icon";
 import { TableWrapper } from "@/components/table/table";
-import { AddClient } from "./add-customer";
+import { AddProduct } from "./add-product";
 import { HouseIcon } from "../icons/breadcrumb/house-icon";
 import Papa from "papaparse";
 import { writeTextFile } from "@tauri-apps/api/fs";
 import { save } from "@tauri-apps/api/dialog";
-import { TableWrapperClients } from "./table/table";
+import { TableWrapperProducts } from "./table/table";
 
 interface Item {
   id: number;
@@ -26,7 +26,7 @@ interface Item {
   [key: string]: number | string | boolean;
 }
 
-export const Clients = () => {
+export const Products = () => {
   const [searchValue, setSearchValue] = useState("");
   const [items, setItems] = useState<Item[]>([]);
   const [filteredItems, setFilteredItems] = useState<Item[]>([]);
@@ -34,7 +34,7 @@ export const Clients = () => {
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch(
-        "https://api-deplom.onrender.com/api/client/"
+        "https://api-deplom.onrender.com/api/product/"
       );
       const data: Item[] = await response.json();
       setItems(data);
@@ -54,7 +54,7 @@ export const Clients = () => {
   const fetchAndExportCSV = async () => {
     try {
       const response = await fetch(
-        "https://api-deplom.onrender.com/api/client/"
+        "https://api-deplom.onrender.com/api/product/"
       );
       const data = await response.json();
 
@@ -149,7 +149,7 @@ export const Clients = () => {
           <DotsIcon />
         </div>
         <div className="flex flex-row gap-3.5 flex-wrap">
-          <AddClient />
+          <AddProduct />
           <Button
             color="primary"
             startContent={<ExportIcon />}
@@ -160,7 +160,7 @@ export const Clients = () => {
         </div>
       </div>
       <div className="max-w-[95rem] mx-auto w-full">
-        <TableWrapperClients />
+        <TableWrapperProducts />
       </div>
     </div>
   );

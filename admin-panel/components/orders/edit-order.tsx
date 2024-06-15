@@ -15,7 +15,7 @@ import {
   useDisclosure,
 } from "@nextui-org/react";
 import { EditIcon } from "../icons/table/edit-icon";
-import { orders } from "../table/data";
+import { orders } from "../../store/data";
 import { format, parse } from "date-fns";
 
 interface EditOrderProps {

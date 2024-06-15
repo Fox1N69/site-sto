@@ -1,4 +1,4 @@
-import jsonDB from "@/app/api/orders/db.json";
+import jsonDB from "./db.json";
 
 export const columns = [
   { name: "ФИО", uid: "fio" },
@@ -14,4 +14,4 @@ export const columns = [
 ];
 
 export const orders = jsonDB.orders;
-export const clients = jsonDB.clients;
+export const products = jsonDB.clients;

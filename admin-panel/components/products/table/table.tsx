@@ -13,7 +13,7 @@ import { RenderCell } from "./render-cell";
 import axios from "axios";
 import { useAsyncList } from "@react-stately/data";
 
-interface Client {
+interface Product {
   fio: string;
   email: string;
   branch: string;
@@ -23,27 +23,27 @@ interface Client {
   [key: string]: any;
 }
 
-export const TableWrapperClients = () => {
+export const TableWrapperProducts = () => {
   const [selectedUser, setSelectedOrder] = useState(null);
   const [editedUser, setEditedUser] = useState(null);
   const { isOpen, onOpen } = useDisclosure();
-  const [clients, setClients] = useState([]);
+  const [products, setProducts] = useState([]);
   const [selectRow, setSelectRow] = useState(null);
   const [isLoading, setIsLoading] = React.useState(true);
 
   useEffect(() => {
     axios
-      .get("https://api-deplom.onrender.com/api/client/")
+      .get("https://api-deplom.onrender.com/api/product/")
       .then((response) => {
-        setClients(response.data);
+        setProducts(response.data);
       })
       .catch((error) => {
         console.error("Ошибка при загрузке данных:", error);
       });
   }, [editedUser]);
 
-  const handleEditUser = (client: any) => {
-    setEditedUser(client);
+  const handleEditUser = (product: any) => {
+    setEditedUser(product);
     onOpen();
   };
 
@@ -51,9 +51,9 @@ export const TableWrapperClients = () => {
     setSelectRow(row);
   };
 
-  const list = useAsyncList<Client>({
+  const list = useAsyncList<Product>({
     async load({ signal }) {
-      let res = await fetch("https://api-deplom.onrender.com/api/client/", {
+      let res = await fetch("https://api-deplom.onrender.com/api/product/", {
         signal,
       });
       let json = await res.json();
@@ -65,8 +65,8 @@ export const TableWrapperClients = () => {
     async sort({ items, sortDescriptor }) {
       return {
         items: items.sort((a, b) => {
-          let first = a[sortDescriptor.column as keyof Client];
-          let second = b[sortDescriptor.column as keyof Client];
+          let first = a[sortDescriptor.column as keyof Product];
+          let second = b[sortDescriptor.column as keyof Product];
           if (first == null || second == null) {
             return 0;
           }
@@ -116,7 +116,7 @@ export const TableWrapperClients = () => {
               {(columnKey) => (
                 <TableCell>
                   {RenderCell({
-                    client: item,
+                    product: item,
                     columnKey: columnKey,
                     onEdit: handleEditUser,
                   })}

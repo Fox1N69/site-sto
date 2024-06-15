@@ -64,10 +64,10 @@ export const SidebarWrapper = () => {
                 icon={<PaymentsIcon />}
               />
               <SidebarItem
-                isActive={pathname === "/customers"}
-                title="Клиенты"
+                isActive={pathname === "/products"}
+                title="Товар"
                 icon={<CustomersIcon />}
-                href="customers"
+                href="product"
               />
               <SidebarItem
                 isActive={pathname === "/reports"}
