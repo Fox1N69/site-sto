@@ -39,18 +39,18 @@ export const Navbar = () => {
   const handleSearchInputChange = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const query = event.target.value.toLowerCase();
+    const query = event.target.value;
     setSearchQuery(query);
     if (query.length > 1) {
       try {
         const response = await axios.get(
           `http://localhost:4000/shop/autoparts/search?query=${query}`
         );
-        setSearchResults(response.data); 
+        setSearchResults(response.data);
         setShowDropdown(true);
       } catch (error) {
         console.error("Failed to fetch search results", error);
-        setSearchResults([]); 
+        setSearchResults([]);
         setShowDropdown(false);
       }
     } else {

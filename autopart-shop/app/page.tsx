@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import { useFetchAutoParts } from "@/hooks/fetching";
 import Example from "@/components/cart/CartModal";
 import { Button } from "@nextui-org/button";
+import { PartCard } from "@/components/product/ProductCard/PartCard";
 
 export default function Home() {
   const router = useRouter();
@@ -23,7 +24,7 @@ export default function Home() {
         <Banner />
         <div className="autopart__cards flex gap-5 justify-center mt-20">
           {autoParts.slice(0, 5).map((part) => (
-            <Card key={part.id} part={part} />
+            <PartCard key={part.id} part={part} />
           ))}
         </div>
       </div>

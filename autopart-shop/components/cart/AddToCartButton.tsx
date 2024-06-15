@@ -1,59 +1,92 @@
-"use client";
-import { useState } from "react";
-import { Button } from "@nextui-org/button";
+import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
+import { Button } from "@nextui-org/button";
+import {
+  handleAddToCart,
+  checkIfInCart,
+  handleRemoveFromCart,
+} from "@/hooks/fetching";
+import { useCartStore } from "@/store/cartStore";
+import { AutoPart } from "@/types";
 
-interface AddToCartButtonProps {
-  autopartID: number;
-  quantity: number;
+interface ButtonCartProps {
+  part: AutoPart;
 }
 
-const AddToCartButton: React.FC<AddToCartButtonProps> = ({
-  autopartID,
-  quantity,
-}) => {
+const ButtonCart: React.FC<ButtonCartProps> = ({ part }) => {
   const { data: session } = useSession();
+  const { itemsInCart, addItemToCart, setItemsInCart, removeItemFromCart } =
+    useCartStore();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleAddToCart = async () => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      const response = await fetch(
-        `http://localhost:4000/v1/account/user/${session?.user.id}/basket/items`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${session?.user.token}`,
-          },
-          body: JSON.stringify({
-            autopart_id: 7,
-            quantity: quantity,
-          }),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to add item to cart");
+  useEffect(() => {
+    const fetchCartStatus = async () => {
+      if (session?.user) {
+        const inCart = await checkIfInCart(
+          session.user.id,
+          session.user.token,
+          part.id
+        );
+        setItemsInCart({ [part.id]: inCart });
       }
-      // Handle successful response if needed
-    } catch (error) {
-      setError("Failed to add item to cart");
-    } finally {
-      setIsLoading(false);
+    };
+
+    fetchCartStatus();
+  }, [part.id, session?.user, setItemsInCart]);
+
+  const onToggleCart = async () => {
+    if (session?.user) {
+      try {
+        setIsLoading(true);
+        if (itemsInCart[part.id]) {
+          await handleRemoveFromCart({
+            token: session.user.token,
+            cartItemID: part.id,
+            userID: session.user.id,
+          });
+          removeItemFromCart(part.id);
+        } else {
+          await handleAddToCart({
+            userId: session.user.id,
+            token: session.user.token,
+            autopartID: part.id,
+            quantity: 1, // Указываем количество товара для добавления
+            setIsLoading,
+            setError,
+          });
+          addItemToCart(part.id);
+        }
+      } catch (error) {
+        setError("Failed to add item to cart");
+      } finally {
+        setIsLoading(false);
+      }
+    } else {
+      setError("You need to be logged in to add items to the cart");
     }
   };
 
+  const buttonText = itemsInCart[part.id] ? "В корзине" : "В корзину";
+
   return (
-    <div>
-      <Button onPress={handleAddToCart} disabled={isLoading}>
-        {isLoading ? "Adding..." : "Add to Cart"}
-      </Button>
-      {error && <p className="text-red-500">{error}</p>}
-    </div>
+    <Button
+      className={
+        itemsInCart[part.id]
+          ? "bg-transparent text-foreground border-default-200"
+          : ""
+      }
+      color="primary"
+      radius="full"
+      size="sm"
+      variant={itemsInCart[part.id] ? "bordered" : "solid"}
+      onPress={onToggleCart}
+      isLoading={isLoading}
+      disabled={isLoading}
+    >
+      {buttonText}
+    </Button>
   );
 };
 
-export default AddToCartButton;
+export default ButtonCart;

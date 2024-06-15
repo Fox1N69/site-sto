@@ -102,10 +102,10 @@ export default function CartModal() {
     }
   };
 
-  const removeItemFromBasket = async (cartItemID: number) => {
+  const removeItemFromBasket = async (partID: number) => {
     try {
       const response = await fetch(
-        `http://localhost:4000/v1/account/user/remove_items/${cartItemID}`,
+        `http://localhost:4000/v1/account/user/${session?.user.id}/remove_items/${partID}`,
         {
           method: "DELETE",
           headers: {
@@ -117,10 +117,10 @@ export default function CartModal() {
         throw new Error("Failed to remove item");
       }
       setProducts((prevProducts) =>
-        prevProducts.filter((product) => product.cartItemID !== cartItemID)
+        prevProducts.filter((product) => product.id !== partID)
       );
       const { removeItemFromCart } = useCartStore.getState();
-      removeItemFromCart(cartItemID);
+      removeItemFromCart(partID);
     } catch (error) {
       console.error("Failed to remove item from server", error);
     }
@@ -242,9 +242,7 @@ export default function CartModal() {
                                           type="button"
                                           className="font-medium text-indigo-600 hover:text-indigo-500"
                                           onClick={() =>
-                                            removeItemFromBasket(
-                                              product.cartItemID
-                                            )
+                                            removeItemFromBasket(product.id)
                                           }
                                         >
                                           Remove
