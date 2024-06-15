@@ -24,15 +24,23 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": [
+        "./*"
+      ],
+      "@config/*": [
+        "./config/*"
+      ],
     }
   },
   "include": [
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    ".next/types/**/*.ts"
-, "components/orders/edit-order.tsx", "app/api/editOrders.js", "app/api/route.js"  ],
+    ".next/types/**/*.ts",
+    "components/orders/edit-order.tsx",
+    "app/api/editOrders.js",
+    "app/api/route.js"
+  ],
   "exclude": [
     "node_modules"
   ]

@@ -14,7 +14,7 @@ interface Props {
 
 export const RenderCell = ({ product, columnKey, onEdit }: Props) => {
   const handleDelete = () => {
-    fetch(`https://api-deplom.onrender.com/api/product/${product.id}`, {
+    fetch(`http://localhost:4000/admin/part/delete/${product.id}`, {
       method: "DELETE",
     })
       .then((response) => {
