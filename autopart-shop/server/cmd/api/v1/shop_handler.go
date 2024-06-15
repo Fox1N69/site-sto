@@ -44,9 +44,9 @@ func (h *shopHandler) GetAllAutoPart(c *gin.Context) {
 }
 
 func (h *shopHandler) SearchAutoPart(c *gin.Context) {
-	query := c.Query("query")
+	rawQuery := c.Query("query")
 
-	data, err := h.autopartService.Search(query)
+	data, err := h.autopartService.Search(rawQuery)
 	if err != nil {
 		response.New(c).Write(http.StatusInternalServerError, err.Error())
 		return

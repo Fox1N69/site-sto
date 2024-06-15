@@ -1,4 +1,5 @@
 import React from "react";
+import { SearchCard } from "./search-card";
 
 export const SearchIcon = () => {
   return (

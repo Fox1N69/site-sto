@@ -19,69 +19,105 @@ import clsx from "clsx";
 
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
-import {
-  TwitterIcon,
-  GithubIcon,
-  DiscordIcon,
-  HeartFilledIcon,
-  SearchIcon,
-  Logo,
-} from "@/components/icons";
-import Cookies from "js-cookie";
-import { useEffect, useState } from "react";
+import { GithubIcon, SearchIcon, Logo } from "@/components/icons";
+import { useState, useRef, useEffect } from "react";
 import { UserDropdown } from "./user-dropdown";
-import { signOut, useSession } from "next-auth/react";
-import { Session } from "inspector";
+import { useSession } from "next-auth/react";
 import axios from "axios";
 import Loaded from "@icons/lottie/loaded.json";
 import Lottie from "lottie-react";
 import CartModal from "../cart/CartModal";
-import { isConstructorDeclaration } from "typescript";
 import { AutoPart } from "@/types";
 
 export const Navbar = () => {
   const { data: session, status } = useSession();
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<AutoPart[]>([]);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const handleSearchInputChange = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const query = event.target.value;
+    const query = event.target.value.toLowerCase();
     setSearchQuery(query);
-
-    try {
-      const response = await axios.get(
-        `http://localhost:4000/shop/autoparts/search?query=${query}`
-      );
-      setSearchResults(response.data); // Предположим, что сервер возвращает массив найденных товаров
-    } catch (error) {
-      console.error("Failed to fetch search results", error);
-      setSearchResults([]); // Обработка ошибки, если запрос не удался
+    if (query.length > 1) {
+      try {
+        const response = await axios.get(
+          `http://localhost:4000/shop/autoparts/search?query=${query}`
+        );
+        setSearchResults(response.data); 
+        setShowDropdown(true);
+      } catch (error) {
+        console.error("Failed to fetch search results", error);
+        setSearchResults([]); 
+        setShowDropdown(false);
+      }
+    } else {
+      setSearchResults([]);
+      setShowDropdown(false);
     }
   };
 
+  const handleClickOutside = (event: MouseEvent) => {
+    if (
+      dropdownRef.current &&
+      !dropdownRef.current.contains(event.target as Node)
+    ) {
+      setShowDropdown(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   const searchInput = (
-    <Input
-      aria-label="Search"
-      classNames={{
-        inputWrapper: "bg-default-100",
-        input: "text-sm",
-      }}
-      onChange={handleSearchInputChange}
-      value={searchQuery}
-      endContent={
-        <Kbd className="hidden lg:inline-block" keys={["command"]}>
-          K
-        </Kbd>
-      }
-      labelPlacement="outside"
-      placeholder="Search..."
-      startContent={
-        <SearchIcon className="text-base text-default-400 pointer-events-none flex-shrink-0" />
-      }
-      type="search"
-    />
+    <div style={{ position: "relative" }}>
+      <Input
+        aria-label="Search"
+        classNames={{
+          inputWrapper: "bg-default-100",
+          input: "text-sm",
+        }}
+        onChange={handleSearchInputChange}
+        value={searchQuery}
+        endContent={
+          <Kbd className="hidden lg:inline-block" keys={["command"]}>
+            K
+          </Kbd>
+        }
+        labelPlacement="outside"
+        placeholder="Search..."
+        startContent={
+          <SearchIcon className="text-base text-default-400 pointer-events-none flex-shrink-0" />
+        }
+        type="search"
+      />
+      {showDropdown && searchResults.length > 0 && (
+        <div
+          ref={dropdownRef}
+          className="absolute z-10 w-full bg-white border border-gray-300 rounded-md shadow-lg mt-1"
+        >
+          {searchResults.map((result) => (
+            <div
+              key={result.id}
+              className="p-2 hover:bg-gray-100 cursor-pointer"
+            >
+              <Link href={`/autopart/${result.id}`}>
+                {result.name ||
+                  result.model_name ||
+                  result.Category?.name ||
+                  result.Brand?.name}
+              </Link>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
   );
 
   return (
@@ -144,19 +180,6 @@ export const Navbar = () => {
         <ThemeSwitch />
         <NavbarMenuToggle />
       </NavbarContent>
-
-      <NavbarMenu>
-        {searchInput}
-        <div className="mx-4 mt-2 flex flex-col gap-2">
-          {searchResults.map((result) => (
-            <NavbarMenuItem key={result.id}>
-              <Link href={`/autoparts/${result.id}`} size="lg">
-                {result.name}
-              </Link>
-            </NavbarMenuItem>
-          ))}
-        </div>
-      </NavbarMenu>
     </NextUINavbar>
   );
 };

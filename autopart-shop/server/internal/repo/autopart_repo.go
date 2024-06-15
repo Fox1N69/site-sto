@@ -81,7 +81,7 @@ func (r *autoPartRepo) Search(query string) ([]model.AutoPart, error) {
 		Select("auto_parts.*, categories.name AS category_name, brands.name AS brand_name").
 		Joins("JOIN categories ON auto_parts.category_id = categories.id").
 		Joins("JOIN brands ON auto_parts.brand_id = brands.id").
-		Where("auto_parts.name LIKE ? OR categories.name LIKE ? OR brands.name LIKE ? OR model_name LIKE ?", "%"+query+"%", "%"+query+"%", "%"+query+"%", "%"+query+"%").
+		Where("auto_parts.name ILIKE ? OR categories.name ILIKE ? OR brands.name ILIKE ? OR model_name ILIKE ?", "%"+query+"%", "%"+query+"%", "%"+query+"%", "%"+query+"%").
 		Find(&product).Error; err != nil {
 		return nil, err
 	}
