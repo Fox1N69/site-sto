@@ -14,14 +14,16 @@
       "id": "1"
     }
   ],
-  "clients": [
+  "products": [
     {
       "id": "",
-      "fio": "",
-      "branch": "",
-      "phoneNumber": "",
-      "email": "",
-      "lastVisit": ""
+      "name": "",
+      "price": 0,
+      "img": "",
+      "category": "",
+      "brand": "",
+      "stock": 0,
+      "model_name": ""
     }
   ]
 }

@@ -1,4 +1,4 @@
-import jsonDB from "./db.json";
+import jsonDB from "./model.json";
 
 export const columns = [
   { name: "ФИО", uid: "fio" },
@@ -14,4 +14,4 @@ export const columns = [
 ];
 
 export const orders = jsonDB.orders;
-export const products = jsonDB.clients;
+export const products = jsonDB.products;

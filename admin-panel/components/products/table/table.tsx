@@ -33,7 +33,7 @@ export const TableWrapperProducts = () => {
 
   useEffect(() => {
     axios
-      .get("https://api-deplom.onrender.com/api/product/")
+      .get("http://localhost:4000/shop/autoparts")
       .then((response) => {
         setProducts(response.data);
       })
@@ -53,7 +53,7 @@ export const TableWrapperProducts = () => {
 
   const list = useAsyncList<Product>({
     async load({ signal }) {
-      let res = await fetch("https://api-deplom.onrender.com/api/product/", {
+      let res = await fetch("http://localhost:4000/shop/autoparts", {
         signal,
       });
       let json = await res.json();

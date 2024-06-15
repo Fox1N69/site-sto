@@ -27,30 +27,6 @@ interface Item {
 }
 
 export const Products = () => {
-  const [searchValue, setSearchValue] = useState("");
-  const [items, setItems] = useState<Item[]>([]);
-  const [filteredItems, setFilteredItems] = useState<Item[]>([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const response = await fetch(
-        "https://api-deplom.onrender.com/api/product/"
-      );
-      const data: Item[] = await response.json();
-      setItems(data);
-      setFilteredItems(data); // Инициализация с полным списком данных
-    };
-    fetchData();
-  }, []);
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    const day = date.getDate().toString().padStart(2, "0");
-    const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Месяцы начинаются с 0
-    const year = date.getFullYear();
-    return `${day}.${month}.${year}`;
-  };
-
   const fetchAndExportCSV = async () => {
     try {
       const response = await fetch(
@@ -93,24 +69,6 @@ export const Products = () => {
       console.error("Ошибка при экспорте данных:", error);
     }
   };
-  // Добавьте состояние для хранения текста поискового запроса
-
-  // Функция для обновления текста поискового запроса
-  const handleSearchChange = (value: any) => {
-    setSearchValue(value);
-  };
-
-  // Обновление отфильтрованных данных при изменении поискового запроса
-  useEffect(() => {
-    if (searchValue === "") {
-      setFilteredItems(items);
-    } else {
-      const filteredData = items.filter((item) =>
-        item.fio.toLowerCase().includes(searchValue.toLowerCase())
-      );
-      setFilteredItems(filteredData);
-    }
-  }, [searchValue, items]);
 
   return (
     <div className="my-14 lg:px-6 max-w-[95rem] mx-auto w-full flex flex-col gap-4">
