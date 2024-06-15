@@ -2,14 +2,14 @@ import { User, Tooltip, Chip } from "@nextui-org/react";
 import React from "react";
 import { DeleteIcon } from "../../icons/table/delete-icon";
 import { EyeIcon } from "../../icons/table/eye-icon";
-import { products } from "../../../store/data";
 import { EditProducts } from "../edit-product";
 import { Retryer } from "react-query/types/core/retryer";
 import { format } from "date-fns";
+import { Product } from "@/types";
 
 interface Props {
-  product: (typeof products)[number];
-  columnKey: string | React.Key;
+  product: Product;
+  columnKey: keyof Product | "actions" | "category_name";
   onEdit: (product: any) => void;
 }
 
@@ -33,11 +33,11 @@ export const RenderCell = ({ product, columnKey, onEdit }: Props) => {
   switch (columnKey) {
     case "name":
       return <User avatarProps={{}} name={cellValue}></User>;
-    case "phone_number":
+    case "modelName":
       return <span>{cellValue}</span>;
-    case "email":
+    case "price":
       return <span>{cellValue}</span>;
-    case "lastVisit":
+    case "category_name":
       return <span>{cellValue}</span>;
 
     case "actions":

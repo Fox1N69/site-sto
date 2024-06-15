@@ -9,6 +9,7 @@ interface Product {
   Brand?: Brand[];
   Category: Category[];
   autoPartAboutInfo?: AutoPartInfo[];
+  [key: string]: any;
 }
 
 interface Category {

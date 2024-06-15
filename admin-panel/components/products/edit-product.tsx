@@ -17,10 +17,11 @@ import React, { useState } from "react";
 import { EditIcon } from "../icons/table/edit-icon";
 import { products } from "../../store/data";
 import { format, parse } from "date-fns";
+import { Product } from "@/types";
 
 interface EditProductsProps {
-  selectedProductsId: string;
-  products: (typeof products)[number];
+  selectedProductsId: number;
+  products: Product;
 }
 
 export const EditProducts: React.FC<EditProductsProps> = ({
@@ -32,9 +33,6 @@ export const EditProducts: React.FC<EditProductsProps> = ({
 
   const [editedData, setEditedData] = useState({
     id: selectedProductsId,
-    fio: products.fio,
-    phoneNumber: products.phoneNumber,
-    email: products.email,
   });
 
   const handleChange = (e: any) => {
@@ -124,21 +122,21 @@ export const EditProducts: React.FC<EditProductsProps> = ({
                     label="ФИО"
                     variant="bordered"
                     name="fio"
-                    defaultValue={products.fio}
+                    defaultValue={products.modelName}
                     onChange={handleChange}
                   />
                   <Input
                     label="Номер телефона"
                     variant="bordered"
                     name="phoneNumber"
-                    defaultValue={products.phoneNumber}
+                    defaultValue={products.modelName}
                     onChange={handleChange}
                   />
                   <Input
                     label="Почта"
                     variant="bordered"
                     name="email"
-                    defaultValue={products.email}
+                    defaultValue={products.modelName}
                     onChange={handleChange}
                   />
                 </ModalBody>

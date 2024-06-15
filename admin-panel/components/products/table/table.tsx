@@ -12,30 +12,30 @@ import { columns } from "./columns";
 import { RenderCell } from "./render-cell";
 import axios from "axios";
 import { useAsyncList } from "@react-stately/data";
-
-interface Product {
-  fio: string;
-  email: string;
-  branch: string;
-  phoneNumber: string;
-  id: string;
-  lastVisit: string;
-  [key: string]: any;
-}
+import { Product } from "@/types";
 
 export const TableWrapperProducts = () => {
   const [selectedUser, setSelectedOrder] = useState(null);
   const [editedUser, setEditedUser] = useState(null);
   const { isOpen, onOpen } = useDisclosure();
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [selectRow, setSelectRow] = useState(null);
   const [isLoading, setIsLoading] = React.useState(true);
+
+  const flattenProducts = (products: any[]) => {
+    return products.map((product) => ({
+      ...product,
+      category_name: product.Category?.name,
+      brand_name: product.Brand?.name,
+    }));
+  };
 
   useEffect(() => {
     axios
       .get("http://localhost:4000/shop/autoparts")
       .then((response) => {
-        setProducts(response.data);
+        const flatProduct = flattenProducts(response.data);
+        setProducts(flatProduct);
       })
       .catch((error) => {
         console.error("Ошибка при загрузке данных:", error);
