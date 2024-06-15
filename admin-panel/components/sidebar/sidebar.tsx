@@ -64,7 +64,7 @@ export const SidebarWrapper = () => {
                 icon={<PaymentsIcon />}
               />
               <SidebarItem
-                isActive={pathname === "/products"}
+                isActive={pathname === "/product"}
                 title="Товар"
                 icon={<CustomersIcon />}
                 href="product"

@@ -7,7 +7,7 @@ import {
   TableRow,
   useDisclosure,
 } from "@nextui-org/react";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { Key, useEffect, useMemo, useState } from "react";
 import { columns } from "./columns";
 import { RenderCell } from "./render-cell";
 import axios from "axios";
@@ -22,7 +22,7 @@ export const TableWrapperProducts = () => {
   const [selectRow, setSelectRow] = useState(null);
   const [isLoading, setIsLoading] = React.useState(true);
 
-  const flattenProducts = (products: any[]) => {
+  const flattenProducts = (products: any[]): Product[] => {
     return products.map((product) => ({
       ...product,
       category_name: product.Category?.name,
@@ -57,9 +57,12 @@ export const TableWrapperProducts = () => {
         signal,
       });
       let json = await res.json();
+
+      const flatProducts = flattenProducts(json);
       setIsLoading(false);
+
       return {
-        items: json,
+        items: flatProducts,
       };
     },
     async sort({ items, sortDescriptor }) {
@@ -113,11 +116,15 @@ export const TableWrapperProducts = () => {
         <TableBody items={list.items}>
           {(item) => (
             <TableRow onClick={() => handleRowSelection(item)}>
-              {(columnKey) => (
+              {(columnKey: Key) => (
                 <TableCell>
                   {RenderCell({
                     product: item,
-                    columnKey: columnKey,
+                    columnKey: columnKey as
+                      | keyof Product
+                      | "actions"
+                      | "category_name"
+                      | "brand_name",
                     onEdit: handleEditUser,
                   })}
                 </TableCell>

@@ -3,13 +3,12 @@ import React from "react";
 import { DeleteIcon } from "../../icons/table/delete-icon";
 import { EyeIcon } from "../../icons/table/eye-icon";
 import { EditProducts } from "../edit-product";
-import { Retryer } from "react-query/types/core/retryer";
-import { format } from "date-fns";
 import { Product } from "@/types";
+import { Span } from "next/dist/trace";
 
 interface Props {
   product: Product;
-  columnKey: keyof Product | "actions" | "category_name";
+  columnKey: keyof Product | "actions" | "category_name" | "brand_name";
   onEdit: (product: any) => void;
 }
 
@@ -33,11 +32,13 @@ export const RenderCell = ({ product, columnKey, onEdit }: Props) => {
   switch (columnKey) {
     case "name":
       return <User avatarProps={{}} name={cellValue}></User>;
-    case "modelName":
+    case "model_name":
       return <span>{cellValue}</span>;
     case "price":
       return <span>{cellValue}</span>;
     case "category_name":
+      return <span>{cellValue}</span>;
+    case "brand_name":
       return <span>{cellValue}</span>;
 
     case "actions":

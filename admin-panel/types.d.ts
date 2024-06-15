@@ -1,29 +1,37 @@
-import { isSameDay } from "date-fns";
-interface Product {
+export interface DeletedAt {
+  Time: string;
+  Valid: boolean;
+}
+
+export interface Category {
   id: number;
+  deleted_at: DeletedAt;
   name: string;
-  modelName: string;
-  img_url?: string;
+  AutoParts: any;
+  Brands: any;
+}
+
+export interface Brand {
+  id: number;
+  deleted_at: DeletedAt;
+  name: string;
+  AutoParts: any;
+  Categories: any;
+}
+
+export interface Product {
+  id: number;
+  deleted_at: DeletedAt;
+  name: string;
   price: number;
+  img: string;
+  model_name: string;
+  category_id: number;
+  Category: Category;
+  category_name?: string; // Добавляем это поле
+  brand_id: number;
+  Brand: Brand;
+  brand_name?: string; // Добавляем это поле
+  auto_part_info: any;
   stock: number;
-  Brand?: Brand[];
-  Category: Category[];
-  autoPartAboutInfo?: AutoPartInfo[];
-  [key: string]: any;
-}
-
-interface Category {
-  id: number;
-  name: string;
-}
-
-interface Brand {
-  id: number;
-  name: string;
-}
-
-interface AutoPartInfo {
-  id: number;
-  title: string;
-  description: string;
 }
