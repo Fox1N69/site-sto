@@ -6,6 +6,7 @@ import (
 	"shop-server/infra"
 	"shop-server/internal/model"
 	"shop-server/internal/service"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -13,6 +14,7 @@ import (
 type AdminHandler interface {
 	Test(c *gin.Context)
 	CreateAutoPart(c *gin.Context)
+	DeleteAutoPart(c *gin.Context)
 }
 
 type adminHandler struct {
@@ -46,3 +48,17 @@ func (h *adminHandler) CreateAutoPart(c *gin.Context) {
 	c.JSON(http.StatusCreated, "autopart create success")
 }
 
+func (h *adminHandler) DeleteAutoPart(c *gin.Context) {
+	autopartID, err := strconv.ParseUint(c.Param("id"), 10, 32)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	if err := h.service.DeleteAutoPart(uint(autopartID)); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(200, "item delete success")
+}

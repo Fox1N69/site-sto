@@ -70,7 +70,8 @@ func (c *server) v1() {
 	{
 		admin.Use(c.middleware.Role("admin"))
 		admin.GET("/test", adminHandler.Test)
-		admin.POST("/create", adminHandler.CreateAutoPart)
+		admin.POST("/part/create", adminHandler.CreateAutoPart)
+		admin.DELETE("/part/delete/:id", adminHandler.DeleteAutoPart)
 
 		brand := admin.Group("/brand")
 		{

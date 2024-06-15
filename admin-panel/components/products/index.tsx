@@ -46,14 +46,12 @@ export const Products = () => {
         "Последний визит": item.lastVisit,
       }));
 
-      // Добавим отладочный вывод для проверки csvData перед формированием CSV
       console.log("Данные для CSV:", csvData);
 
       const csv = Papa.unparse(csvData, {
         header: true,
       });
 
-      // Добавим отладочный вывод для проверки CSV перед сохранением
       console.log("Сформированный CSV:", csv);
 
       const path = await save({ defaultPath: "заявки.csv" });
@@ -83,7 +81,7 @@ export const Products = () => {
 
         <li className="flex gap-2">
           <UsersIcon />
-          <span>Клиенты</span>
+          <span>Товар</span>
           <span> / </span>{" "}
         </li>
         <li className="flex gap-2">
