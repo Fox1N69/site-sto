@@ -1,3 +1,4 @@
+"use client";
 import { User, Tooltip, Chip } from "@nextui-org/react";
 import React from "react";
 import { DeleteIcon } from "../../icons/table/delete-icon";
@@ -7,19 +8,20 @@ import { Product } from "@/types";
 import { Span } from "next/dist/trace";
 import { useSession } from "next-auth/react";
 import { deleteProduct } from "@/utils/fetching";
+import DeleteButton from "./delete-button";
 
 interface Props {
-  token: string;
   product: Product;
   columnKey: keyof Product | "actions" | "category_name" | "brand_name";
   onEdit: (product: any) => void;
 }
 
-export const RenderCell = ({ token, product, columnKey, onEdit }: Props) => {
-  const handleDelete = async () => {
-    await deleteProduct(token, product.id);
-  };
-
+export const RenderCell: React.FC<Props> = ({
+  token,
+  product,
+  columnKey,
+  onEdit,
+}: Props) => {
   // @ts-ignore
   const cellValue = product[columnKey];
   switch (columnKey) {
@@ -53,9 +55,7 @@ export const RenderCell = ({ token, product, columnKey, onEdit }: Props) => {
               color="danger"
               onClick={() => console.log("Delete user", product.id)}
             >
-              <button onClick={handleDelete}>
-                <DeleteIcon size={20} fill="#FF0080" />
-              </button>
+              <DeleteButton productId={product.id} />
             </Tooltip>
           </div>
         </div>

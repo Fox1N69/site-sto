@@ -96,6 +96,10 @@ export const TableWrapperProducts = () => {
     },
   });
 
+  if (status === "loading") {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className=" w-full flex flex-col gap-4">
       <Table
@@ -121,7 +125,6 @@ export const TableWrapperProducts = () => {
               {(columnKey: Key) => (
                 <TableCell>
                   {RenderCell({
-                    token: session?.user.token as string,
                     product: item,
                     columnKey: columnKey as
                       | keyof Product

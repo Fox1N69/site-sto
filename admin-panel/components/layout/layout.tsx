@@ -4,7 +4,7 @@ import { NavbarWrapper } from "../navbar/navbar";
 import { SidebarWrapper } from "../sidebar/sidebar";
 import { SidebarContext } from "./layout-context";
 import { BranchProvider } from "../context/BranchContext";
-import { SessionProvider } from "next-auth/react";
+import { SessionProvider, useSession } from "next-auth/react";
 
 interface Props {
   children: React.ReactNode;
@@ -26,12 +26,10 @@ export const Layout = ({ children }: Props) => {
           setCollapsed: handleToggleSidebar,
         }}
       >
-        <SessionProvider>
-          <section className="flex">
-            <SidebarWrapper />
-            <NavbarWrapper>{children}</NavbarWrapper>
-          </section>
-        </SessionProvider>
+        <section className="flex">
+          <SidebarWrapper />
+          <NavbarWrapper>{children}</NavbarWrapper>
+        </section>
       </SidebarContext.Provider>
     </BranchProvider>
   );

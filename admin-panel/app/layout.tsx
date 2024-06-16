@@ -3,6 +3,8 @@ import type { Metadata } from "next";
 import { Providers } from "./providers";
 import { fontSans } from "@/config/fonts";
 import clsx from "clsx";
+import { useSearchParams } from "next/navigation";
+import { SessionProvider, useSession } from "next-auth/react";
 
 export const metadata: Metadata = {
   title: "Next.js",

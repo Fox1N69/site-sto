@@ -26,7 +26,10 @@ export const fetchBrands = async () => {
   }
 };
 
-export const deleteProduct = async (token: string, productId: number) => {
+export const deleteProduct = async (
+  token: string | undefined,
+  productId: number
+) => {
   try {
     const response = await fetch(
       `http://localhost:4000/admin/part/delete/${productId}`,

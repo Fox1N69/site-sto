@@ -15,7 +15,11 @@ interface Props {
   onEdit: (order: any) => void;
 }
 
-export const RenderCell = ({ order, columnKey, onEdit }: Props) => {
+export const RenderCell: React.FC<Props> = ({
+  order,
+  columnKey,
+  onEdit,
+}: Props) => {
   const { data: session } = useSession();
   const handleDelete = async () => {
     const token = session?.user.token;
