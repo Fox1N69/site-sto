@@ -95,7 +95,17 @@ func (ar *autoPartRepo) Update(product model.AutoPart, fieldsToUpdate map[string
 }
 
 func (ar *autoPartRepo) Delete(id uint) error {
-	return ar.db.Delete(&model.AutoPart{}, id).Error
+	return ar.db.Transaction(func(tx *gorm.DB) error {
+		if err := tx.Where("auto_part_id = ?", id).Delete(model.AutoPartCategory{}).Error; err != nil {
+			return err
+		}
+
+		if err := tx.Delete(&model.AutoPart{}, id).Error; err != nil {
+			return err
+		}
+
+		return nil
+	})
 }
 
 func (ar *autoPartRepo) UpdateStock(id uint, quantity int) error {

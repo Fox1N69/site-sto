@@ -81,18 +81,20 @@ func (h *adminHandler) CreateAutoPart(c *gin.Context) {
 }
 
 func (h *adminHandler) DeleteAutoPart(c *gin.Context) {
-	autopartID, err := strconv.ParseUint(c.Param("id"), 10, 32)
+	idParam := c.Param("id")
+	id, err := strconv.ParseUint(idParam, 10, 64)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid auto part ID"})
 		return
 	}
 
-	if err := h.service.DeleteAutoPart(uint(autopartID)); err != nil {
+	err = h.service.DeleteAutoPart(uint(id))
+	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(200, "item delete success")
+	c.JSON(http.StatusOK, gin.H{"message": "Auto part deleted successfully"})
 }
 
 func (h *adminHandler) UpdateAutoPart(c *gin.Context) {
