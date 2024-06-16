@@ -34,6 +34,7 @@ export const EditProducts: React.FC<EditProductsProps> = ({
   const [isDropdownOpen, setIsDropDownOpen] = useState(false);
   const { data: session } = useSession();
   const [categories, setCategories] = useState<Category[]>([]);
+  const [brands, setBrands] = useState<Brand[]>([]);
   const [selectedCategoryName, setSelectedCategoryName] = useState<string>("");
   const {
     selectedCategory,
@@ -42,17 +43,10 @@ export const EditProducts: React.FC<EditProductsProps> = ({
     setSelectedBrand,
   } = useEditStore();
 
-  const handleBrandChange = (brand: Brand) => {
-    setEditedData((prevData) => ({
-      ...prevData,
-      brand_id: brand.id,
-    }));
-    setSelectedBrand(brand);
-  };
-
   const [editedData, setEditedData] = useState({
     id: selectedProductsId,
     category_id: products.category_id,
+    brand_id: products.brand_id,
   });
 
   useEffect(() => {
@@ -77,6 +71,23 @@ export const EditProducts: React.FC<EditProductsProps> = ({
       console.error("Error fetching categories:", error);
     }
   };
+
+  const fetchBrands = async () => {
+    try {
+      const response = await fetch("http://localhost:4000/shop/brands");
+      if (!response.ok) {
+        throw new Error("Failed to fetch categories");
+      }
+      const data = await response.json();
+      setBrands(data);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchBrands();
+  }, []);
 
   const handleChange = (e: any) => {
     const { name, value } = e.target;
@@ -114,6 +125,14 @@ export const EditProducts: React.FC<EditProductsProps> = ({
       category_id: category.id,
     }));
     setSelectedCategory(category);
+  };
+
+  const handleBrandChange = (brand: Brand) => {
+    setEditedData((prevData) => ({
+      ...prevData,
+      brand_id: brand.id,
+    }));
+    setSelectedBrand(brand);
   };
 
   return (
