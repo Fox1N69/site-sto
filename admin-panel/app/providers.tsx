@@ -20,7 +20,7 @@ export function Providers({ children, themeProps }: ProvidersProps) {
           attribute="class"
           {...themeProps}
         >
-          <Layout>{children}</Layout>
+          <main>{children}</main>
         </NextThemesProvider>
       </NextUIProvider>
     </SessionProvider>

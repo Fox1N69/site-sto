@@ -20,8 +20,6 @@ const SignInPage: React.FC = () => {
 
     if (result?.error) {
       setError(result.error);
-    } else {
-      router.push("/");
     }
   };
 
