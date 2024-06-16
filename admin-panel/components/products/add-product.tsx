@@ -1,6 +1,11 @@
-import React, { useState } from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import {
   Button,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
   Input,
   Modal,
   ModalBody,
@@ -10,6 +15,8 @@ import {
   useDisclosure,
 } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
+import { fetchBrands, fetchCategories } from "@/utils/fetching";
+import { Category, Brand } from "@/types";
 
 interface AutoPartInfo {
   title: string;
@@ -19,14 +26,29 @@ interface AutoPartInfo {
 export const AddProduct: React.FC = () => {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const [name, setName] = useState<string>("");
+  const [modelName, setModelName] = useState<string>("");
   const [price, setPrice] = useState<string>("");
-  const [brand, setBrand] = useState<string>("");
-  const [category, setCategory] = useState<string>("");
+  const [brand, setBrand] = useState<Brand | null>(null);
+  const [category, setCategory] = useState<Category | null>(null);
+  const [brands, setBrands] = useState<Brand[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [stock, setStock] = useState<string>("");
   const [autoPartInfo, setAutoPartInfo] = useState<AutoPartInfo[]>([
     { title: "", description: "" },
   ]);
   const { data: session } = useSession();
+
+  useEffect(() => {
+    const fetchInitialData = async () => {
+      const categoriesData = await fetchCategories();
+      setCategories(categoriesData);
+
+      const brandsData = await fetchBrands();
+      setBrands(brandsData);
+    };
+
+    fetchInitialData();
+  }, []);
 
   const handleAutoPartInfoChange = (
     index: number,
@@ -43,11 +65,17 @@ export const AddProduct: React.FC = () => {
   };
 
   const handleSubmit = async () => {
+    if (!brand || !category) {
+      alert("Please select a brand and category.");
+      return;
+    }
+
     const data = {
-      name: name,
+      name,
+      model_name: modelName,
       price: parseFloat(price),
-      category_id: parseInt(category, 10),
-      brand_id: parseInt(brand, 10),
+      category_id: category.id,
+      brand_id: brand.id,
       stock: parseInt(stock, 10),
       auto_part_info: autoPartInfo,
       img: "https://example.com/images/brake_pad.jpg", // Замените на реальную ссылку на изображение
@@ -74,6 +102,14 @@ export const AddProduct: React.FC = () => {
     }
   };
 
+  const handleCategoryChange = (category: Category) => {
+    setCategory(category);
+  };
+
+  const handleBrandChange = (brand: Brand) => {
+    setBrand(brand);
+  };
+
   return (
     <div>
       <Button onPress={onOpen} color="primary">
@@ -91,24 +127,55 @@ export const AddProduct: React.FC = () => {
               onChange={(e) => setName(e.target.value)}
               variant="bordered"
             />
+            <label>Модель</label>
+            <Input
+              value={modelName}
+              onChange={(e) => setModelName(e.target.value)}
+              variant="bordered"
+            />
             <label>Цена</label>
             <Input
               value={price}
               onChange={(e) => setPrice(e.target.value)}
               variant="bordered"
             />
-            <label>Бренд</label>
-            <Input
-              value={brand}
-              onChange={(e) => setBrand(e.target.value)}
-              variant="bordered"
-            />
-            <label>Категория</label>
-            <Input
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              variant="bordered"
-            />
+
+            <Dropdown>
+              <DropdownTrigger>
+                <Button variant="bordered">
+                  {brand ? brand.name : "Выберите бренд"}
+                </Button>
+              </DropdownTrigger>
+              <DropdownMenu>
+                {brands.map((brand) => (
+                  <DropdownItem
+                    key={brand.id}
+                    onClick={() => handleBrandChange(brand)}
+                  >
+                    {brand.name}
+                  </DropdownItem>
+                ))}
+              </DropdownMenu>
+            </Dropdown>
+
+            <Dropdown>
+              <DropdownTrigger>
+                <Button variant="bordered">
+                  {category ? category.name : "Выберите категорию"}
+                </Button>
+              </DropdownTrigger>
+              <DropdownMenu>
+                {categories.map((category) => (
+                  <DropdownItem
+                    key={category.id}
+                    onClick={() => handleCategoryChange(category)}
+                  >
+                    {category.name}
+                  </DropdownItem>
+                ))}
+              </DropdownMenu>
+            </Dropdown>
+
             <label>Наличие</label>
             <Input
               value={stock}
