@@ -1,6 +1,7 @@
 package repo
 
 import (
+	"errors"
 	"shop-server/internal/model"
 
 	"gorm.io/gorm"
@@ -10,7 +11,7 @@ type AutoPartRepo interface {
 	Create(product model.AutoPart) error
 	GetAll() ([]model.AutoPart, error)
 	GetByID(id uint) (*model.AutoPart, error)
-	Update(product model.AutoPart) error
+	Update(product model.AutoPart, fieldsToUpdate map[string]interface{}) error
 	Delete(id uint) error
 	GetStock(id uint) (uint, error)
 	UpdateStock(id uint, quantity int) error
@@ -46,8 +47,30 @@ func (ar *autoPartRepo) GetByID(id uint) (*model.AutoPart, error) {
 	return &product, nil
 }
 
-func (ar *autoPartRepo) Update(product model.AutoPart) error {
-	return ar.db.Save(&product).Error
+func (ar *autoPartRepo) Update(product model.AutoPart, fieldsToUpdate map[string]interface{}) error {
+	var existingProduct model.AutoPart
+	if err := ar.db.Preload("Category").Preload("Brand").First(&existingProduct, product.ID).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return errors.New("record not found")
+		}
+		return err
+	}
+
+	if category, ok := fieldsToUpdate["category"].(map[string]interface{}); ok {
+		if err := ar.db.Model(&existingProduct.Category).Updates(category).Error; err != nil {
+			return err
+		}
+		delete(fieldsToUpdate, "category")
+	}
+
+	if brand, ok := fieldsToUpdate["brand"].(map[string]interface{}); ok {
+		if err := ar.db.Model(&existingProduct.Brand).Updates(brand).Error; err != nil {
+			return err
+		}
+		delete(fieldsToUpdate, "brand")
+	}
+
+	return ar.db.Model(&existingProduct).Updates(fieldsToUpdate).Error
 }
 
 func (ar *autoPartRepo) Delete(id uint) error {

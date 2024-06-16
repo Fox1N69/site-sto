@@ -1,9 +1,5 @@
 import {
   Button,
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownTrigger,
   Input,
   Modal,
   ModalBody,
@@ -15,7 +11,6 @@ import {
 } from "@nextui-org/react";
 import React, { useState } from "react";
 import { EditIcon } from "../icons/table/edit-icon";
-import { products } from "../../store/data";
 import { format, parse } from "date-fns";
 import { Product } from "@/types";
 
@@ -122,21 +117,21 @@ export const EditProducts: React.FC<EditProductsProps> = ({
                     label="ФИО"
                     variant="bordered"
                     name="fio"
-                    defaultValue={products.modelName}
+                    defaultValue={products.model_name}
                     onChange={handleChange}
                   />
                   <Input
                     label="Номер телефона"
                     variant="bordered"
                     name="phoneNumber"
-                    defaultValue={products.modelName}
+                    defaultValue={products.model_name}
                     onChange={handleChange}
                   />
                   <Input
                     label="Почта"
                     variant="bordered"
                     name="email"
-                    defaultValue={products.modelName}
+                    defaultValue={products.model_name}
                     onChange={handleChange}
                   />
                 </ModalBody>

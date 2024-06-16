@@ -72,6 +72,7 @@ func (c *server) v1() {
 		admin.GET("/test", adminHandler.Test)
 		admin.POST("/part/create", adminHandler.CreateAutoPart)
 		admin.DELETE("/part/delete/:id", adminHandler.DeleteAutoPart)
+		admin.PUT("/part/update/:id", adminHandler.UpdateAutoPart)
 
 		brand := admin.Group("/brand")
 		{

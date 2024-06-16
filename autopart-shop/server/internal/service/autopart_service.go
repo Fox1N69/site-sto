@@ -10,7 +10,7 @@ type AutoPartService interface {
 	Create(autoPart *model.AutoPart) error
 	GetAllAutoParts() ([]model.AutoPart, error)
 	GetAutoPartByID(id uint) (*model.AutoPart, error)
-	UpdateAutoPart(autoPart *model.AutoPart) error
+	UpdateAutoPart(product model.AutoPart, fieldsToUpdate map[string]interface{}) error
 	DeleteAutoPart(id uint) error
 	CheckStock(id uint) (int, error)
 	ReduceStock(id uint, quantity int) error
@@ -41,8 +41,8 @@ func (s *autoPartService) CreateAutoPart(autoPart *model.AutoPart) error {
 	return s.autoPartRepo.Create(*autoPart)
 }
 
-func (s *autoPartService) UpdateAutoPart(autoPart *model.AutoPart) error {
-	return s.autoPartRepo.Update(*autoPart)
+func (s *autoPartService) UpdateAutoPart(product model.AutoPart, fieldsToUpdate map[string]interface{}) error {
+	return s.autoPartRepo.Update(product, fieldsToUpdate)
 }
 
 func (s *autoPartService) DeleteAutoPart(id uint) error {

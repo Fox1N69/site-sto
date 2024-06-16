@@ -15,6 +15,7 @@ type AdminHandler interface {
 	Test(c *gin.Context)
 	CreateAutoPart(c *gin.Context)
 	DeleteAutoPart(c *gin.Context)
+	UpdateAutoPart(c *gin.Context)
 }
 
 type adminHandler struct {
@@ -61,4 +62,27 @@ func (h *adminHandler) DeleteAutoPart(c *gin.Context) {
 	}
 
 	c.JSON(200, "item delete success")
+}
+
+func (h *adminHandler) UpdateAutoPart(c *gin.Context) {
+	idParam := c.Param("id")
+	id, err := strconv.Atoi(idParam)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID"})
+		return
+	}
+
+	var fieldsToUpdate map[string]interface{}
+	if err := c.ShouldBindJSON(&fieldsToUpdate); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request payload"})
+		return
+	}
+
+	product := model.AutoPart{ShopCustom: model.ShopCustom{ID: uint(id)}}
+	if err := h.service.UpdateAutoPart(product, fieldsToUpdate); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Auto part updated successfully"})
 }
