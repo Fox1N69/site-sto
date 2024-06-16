@@ -38,50 +38,16 @@ export const EditProducts: React.FC<EditProductsProps> = ({
     }));
   };
 
-  const handleIsPaidChange = (value: string) => {
-    setEditedData((prevData) => ({
-      ...prevData,
-      isPaid: value,
-    }));
-  };
-
-  // Обработчик изменения статуса
-  const handleStatusChange = (value: string) => {
-    setEditedData((prevData) => ({
-      ...prevData,
-      status: value,
-    }));
-  };
-
-  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    try {
-      // Парсим дату из формата DD.MM.YYYY в объект Date
-      const parsedDate = parse(value, "dd.MM.yyyy", new Date());
-      // Форматируем дату в ISO формат
-      const isoDate = format(parsedDate, "yyyy-MM-dd'T'00:00:00'Z'");
-      setEditedData((prevData) => ({
-        ...prevData,
-        [name]: isoDate,
-      }));
-    } catch (error) {
-      console.error("Ошибка при преобразовании даты:", error);
-    }
-  };
-
   const handleUpdateData = async () => {
     try {
-      console.log("Sending data to server:", JSON.stringify(editedData)); // Добавлено логирование данных
-      await fetch(
-        `https://api-deplom.onrender.com/api/product/${editedData.id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(editedData),
-        }
-      );
+      console.log("Sending data to server:", JSON.stringify(editedData));
+      await fetch(`http://localhost:4000/admin/part/update/${editedData.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(editedData),
+      });
     } catch (error) {
       console.error("Произошла ошибка при обновлении данных:", error);
     }
