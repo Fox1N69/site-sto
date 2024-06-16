@@ -12,6 +12,7 @@ import { columns } from "../../store/data";
 import { RenderCell } from "./render-cell";
 import axios from "axios";
 import { useAsyncList } from "@react-stately/data";
+import { useSession } from "next-auth/react";
 
 interface Order {
   fio: string;
@@ -39,6 +40,7 @@ export const TableWrapper: React.FC<TableWrapperProps> = ({ branch }) => {
   const [orders, setOrders] = useState([]);
   const [selectRow, setSelectRow] = useState(null);
   const [isLoading, setIsLoading] = React.useState(true);
+  const { data: session } = useSession();
 
   useEffect(() => {
     const apiUrl = branch

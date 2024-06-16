@@ -16,7 +16,6 @@ interface Props {
 export const NavbarWrapper = ({ children }: Props) => {
   const { data: session } = useSession();
 
-  console.log(session?.user.id);
   return (
     <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
       <Navbar

@@ -13,6 +13,7 @@ import { RenderCell } from "./render-cell";
 import axios from "axios";
 import { useAsyncList } from "@react-stately/data";
 import { Product } from "@/types";
+import { SessionContext, SessionProvider, useSession } from "next-auth/react";
 
 export const TableWrapperProducts = () => {
   const [selectedUser, setSelectedOrder] = useState(null);
@@ -21,6 +22,7 @@ export const TableWrapperProducts = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [selectRow, setSelectRow] = useState(null);
   const [isLoading, setIsLoading] = React.useState(true);
+  const { data: session } = useSession();
 
   const flattenProducts = (products: any[]): Product[] => {
     return products.map((product) => ({
@@ -119,6 +121,7 @@ export const TableWrapperProducts = () => {
               {(columnKey: Key) => (
                 <TableCell>
                   {RenderCell({
+                    token: session?.user.token as string,
                     product: item,
                     columnKey: columnKey as
                       | keyof Product

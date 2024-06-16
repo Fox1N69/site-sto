@@ -5,6 +5,9 @@ import { EyeIcon } from "../icons/table/eye-icon";
 import { orders } from "../../store/data";
 import { EditOrders } from "../orders/edit-order";
 import { format, isSameDay } from "date-fns";
+import { useSearchParams } from "next/navigation";
+import { useSession } from "next-auth/react";
+import axios from "axios";
 
 interface Props {
   order: (typeof orders)[number];
@@ -13,18 +16,39 @@ interface Props {
 }
 
 export const RenderCell = ({ order, columnKey, onEdit }: Props) => {
-  const handleDelete = () => {
-    fetch(`https://api-deplom.onrender.com/api/crequest/${order.id}`, {
-      method: "DELETE",
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Failed to delete order");
+  const { data: session } = useSession();
+  const handleDelete = async () => {
+    const token = session?.user.token;
+
+    if (!token) {
+      throw new Error("Токен авторизации отсутствует или недействителен");
+    }
+
+    try {
+      const response = await axios.delete(
+        `https://api-deplom.onrender.com/api/crequest/${order.id}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
         }
-      })
-      .catch((error) => {
-        // Обработка ошибок
+      );
+
+      console.log("Headers sent:", {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       });
+
+      if (!response.data) {
+        throw new Error("Failed to delete order");
+      }
+
+      // Успешное удаление заказа
+    } catch (error) {
+      console.error("Ошибка при удалении заказа:", error);
+      // Обработка ошибок
+    }
   };
 
   // @ts-ignore

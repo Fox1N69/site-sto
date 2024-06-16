@@ -19,20 +19,20 @@ export const Layout = ({ children }: Props) => {
   };
 
   return (
-    <SessionProvider>
-      <BranchProvider>
-        <SidebarContext.Provider
-          value={{
-            collapsed: sidebarOpen,
-            setCollapsed: handleToggleSidebar,
-          }}
-        >
+    <BranchProvider>
+      <SidebarContext.Provider
+        value={{
+          collapsed: sidebarOpen,
+          setCollapsed: handleToggleSidebar,
+        }}
+      >
+        <SessionProvider>
           <section className="flex">
             <SidebarWrapper />
             <NavbarWrapper>{children}</NavbarWrapper>
           </section>
-        </SidebarContext.Provider>
-      </BranchProvider>
-    </SessionProvider>
+        </SessionProvider>
+      </SidebarContext.Provider>
+    </BranchProvider>
   );
 };

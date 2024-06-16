@@ -5,26 +5,19 @@ import { EyeIcon } from "../../icons/table/eye-icon";
 import { EditProduct } from "../edit-product";
 import { Product } from "@/types";
 import { Span } from "next/dist/trace";
+import { useSession } from "next-auth/react";
+import { deleteProduct } from "@/utils/fetching";
 
 interface Props {
+  token: string;
   product: Product;
   columnKey: keyof Product | "actions" | "category_name" | "brand_name";
   onEdit: (product: any) => void;
 }
 
-export const RenderCell = ({ product, columnKey, onEdit }: Props) => {
-  const handleDelete = () => {
-    fetch(`http://localhost:4000/admin/part/delete/${product.id}`, {
-      method: "DELETE",
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Failed to delete product");
-        }
-      })
-      .catch((error) => {
-        // Обработка ошибок
-      });
+export const RenderCell = ({ token, product, columnKey, onEdit }: Props) => {
+  const handleDelete = async () => {
+    await deleteProduct(token, product.id);
   };
 
   // @ts-ignore
