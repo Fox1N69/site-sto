@@ -22,7 +22,6 @@ export const TableWrapperProducts = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [selectRow, setSelectRow] = useState(null);
   const [isLoading, setIsLoading] = React.useState(true);
-  const { data: session } = useSession();
 
   const flattenProducts = (products: any[]): Product[] => {
     return products.map((product) => ({

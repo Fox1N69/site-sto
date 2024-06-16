@@ -1,10 +1,6 @@
 import React, { useState } from "react";
 import {
   Button,
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownTrigger,
   Input,
   Modal,
   ModalBody,
@@ -13,50 +9,66 @@ import {
   ModalHeader,
   useDisclosure,
 } from "@nextui-org/react";
+import { useSession } from "next-auth/react";
 
-export const AddProduct = () => {
+interface AutoPartInfo {
+  title: string;
+  description: string;
+}
+
+export const AddProduct: React.FC = () => {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
-  const [fio, setFio] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [email, setEmail] = useState("");
-  const [lastVisit, setLastVisit] = useState("");
+  const [name, setName] = useState<string>("");
+  const [price, setPrice] = useState<string>("");
+  const [brand, setBrand] = useState<string>("");
+  const [category, setCategory] = useState<string>("");
+  const [stock, setStock] = useState<string>("");
+  const [autoPartInfo, setAutoPartInfo] = useState<AutoPartInfo[]>([
+    { title: "", description: "" },
+  ]);
+  const { data: session } = useSession();
+
+  const handleAutoPartInfoChange = (
+    index: number,
+    field: "title" | "description",
+    value: string
+  ) => {
+    const newAutoPartInfo = [...autoPartInfo];
+    newAutoPartInfo[index][field] = value;
+    setAutoPartInfo(newAutoPartInfo);
+  };
+
+  const addAutoPartInfo = () => {
+    setAutoPartInfo([...autoPartInfo, { title: "", description: "" }]);
+  };
 
   const handleSubmit = async () => {
-    const formatDate = (dateStr: string) => {
-      const [day, month, year] = dateStr.split(".").map(Number);
-      const date = new Date(year, month - 1, day);
-      if (isNaN(date.getTime())) {
-        throw new Error("Invalid date format");
-      }
-      return date.toISOString();
-    };
-
     const data = {
-      fio: fio,
-      phoneNumber: phoneNumber,
-      email: email,
-      lastVisit: lastVisit,
+      name: name,
+      price: parseFloat(price),
+      category_id: parseInt(category, 10),
+      brand_id: parseInt(brand, 10),
+      stock: parseInt(stock, 10),
+      auto_part_info: autoPartInfo,
+      img: "https://example.com/images/brake_pad.jpg", // Замените на реальную ссылку на изображение
     };
 
     try {
-      const response = await fetch(
-        "https://api-deplom.onrender.com/api/product/set",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        }
-      );
+      const response = await fetch("http://localhost:4000/admin/part/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session?.user.token}`,
+        },
+        body: JSON.stringify(data),
+      });
 
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
 
-      // Handle response here
       console.log("Data submitted:", data);
-      onClose(); // Close the modal after submission
+      onClose();
     } catch (error) {
       console.error("Failed to submit data:", error);
     }
@@ -65,42 +77,72 @@ export const AddProduct = () => {
   return (
     <div>
       <Button onPress={onOpen} color="primary">
-        Добавить заявку
+        Добавить продукт
       </Button>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} placement="top-center">
         <ModalContent>
           <ModalHeader className="flex flex-col gap-1">
-            Новая Заявка
+            Новый продукт
           </ModalHeader>
           <ModalBody>
-            <label>ФИО Клиента</label>
+            <label>Название</label>
             <Input
-              value={fio}
-              onChange={(e) => setFio(e.target.value)}
-              label="ФИО"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
               variant="bordered"
             />
-            <label>Номер телефона</label>
+            <label>Цена</label>
             <Input
-              value={phoneNumber}
-              onChange={(e) => setPhoneNumber(e.target.value)}
-              label="79009009090"
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
               variant="bordered"
             />
-            <label>Почта клиента</label>
+            <label>Бренд</label>
             <Input
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              label="e-mail"
+              value={brand}
+              onChange={(e) => setBrand(e.target.value)}
               variant="bordered"
             />
-            <label>Последний визит</label>
+            <label>Категория</label>
             <Input
-              value={lastVisit}
-              onChange={(e) => setLastVisit(e.target.value)}
-              label="01.01.2001"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
               variant="bordered"
             />
+            <label>Наличие</label>
+            <Input
+              value={stock}
+              onChange={(e) => setStock(e.target.value)}
+              variant="bordered"
+            />
+            <label>Информация о запчастях</label>
+            {autoPartInfo.map((info, index) => (
+              <div key={index}>
+                <Input
+                  value={info.title}
+                  onChange={(e) =>
+                    handleAutoPartInfoChange(index, "title", e.target.value)
+                  }
+                  placeholder="Title"
+                  variant="bordered"
+                />
+                <Input
+                  value={info.description}
+                  onChange={(e) =>
+                    handleAutoPartInfoChange(
+                      index,
+                      "description",
+                      e.target.value
+                    )
+                  }
+                  placeholder="Description"
+                  variant="bordered"
+                />
+              </div>
+            ))}
+            <Button onPress={addAutoPartInfo} color="secondary">
+              Добавить информацию
+            </Button>
           </ModalBody>
           <ModalFooter>
             <Button onPress={onClose}>Отмена</Button>
