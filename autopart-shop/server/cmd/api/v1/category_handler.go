@@ -11,6 +11,7 @@ import (
 
 type CategoryHandler interface {
 	CreateCategory(c *gin.Context)
+	GetAllCategory(c *gin.Context)
 }
 
 type categoryHandler struct {
@@ -34,4 +35,14 @@ func (h *categoryHandler) CreateCategory(c *gin.Context) {
 	}
 
 	response.New(c).Write(http.StatusOK, "success")
+}
+
+func (h *categoryHandler) GetAllCategory(c *gin.Context) {
+	data, err := h.service.GetAllCategory()
+	if err != nil {
+		response.New(c).Error(http.StatusInternalServerError, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, data)
 }

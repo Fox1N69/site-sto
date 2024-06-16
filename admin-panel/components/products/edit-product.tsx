@@ -1,5 +1,8 @@
 import {
   Button,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
   Input,
   Modal,
   ModalBody,
@@ -61,6 +64,13 @@ export const EditProducts: React.FC<EditProductsProps> = ({
   const handleSaveChanges = () => {
     handleUpdateData();
     onClose();
+  };
+
+  const handleCategoryChange = (value: string) => {
+    setEditedData((prevData) => ({
+      ...prevData,
+      category_name: value,
+    }));
   };
 
   return (
@@ -126,6 +136,87 @@ export const EditProducts: React.FC<EditProductsProps> = ({
                     defaultValue={products.stock.toString()}
                     onChange={handleChange}
                   />
+
+                  <Dropdown>
+                    <DropdownTrigger>
+                      <Button variant="bordered">
+                        {editedData.isPaid || "Оплата"}
+                      </Button>
+                    </DropdownTrigger>
+                    <DropdownMenu
+                      aria-label="Static Actions"
+                      onSelect={(event) => {
+                        const value = (
+                          event.target as HTMLElement
+                        ).getAttribute("data-value");
+                        if (value) {
+                          handleIsPaidChange(value);
+                        }
+                      }}
+                    >
+                      <DropdownItem
+                        key="Paid"
+                        color="success"
+                        onClick={() => handleIsPaidChange("оплачено")}
+                      >
+                        Оплачено
+                      </DropdownItem>
+                      <DropdownItem
+                        key="noPaid"
+                        color="danger"
+                        onClick={() => handleIsPaidChange("не оплачено")}
+                      >
+                        Не Оплачено
+                      </DropdownItem>
+                      <DropdownItem
+                        key="PaidForGive"
+                        color="warning"
+                        onClick={() =>
+                          handleIsPaidChange("Оплата при получение")
+                        }
+                      >
+                        Оплата при получение
+                      </DropdownItem>
+                    </DropdownMenu>
+                  </Dropdown>
+
+                  <Dropdown>
+                    <DropdownTrigger>
+                      <Button variant="bordered">
+                        {" "}
+                        {editedData.status || "Статус"}{" "}
+                      </Button>
+                    </DropdownTrigger>
+                    <DropdownMenu
+                      onSelect={(event) => {
+                        const value = (
+                          event.target as HTMLElement
+                        ).getAttribute("data-value");
+                        if (value) {
+                          handleStatusChange(value);
+                        }
+                      }}
+                    >
+                      <DropdownItem
+                        onClick={() => handleStatusChange("На Хранении")}
+                        color="success"
+                      >
+                        На Хранение
+                      </DropdownItem>
+                      <DropdownItem
+                        onClick={() => handleStatusChange("Получен")}
+                        color="danger"
+                      >
+                        Получен
+                      </DropdownItem>
+                      <DropdownItem
+                        onClick={() => handleStatusChange("Ожидает Получения")}
+                        color="warning"
+                      >
+                        Ожидает Получения
+                      </DropdownItem>
+                    </DropdownMenu>
+                  </Dropdown>
                 </ModalBody>
                 <ModalFooter>
                   <Button color="danger" variant="flat" onClick={onClose}>

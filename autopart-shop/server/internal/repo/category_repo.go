@@ -8,6 +8,7 @@ import (
 
 type CategoryRepo interface {
 	CreateCategory(newCategory *model.Category) error
+	GetAll() ([]model.Category, error)
 	GetCategoryByID(id uint) (*model.Category, error)
 	UpdateCategory(category *model.Category) error
 	DeleteCategory(id uint) error
@@ -27,6 +28,12 @@ func NewCategoryRepo(db *gorm.DB) CategoryRepo {
 
 func (cr *categoryRepo) CreateCategory(newCategory *model.Category) error {
 	return cr.db.Create(newCategory).Error
+}
+
+func (repo *categoryRepo) GetAll() ([]model.Category, error) {
+	var categories []model.Category
+	err := repo.db.Find(&categories).Error
+	return categories, err
 }
 
 func (repo *categoryRepo) GetCategoryByID(id uint) (*model.Category, error) {

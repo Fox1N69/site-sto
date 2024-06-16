@@ -7,6 +7,7 @@ import (
 
 type CategoryService interface {
 	GetCategoryByID(id uint) (*model.Category, error)
+	GetAllCategory() ([]model.Category, error)
 	CreateCategory(newCategory *model.Category) error
 	UpdateCategory(category *model.Category) error
 	DeleteCategory(id uint) error
@@ -26,6 +27,10 @@ func NewCategoryService(categoryRepo repo.CategoryRepo) CategoryService {
 
 func (cs *categoryService) GetCategoryByID(id uint) (*model.Category, error) {
 	return cs.categoryRepo.GetCategoryByID(id)
+}
+
+func (cs *categoryService) GetAllCategory() ([]model.Category, error) {
+	return cs.categoryRepo.GetAll()
 }
 
 func (cs *categoryService) CreateCategory(newCategory *model.Category) error {
