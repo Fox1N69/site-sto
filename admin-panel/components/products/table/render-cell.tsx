@@ -2,7 +2,7 @@ import { User, Tooltip, Chip } from "@nextui-org/react";
 import React from "react";
 import { DeleteIcon } from "../../icons/table/delete-icon";
 import { EyeIcon } from "../../icons/table/eye-icon";
-import { EditProducts } from "../edit-product";
+import { EditProduct } from "../edit-product";
 import { Product } from "@/types";
 import { Span } from "next/dist/trace";
 
@@ -52,7 +52,7 @@ export const RenderCell = ({ product, columnKey, onEdit }: Props) => {
             </Tooltip>
           </div>
           <div>
-            <EditProducts products={product} selectedProductsId={product.id} />
+            <EditProduct product={product} selectedProductId={product.id} />
           </div>
           <div>
             <Tooltip
