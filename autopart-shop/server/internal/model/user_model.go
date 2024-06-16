@@ -15,7 +15,7 @@ type GormCustom struct {
 type User struct {
 	GormCustom
 	Username    string  `json:"username" gorm:"unique"`
-	Password    string  `json:"-"`
+	Password    string  `json:"password"`
 	FIO         string  `json:"fio"`
 	Email       string  `json:"email" gorm:"unique"`
 	Role        string  `json:"role" gorm:"default:'user'"`

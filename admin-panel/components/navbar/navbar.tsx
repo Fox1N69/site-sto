@@ -7,12 +7,16 @@ import { SearchIcon } from "../icons/searchicon";
 import { BurguerButton } from "./burguer-button";
 import { NotificationsDropdown } from "./notifications-dropdown";
 import { UserDropdown } from "./user-dropdown";
+import { useSession } from "next-auth/react";
 
 interface Props {
   children: React.ReactNode;
 }
 
 export const NavbarWrapper = ({ children }: Props) => {
+  const { data: session } = useSession();
+
+  console.log(session?.user.id);
   return (
     <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
       <Navbar
@@ -41,10 +45,17 @@ export const NavbarWrapper = ({ children }: Props) => {
           justify="end"
           className="w-fit data-[justify=end]:flex-grow-0"
         >
-          
           <NotificationsDropdown />
           <NavbarContent>
-            <UserDropdown />
+            {status === "loading" ? (
+              <div>Loading...</div>
+            ) : (
+              session && (
+                <div className="flex gap-3">
+                  <UserDropdown user={session?.user.id} />
+                </div>
+              )
+            )}
           </NavbarContent>
         </NavbarContent>
       </Navbar>

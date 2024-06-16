@@ -73,7 +73,10 @@ func (h *authUserHandler) GetUsernameByID(c *gin.Context) {
 
 func (h *authUserHandler) Register(c *gin.Context) {
 	var data model.User
-	c.BindJSON(&data)
+	if err := c.ShouldBind(&data); err != nil {
+		response.New(c).Error(http.StatusBadRequest, err)
+		return
+	}
 
 	if err := validation.Validate(data.Username, validation.Required, validation.Length(4, 30), is.Alphanumeric); err != nil {
 		response.New(c).Error(http.StatusBadRequest, fmt.Errorf("username: %v", err))
@@ -102,6 +105,7 @@ func (h *authUserHandler) Register(c *gin.Context) {
 			response.New(c).Error(http.StatusInternalServerError, err)
 			return
 		}
+
 		//Присваивание корзины пользвателю
 		if err := h.basketService.Create(data); err != nil {
 			response.New(c).Error(http.StatusInternalServerError, fmt.Errorf("failed to create basket: %v", err))
