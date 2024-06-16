@@ -13,6 +13,8 @@ import React, { useState } from "react";
 import { EditIcon } from "../icons/table/edit-icon";
 import { format, parse } from "date-fns";
 import { Product } from "@/types";
+import { Cookie } from "next/font/google";
+import { useSession } from "next-auth/react";
 
 interface EditProductsProps {
   selectedProductsId: number;
@@ -25,6 +27,7 @@ export const EditProducts: React.FC<EditProductsProps> = ({
 }) => {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const [isDropdownOpen, setIsDropDownOpen] = useState(false);
+  const { data: session } = useSession();
 
   const [editedData, setEditedData] = useState({
     id: selectedProductsId,
@@ -45,9 +48,11 @@ export const EditProducts: React.FC<EditProductsProps> = ({
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${session?.user.token}`,
         },
         body: JSON.stringify(editedData),
       });
+      console.log(JSON.stringify(editedData));
     } catch (error) {
       console.error("Произошла ошибка при обновлении данных:", error);
     }
@@ -80,24 +85,45 @@ export const EditProducts: React.FC<EditProductsProps> = ({
                 </ModalHeader>
                 <ModalBody>
                   <Input
-                    label="ФИО"
+                    label="Название"
                     variant="bordered"
-                    name="fio"
+                    name="name"
+                    defaultValue={products.name}
+                    onChange={handleChange}
+                  />
+                  <Input
+                    label="Модель"
+                    variant="bordered"
+                    name="model_name"
                     defaultValue={products.model_name}
                     onChange={handleChange}
                   />
                   <Input
-                    label="Номер телефона"
+                    label="Price"
                     variant="bordered"
-                    name="phoneNumber"
-                    defaultValue={products.model_name}
+                    name="price"
+                    defaultValue={products.price.toString()}
                     onChange={handleChange}
                   />
                   <Input
-                    label="Почта"
+                    label="Бренд"
                     variant="bordered"
-                    name="email"
-                    defaultValue={products.model_name}
+                    name="brand_name"
+                    defaultValue={products.Brand?.name}
+                    onChange={handleChange}
+                  />
+                  <Input
+                    label="Категория"
+                    variant="bordered"
+                    name="category_name"
+                    defaultValue={products.Category?.name}
+                    onChange={handleChange}
+                  />
+                  <Input
+                    label="Наличие"
+                    variant="bordered"
+                    name="stock"
+                    defaultValue={products.stock.toString()}
                     onChange={handleChange}
                   />
                 </ModalBody>

@@ -49,30 +49,25 @@ func (ar *autoPartRepo) GetByID(id uint) (*model.AutoPart, error) {
 
 func (ar *autoPartRepo) Update(product model.AutoPart, fieldsToUpdate map[string]interface{}) error {
 	var existingProduct model.AutoPart
-	if err := ar.db.Preload("Category").Preload("Brand").First(&existingProduct, product.ID).Error; err != nil {
+	if err := ar.db.First(&existingProduct, product.ID).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return errors.New("record not found")
 		}
 		return err
 	}
 
-	if category, ok := fieldsToUpdate["category"].(map[string]interface{}); ok {
-		if err := ar.db.Model(&existingProduct.Category).Updates(category).Error; err != nil {
-			return err
-		}
-		delete(fieldsToUpdate, "category")
+	if categoryID, ok := fieldsToUpdate["category_id"].(uint); ok {
+		existingProduct.CategoryID = categoryID
+		delete(fieldsToUpdate, "category_id")
 	}
 
-	if brand, ok := fieldsToUpdate["brand"].(map[string]interface{}); ok {
-		if err := ar.db.Model(&existingProduct.Brand).Updates(brand).Error; err != nil {
-			return err
-		}
-		delete(fieldsToUpdate, "brand")
+	if brandID, ok := fieldsToUpdate["brand_id"].(uint); ok {
+		existingProduct.BrandID = brandID
+		delete(fieldsToUpdate, "brand_id")
 	}
 
 	return ar.db.Model(&existingProduct).Updates(fieldsToUpdate).Error
 }
-
 func (ar *autoPartRepo) Delete(id uint) error {
 	return ar.db.Delete(&model.AutoPart{}, id).Error
 }
