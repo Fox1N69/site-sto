@@ -41,7 +41,7 @@ const CartCounter: React.FC<CartCounterProps> = ({
   };
 
   const handleDecrement = () => {
-    if (count > 0) {
+    if (count > 1) {
       const newCount = count - 1;
       setCount(newCount);
       updateQuantityOnServer(newCount);

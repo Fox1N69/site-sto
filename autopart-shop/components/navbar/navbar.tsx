@@ -161,7 +161,7 @@ export const Navbar = () => {
               <Lottie animationData={Loaded} />
             </div>
           ) : session ? (
-            <div className="flex gap-3">
+            <div className="flex gap-3  items-center">
               <CartModal />
               <UserDropdown user={session?.user.id} />
             </div>

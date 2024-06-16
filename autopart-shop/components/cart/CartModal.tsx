@@ -15,6 +15,8 @@ import CartCouter from "./CartCouter";
 import { Product } from "@/types";
 import CartButton from "./CartButton";
 import { useCartStore } from "@/store/cartStore";
+import { useSelect } from "@nextui-org/react";
+import { useTypedSelector } from "@/store/useTypedSelector";
 
 export const calculateTotalPrice = (products: Product[]) => {
   const totalPrice = products.reduce((acc, product) => {

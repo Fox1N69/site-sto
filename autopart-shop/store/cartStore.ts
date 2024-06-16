@@ -1,12 +1,10 @@
-// store/cartStore.ts
-import { Product } from "@/types";
 import create from "zustand";
 import { persist } from "zustand/middleware";
 
 type CartStore = {
   itemsInCart: { [key: number]: boolean };
   itemCount: number;
-  totalPrice: number; // Начальное значение общей стоимости
+  totalPrice: number;
   setItemsInCart: (items: { [key: number]: boolean }) => void;
   addItemToCart: (id: number) => void;
   removeItemFromCart: (id: number) => void;
@@ -29,8 +27,14 @@ export const useCartStore = create<CartStore>()(
       removeItemFromCart: (id) =>
         set((state) => {
           const updatedItems = { ...state.itemsInCart };
-          delete updatedItems[id];
-          return { itemsInCart: updatedItems, itemCount: state.itemCount - 1 };
+          if (updatedItems[id]) {
+            delete updatedItems[id];
+            return {
+              itemsInCart: updatedItems,
+              itemCount: Math.max(0, state.itemCount - 1),
+            };
+          }
+          return state;
         }),
       resetItemCount: () => set({ itemCount: 0 }),
       totalPrice: 0,
@@ -41,4 +45,3 @@ export const useCartStore = create<CartStore>()(
     }
   )
 );
-

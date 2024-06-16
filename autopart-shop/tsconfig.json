@@ -34,6 +34,6 @@
     "components/navbar/user-dropdown.tsx",
     "components/withAdmin.jsx",
     "components/icons/eye/eyesplashfilled.jsx"
-  ],
+, "components/icons/cart/CartIcon.jsx"  ],
   "exclude": ["node_modules"]
 }

@@ -1,23 +1,36 @@
 import { Button } from "@nextui-org/button";
 import { Icon } from "@iconify/react";
 import { useCartStore } from "@/store/cartStore";
+import { Badge } from "@nextui-org/react";
+import { useTypedSelector } from "@/store/useTypedSelector";
+import { CartIcon } from "../icons/cart/CartIcon";
 
 type CartButtonProps = {
   onClick: () => void;
 };
 
 const CartButton: React.FC<CartButtonProps> = ({ onClick }) => {
-  const itemCount = useCartStore((state) => state.itemCount);
+  const itemCounts = useCartStore((state) => state.itemCount);
+
+  console.log(itemCounts);
 
   return (
     <div className="relative">
-      <Button isIconOnly onPress={onClick} variant="bordered">
-        <Icon icon={"carbon:shopping-cart"} />
-      </Button>
-      {itemCount > 0 && (
-        <div className="absolute -top-2 -right-2 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs">
-          {itemCount}
-        </div>
+      {itemCounts > 0 ? (
+        <Badge color="danger" content={itemCounts} shape="circle">
+          <Button
+            isIconOnly
+            onClick={onClick}
+            variant="ghost"
+            aria-label="Cart"
+          >
+            <CartIcon size={24} height={24} width={24} fill="currentColor" />
+          </Button>
+        </Badge>
+      ) : (
+        <Button isIconOnly onClick={onClick} variant="ghost">
+          <CartIcon size={24} height={24} width={24} fill="currentColor" />
+        </Button>
       )}
     </div>
   );
