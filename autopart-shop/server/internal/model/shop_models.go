@@ -30,8 +30,7 @@ type AutoPart struct {
 	Price        int            `json:"price"`
 	Img          string         `json:"img"`
 	ModelName    string         `json:"model_name"`
-	CategoryID   uint           `json:"category_id"`
-	Category     Category       `gorm:"foreignKey:CategoryID"`
+	Categories   []Category     `json:"categories" gorm:"many2many:auto_part_categories;"`
 	BrandID      uint           `json:"brand_id"`
 	Brand        Brand          `gorm:"foreignKey:BrandID"`
 	AutoPartInfo []AutoPartInfo `json:"auto_part_info" gorm:"foreignKey:AutoPartID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
@@ -49,8 +48,13 @@ type AutoPartInfo struct {
 type Category struct {
 	ShopCustom
 	Name      string     `json:"name"`
-	AutoParts []AutoPart `gorm:"foreignKey:CategoryID"`
+	AutoParts []AutoPart `json:"auto_parts" gorm:"many2many:auto_part_categories;"`
 	Brands    []Brand    `gorm:"many2many:brand_categories;"`
+}
+
+type AutoPartCategory struct {
+	AutoPartID uint
+	CategoryID uint
 }
 
 type Brand struct {

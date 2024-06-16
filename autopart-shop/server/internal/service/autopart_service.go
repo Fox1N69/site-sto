@@ -7,7 +7,7 @@ import (
 )
 
 type AutoPartService interface {
-	Create(autoPart *model.AutoPart) error
+	CreateAutoPart(autoPart *model.AutoPart) error
 	GetAllAutoParts() ([]model.AutoPart, error)
 	GetAutoPartByID(id uint) (*model.AutoPart, error)
 	UpdateAutoPart(product model.AutoPart, fieldsToUpdate map[string]interface{}) error
@@ -25,8 +25,8 @@ func NewAutoPartService(autoPartRepo repo.AutoPartRepo) AutoPartService {
 	return &autoPartService{autoPartRepo: autoPartRepo}
 }
 
-func (s *autoPartService) Create(autoPart *model.AutoPart) error {
-	return s.autoPartRepo.Create(*autoPart)
+func (s *autoPartService) CreateAutoPart(autoPart *model.AutoPart) error {
+	return s.autoPartRepo.Create(autoPart)
 }
 
 func (s *autoPartService) GetAllAutoParts() ([]model.AutoPart, error) {
@@ -35,10 +35,6 @@ func (s *autoPartService) GetAllAutoParts() ([]model.AutoPart, error) {
 
 func (s *autoPartService) GetAutoPartByID(id uint) (*model.AutoPart, error) {
 	return s.autoPartRepo.GetByID(id)
-}
-
-func (s *autoPartService) CreateAutoPart(autoPart *model.AutoPart) error {
-	return s.autoPartRepo.Create(*autoPart)
 }
 
 func (s *autoPartService) UpdateAutoPart(product model.AutoPart, fieldsToUpdate map[string]interface{}) error {

@@ -21,6 +21,7 @@ func main() {
 		&model.BrandCategory{},
 		&model.Order{},
 	)
+	i.Migrate(&model.AutoPartCategory{})
 
 	api.NewServer(i).Run()
 }

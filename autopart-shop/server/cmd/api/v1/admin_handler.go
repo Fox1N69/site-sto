@@ -34,19 +34,48 @@ func (h *adminHandler) Test(c *gin.Context) {
 	response.New(c).Write(http.StatusOK, "success")
 }
 
+type CreateAutoPartRequest struct {
+	Name         string               `json:"name" binding:"required"`
+	Price        int                  `json:"price" binding:"required"`
+	Img          string               `json:"img"`
+	CategoryIDs  []uint               `json:"category_id" binding:"required"`
+	BrandID      uint                 `json:"brand_id" binding:"required"`
+	AutoPartInfo []model.AutoPartInfo `json:"auto_part_info"`
+	Stock        uint                 `json:"stock" binding:"required"`
+}
+
 func (h *adminHandler) CreateAutoPart(c *gin.Context) {
-	var autoPart model.AutoPart
-	if err := c.ShouldBindJSON(&autoPart); err != nil {
+	var req CreateAutoPartRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	if err := h.service.Create(&autoPart); err != nil {
+	autoPart := model.AutoPart{
+		Name:    req.Name,
+		Price:   req.Price,
+		Img:     req.Img,
+		BrandID: req.BrandID,
+		Stock:   req.Stock,
+	}
+
+	for _, info := range req.AutoPartInfo {
+		autoPart.AutoPartInfo = append(autoPart.AutoPartInfo, model.AutoPartInfo{
+			Title:       info.Title,
+			Description: info.Description,
+		})
+	}
+
+	for _, categoryID := range req.CategoryIDs {
+		autoPart.Categories = append(autoPart.Categories, model.Category{ShopCustom: model.ShopCustom{ID: categoryID}})
+	}
+
+	if err := h.service.CreateAutoPart(&autoPart); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusCreated, "autopart create success")
+	c.JSON(http.StatusCreated, autoPart)
 }
 
 func (h *adminHandler) DeleteAutoPart(c *gin.Context) {

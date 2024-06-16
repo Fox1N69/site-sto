@@ -8,7 +8,7 @@ import (
 )
 
 type AutoPartRepo interface {
-	Create(product model.AutoPart) error
+	Create(product *model.AutoPart) error
 	GetAll() ([]model.AutoPart, error)
 	GetByID(id uint) (*model.AutoPart, error)
 	Update(product model.AutoPart, fieldsToUpdate map[string]interface{}) error
@@ -27,8 +27,20 @@ func NewAutoPartRepo(db *gorm.DB) AutoPartRepo {
 	return &autoPartRepo{db: db}
 }
 
-func (ar *autoPartRepo) Create(product model.AutoPart) error {
-	return ar.db.Create(&product).Error
+func (ar *autoPartRepo) Create(product *model.AutoPart) error {
+	return ar.db.Transaction(func(tx *gorm.DB) error {
+		if err := tx.Create(product).Error; err != nil {
+			return err
+		}
+
+		if len(product.Categories) > 0 {
+			if err := tx.Model(product).Association("Categories").Replace(product.Categories); err != nil {
+				return err
+			}
+		}
+
+		return nil
+	})
 }
 
 func (ar *autoPartRepo) GetAll() ([]model.AutoPart, error) {
@@ -49,16 +61,23 @@ func (ar *autoPartRepo) GetByID(id uint) (*model.AutoPart, error) {
 
 func (ar *autoPartRepo) Update(product model.AutoPart, fieldsToUpdate map[string]interface{}) error {
 	var existingProduct model.AutoPart
-	if err := ar.db.First(&existingProduct, product.ID).Error; err != nil {
+	if err := ar.db.Preload("Categories").First(&existingProduct, product.ID).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return errors.New("record not found")
 		}
 		return err
 	}
 
-	if categoryID, ok := fieldsToUpdate["category_id"].(uint); ok {
-		existingProduct.CategoryID = categoryID
-		delete(fieldsToUpdate, "category_id")
+	// Update categories if provided
+	if categories, ok := fieldsToUpdate["categories"].([]uint); ok {
+		var newCategories []model.Category
+		if err := ar.db.Where("id IN ?", categories).Find(&newCategories).Error; err != nil {
+			return err
+		}
+		if err := ar.db.Model(&existingProduct).Association("Categories").Replace(newCategories); err != nil {
+			return err
+		}
+		delete(fieldsToUpdate, "categories")
 	}
 
 	if brandID, ok := fieldsToUpdate["brand_id"].(uint); ok {
@@ -66,8 +85,15 @@ func (ar *autoPartRepo) Update(product model.AutoPart, fieldsToUpdate map[string
 		delete(fieldsToUpdate, "brand_id")
 	}
 
-	return ar.db.Model(&existingProduct).Updates(fieldsToUpdate).Error
+	if len(fieldsToUpdate) > 0 {
+		if err := ar.db.Model(&existingProduct).Updates(fieldsToUpdate).Error; err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
+
 func (ar *autoPartRepo) Delete(id uint) error {
 	return ar.db.Delete(&model.AutoPart{}, id).Error
 }
