@@ -35,3 +35,13 @@ export interface Product {
   auto_part_info: any;
   stock: number;
 }
+
+
+
+export interface User {
+  id: number;
+  fio?: string;
+  username?: string;
+  role?: string;
+}
+

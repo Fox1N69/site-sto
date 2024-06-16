@@ -4,13 +4,56 @@ import {
   DropdownItem,
   DropdownMenu,
   DropdownTrigger,
-  Navbar,
   NavbarItem,
 } from "@nextui-org/react";
-import React from "react";
-import { DarkModeSwitch } from "./darkmodeswitch";
 
-export const UserDropdown = () => {
+import { useRouter, useSearchParams } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import Cookies from "js-cookie";
+import { Switch } from "@nextui-org/switch";
+import { UserInfo } from "os";
+import { User } from "@/types";
+import axios from "axios";
+import { fetchData } from "next-auth/client/_utils";
+import { signOut, useSession } from "next-auth/react";
+
+interface Props {
+  user: string;
+}
+
+export const UserDropdown: React.FC<Props> = ({ user }) => {
+  const { data: session } = useSession();
+  const [fio, setFio] = useState<string>("");
+  const route = useRouter();
+
+  const handleLogout = async () => {
+    signOut({ callbackUrl: "/auth/login" });
+  };
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (!session || !session.user || !session.user.token) {
+        console.log("No user token found in session");
+        return;
+      }
+      try {
+        const response = await axios.get(
+          `http://localhost:4000/v1/account/user/${user}`,
+          {
+            headers: {
+              Authorization: `Bearer ${session.user.token}`,
+            },
+          }
+        );
+        setFio(response.data.fio);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchUserData();
+  }, [user, session]);
+
   return (
     <Dropdown>
       <NavbarItem>
@@ -31,18 +74,24 @@ export const UserDropdown = () => {
           key="profile"
           className="flex flex-col justify-start w-full items-start"
         >
-          <p>Авторизован как</p>
-          <p>zoey@example.com</p>
+          <p>{fio}</p>
         </DropdownItem>
         <DropdownItem key="settings">Настройки</DropdownItem>
         <DropdownItem key="system">Система</DropdownItem>
         <DropdownItem key="configurations">Конфигурация</DropdownItem>
-        <DropdownItem key="help_and_feedback">Помощь и обратная связь</DropdownItem>
-        <DropdownItem key="logout" color="danger" className="text-danger ">
-          Выйти
+        <DropdownItem key="help_and_feedback">
+          Помощь и обратная связь
         </DropdownItem>
-        <DropdownItem key="switch">
-          <DarkModeSwitch />
+        <DropdownItem>
+          <Switch />
+        </DropdownItem>
+        <DropdownItem
+          key="logout"
+          color="danger"
+          className="text-danger"
+          onClick={handleLogout}
+        >
+          Выйти
         </DropdownItem>
       </DropdownMenu>
     </Dropdown>
