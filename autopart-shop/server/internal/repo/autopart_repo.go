@@ -43,12 +43,12 @@ func (ar *autoPartRepo) Create(product *model.AutoPart) error {
 	})
 }
 
-func (ar *autoPartRepo) GetAll() ([]model.AutoPart, error) {
-	var product []model.AutoPart
-	if err := ar.db.Find(&product).Error; err != nil {
+func (r *autoPartRepo) GetAll() ([]model.AutoPart, error) {
+	var autoParts []model.AutoPart
+	if err := r.db.Preload("Categories").Preload("Brand").Preload("AutoPartInfo").Find(&autoParts).Error; err != nil {
 		return nil, err
 	}
-	return product, nil
+	return autoParts, nil
 }
 
 func (ar *autoPartRepo) GetByID(id uint) (*model.AutoPart, error) {
