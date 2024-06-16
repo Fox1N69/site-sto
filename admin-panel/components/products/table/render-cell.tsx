@@ -4,7 +4,7 @@ import React from "react";
 import { DeleteIcon } from "../../icons/table/delete-icon";
 import { EyeIcon } from "../../icons/table/eye-icon";
 import { EditProduct } from "../edit-product";
-import { Product } from "@/types";
+import { Category, Product } from "@/types";
 import { Span } from "next/dist/trace";
 import { useSession } from "next-auth/react";
 import { deleteProduct } from "@/utils/fetching";
@@ -17,7 +17,6 @@ interface Props {
 }
 
 export const RenderCell: React.FC<Props> = ({
-  token,
   product,
   columnKey,
   onEdit,
@@ -32,7 +31,15 @@ export const RenderCell: React.FC<Props> = ({
     case "price":
       return <span>{cellValue}</span>;
     case "category_name":
-      return <span>{cellValue}</span>;
+      return (
+        <span className="flex gap-2 items-center">
+          {product.categories.map((category: Category, index: number) => (
+            <Chip variant="faded" key={index} >
+              {category.name}
+            </Chip>
+          ))}
+        </span>
+      );
     case "brand_name":
       return <span>{cellValue}</span>;
 

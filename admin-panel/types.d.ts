@@ -34,9 +34,8 @@ export interface Product {
   brand_name?: string; // Добавляем это поле
   auto_part_info: any;
   stock: number;
+  categories: any;
 }
-
-
 
 export interface User {
   id: number;
@@ -44,4 +43,3 @@ export interface User {
   username?: string;
   role?: string;
 }
-
