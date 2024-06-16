@@ -15,11 +15,10 @@ import {
 } from "@nextui-org/react";
 import React, { useEffect, useState } from "react";
 import { EditIcon } from "../icons/table/edit-icon";
-import { format, parse } from "date-fns";
 import { Brand, Category, Product } from "@/types";
-import { Cookie } from "next/font/google";
 import { useSession } from "next-auth/react";
 import { useEditStore } from "@/store/editStore";
+import { fetchBrands, fetchCategories } from "@/utils/fetching";
 
 interface EditProductsProps {
   selectedProductsId: number;
@@ -35,7 +34,6 @@ export const EditProducts: React.FC<EditProductsProps> = ({
   const { data: session } = useSession();
   const [categories, setCategories] = useState<Category[]>([]);
   const [brands, setBrands] = useState<Brand[]>([]);
-  const [selectedCategoryName, setSelectedCategoryName] = useState<string>("");
   const {
     selectedCategory,
     selectedBrand,
@@ -56,37 +54,15 @@ export const EditProducts: React.FC<EditProductsProps> = ({
   }, [products.Category, setSelectedCategory]);
 
   useEffect(() => {
-    fetchCategories();
-  }, []);
+    const fetchInitialData = async () => {
+      const categoriesData = await fetchCategories();
+      setCategories(categoriesData);
 
-  const fetchCategories = async () => {
-    try {
-      const response = await fetch("http://localhost:4000/shop/categorys");
-      if (!response.ok) {
-        throw new Error("Failed to fetch categories");
-      }
-      const data = await response.json();
-      setCategories(data);
-    } catch (error) {
-      console.error("Error fetching categories:", error);
-    }
-  };
+      const brandsData = await fetchBrands();
+      setBrands(brandsData);
+    };
 
-  const fetchBrands = async () => {
-    try {
-      const response = await fetch("http://localhost:4000/shop/brands");
-      if (!response.ok) {
-        throw new Error("Failed to fetch categories");
-      }
-      const data = await response.json();
-      setBrands(data);
-    } catch (error) {
-      console.error("Error fetching categories:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchBrands();
+    fetchInitialData();
   }, []);
 
   const handleChange = (e: any) => {
