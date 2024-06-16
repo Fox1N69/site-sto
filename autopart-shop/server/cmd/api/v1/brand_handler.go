@@ -11,6 +11,7 @@ import (
 
 type BrandHandler interface {
 	CreateBrand(c *gin.Context)
+	GetAllBrands(c *gin.Context)
 }
 
 type brandHandler struct {
@@ -31,4 +32,14 @@ func (h *brandHandler) CreateBrand(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, "brand create success")
+}
+
+func (h *brandHandler) GetAllBrands(c *gin.Context) {
+	data, err := h.service.GetAllBrand()
+	if err != nil {
+		response.New(c).Write(http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, data)
 }

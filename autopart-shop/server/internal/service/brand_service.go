@@ -7,6 +7,7 @@ import (
 
 type BrandService interface {
 	CreateBrand(brand *model.Brand) error
+	GetAllBrand() ([]model.Brand, error)
 	GetBrandByID(id uint) (*model.Brand, error)
 	UpdateBrand(brand *model.Brand) error
 	DeleteBrand(brandID uint) error
@@ -24,6 +25,10 @@ func NewBrandService(brandRepo repo.BrandRepo) BrandService {
 
 func (s *brandService) CreateBrand(brand *model.Brand) error {
 	return s.brandRepo.CreateBrand(brand)
+}
+
+func (s *brandService) GetAllBrand() ([]model.Brand, error) {
+	return s.brandRepo.GetAllBrand()
 }
 
 func (s *brandService) GetBrandByID(id uint) (*model.Brand, error) {

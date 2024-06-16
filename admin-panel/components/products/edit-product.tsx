@@ -3,6 +3,7 @@ import {
   Dropdown,
   DropdownItem,
   DropdownMenu,
+  DropdownTrigger,
   Input,
   Modal,
   ModalBody,
@@ -12,12 +13,13 @@ import {
   Tooltip,
   useDisclosure,
 } from "@nextui-org/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { EditIcon } from "../icons/table/edit-icon";
 import { format, parse } from "date-fns";
-import { Product } from "@/types";
+import { Brand, Category, Product } from "@/types";
 import { Cookie } from "next/font/google";
 import { useSession } from "next-auth/react";
+import { useEditStore } from "@/store/editStore";
 
 interface EditProductsProps {
   selectedProductsId: number;
@@ -31,10 +33,50 @@ export const EditProducts: React.FC<EditProductsProps> = ({
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const [isDropdownOpen, setIsDropDownOpen] = useState(false);
   const { data: session } = useSession();
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [selectedCategoryName, setSelectedCategoryName] = useState<string>("");
+  const {
+    selectedCategory,
+    selectedBrand,
+    setSelectedCategory,
+    setSelectedBrand,
+  } = useEditStore();
+
+  const handleBrandChange = (brand: Brand) => {
+    setEditedData((prevData) => ({
+      ...prevData,
+      brand_id: brand.id,
+    }));
+    setSelectedBrand(brand);
+  };
 
   const [editedData, setEditedData] = useState({
     id: selectedProductsId,
+    category_id: products.category_id,
   });
+
+  useEffect(() => {
+    if (products.Category) {
+      setSelectedCategory(products.Category);
+    }
+  }, [products.Category, setSelectedCategory]);
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch("http://localhost:4000/shop/categorys");
+      if (!response.ok) {
+        throw new Error("Failed to fetch categories");
+      }
+      const data = await response.json();
+      setCategories(data);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  };
 
   const handleChange = (e: any) => {
     const { name, value } = e.target;
@@ -66,11 +108,12 @@ export const EditProducts: React.FC<EditProductsProps> = ({
     onClose();
   };
 
-  const handleCategoryChange = (value: string) => {
+  const handleCategoryChange = (category: Category) => {
     setEditedData((prevData) => ({
       ...prevData,
-      category_name: value,
+      category_id: category.id,
     }));
+    setSelectedCategory(category);
   };
 
   return (
@@ -129,6 +172,44 @@ export const EditProducts: React.FC<EditProductsProps> = ({
                     defaultValue={products.Category?.name}
                     onChange={handleChange}
                   />
+
+                  <Dropdown>
+                    <DropdownTrigger>
+                      <Button variant="bordered">
+                        {selectedBrand ? selectedBrand.name : "Выберите бренд"}
+                      </Button>
+                    </DropdownTrigger>
+                    <DropdownMenu>
+                      {brands.map((brand) => (
+                        <DropdownItem
+                          key={brand.id}
+                          onClick={() => handleBrandChange(brand)}
+                        >
+                          {brand.name}
+                        </DropdownItem>
+                      ))}
+                    </DropdownMenu>
+                  </Dropdown>
+
+                  <Dropdown>
+                    <DropdownTrigger>
+                      <Button variant="bordered">
+                        {selectedCategory
+                          ? selectedCategory.name
+                          : "Выберите категорию"}
+                      </Button>
+                    </DropdownTrigger>
+                    <DropdownMenu>
+                      {categories.map((category) => (
+                        <DropdownItem
+                          key={category.id}
+                          onClick={() => handleCategoryChange(category)}
+                        >
+                          {category.name}
+                        </DropdownItem>
+                      ))}
+                    </DropdownMenu>
+                  </Dropdown>
                   <Input
                     label="Наличие"
                     variant="bordered"
@@ -136,87 +217,6 @@ export const EditProducts: React.FC<EditProductsProps> = ({
                     defaultValue={products.stock.toString()}
                     onChange={handleChange}
                   />
-
-                  <Dropdown>
-                    <DropdownTrigger>
-                      <Button variant="bordered">
-                        {editedData.isPaid || "Оплата"}
-                      </Button>
-                    </DropdownTrigger>
-                    <DropdownMenu
-                      aria-label="Static Actions"
-                      onSelect={(event) => {
-                        const value = (
-                          event.target as HTMLElement
-                        ).getAttribute("data-value");
-                        if (value) {
-                          handleIsPaidChange(value);
-                        }
-                      }}
-                    >
-                      <DropdownItem
-                        key="Paid"
-                        color="success"
-                        onClick={() => handleIsPaidChange("оплачено")}
-                      >
-                        Оплачено
-                      </DropdownItem>
-                      <DropdownItem
-                        key="noPaid"
-                        color="danger"
-                        onClick={() => handleIsPaidChange("не оплачено")}
-                      >
-                        Не Оплачено
-                      </DropdownItem>
-                      <DropdownItem
-                        key="PaidForGive"
-                        color="warning"
-                        onClick={() =>
-                          handleIsPaidChange("Оплата при получение")
-                        }
-                      >
-                        Оплата при получение
-                      </DropdownItem>
-                    </DropdownMenu>
-                  </Dropdown>
-
-                  <Dropdown>
-                    <DropdownTrigger>
-                      <Button variant="bordered">
-                        {" "}
-                        {editedData.status || "Статус"}{" "}
-                      </Button>
-                    </DropdownTrigger>
-                    <DropdownMenu
-                      onSelect={(event) => {
-                        const value = (
-                          event.target as HTMLElement
-                        ).getAttribute("data-value");
-                        if (value) {
-                          handleStatusChange(value);
-                        }
-                      }}
-                    >
-                      <DropdownItem
-                        onClick={() => handleStatusChange("На Хранении")}
-                        color="success"
-                      >
-                        На Хранение
-                      </DropdownItem>
-                      <DropdownItem
-                        onClick={() => handleStatusChange("Получен")}
-                        color="danger"
-                      >
-                        Получен
-                      </DropdownItem>
-                      <DropdownItem
-                        onClick={() => handleStatusChange("Ожидает Получения")}
-                        color="warning"
-                      >
-                        Ожидает Получения
-                      </DropdownItem>
-                    </DropdownMenu>
-                  </Dropdown>
                 </ModalBody>
                 <ModalFooter>
                   <Button color="danger" variant="flat" onClick={onClose}>

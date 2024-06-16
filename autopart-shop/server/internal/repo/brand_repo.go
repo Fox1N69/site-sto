@@ -8,6 +8,7 @@ import (
 
 type BrandRepo interface {
 	CreateBrand(brand *model.Brand) error
+	GetAllBrand() ([]model.Brand, error)
 	GetBrandByID(id uint) (*model.Brand, error)
 	UpdateBrand(brand *model.Brand) error
 	DeleteBrand(brandID uint) error
@@ -25,6 +26,12 @@ func NewBrandRepo(db *gorm.DB) BrandRepo {
 
 func (br *brandRepo) CreateBrand(brand *model.Brand) error {
 	return br.db.Create(brand).Error
+}
+
+func (br *brandRepo) GetAllBrand() ([]model.Brand, error) {
+	var brands []model.Brand
+	err := br.db.Find(&brands).Error
+	return brands, err
 }
 
 func (br *brandRepo) GetBrandByID(id uint) (*model.Brand, error) {
