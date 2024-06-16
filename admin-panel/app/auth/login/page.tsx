@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { signIn } from "next-auth/react";
+import { getSession, signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Button, Input } from "@nextui-org/react";
 
@@ -12,6 +12,7 @@ const SignInPage: React.FC = () => {
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
+
     const result = await signIn("credentials", {
       redirect: false,
       username,
@@ -20,6 +21,11 @@ const SignInPage: React.FC = () => {
 
     if (result?.error) {
       setError(result.error);
+    } else {
+      const session = await getSession();
+      if (session?.user?.role === "admin") {
+        router.push("/"); // Замените на необходимый защищенный маршрут
+      }
     }
   };
 
