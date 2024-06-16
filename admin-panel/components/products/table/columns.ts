@@ -4,5 +4,6 @@ export const columns = [
   { name: "Цена", uid: "price" },
   { name: "Бренд", uid: "brand_name" },
   { name: "Категория", uid: "category_name" },
+  {name: "Наличие", uid: "stock"},
   { name: "ACTIONS", uid: "actions" },
 ];
