@@ -13,6 +13,7 @@ import {
   ModalFooter,
   ModalHeader,
   useDisclosure,
+  Chip,
 } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import { fetchBrands, fetchCategories } from "@/utils/fetching";
@@ -29,7 +30,7 @@ export const AddProduct: React.FC = () => {
   const [modelName, setModelName] = useState<string>("");
   const [price, setPrice] = useState<string>("");
   const [brand, setBrand] = useState<Brand | null>(null);
-  const [category, setCategory] = useState<Category | null>(null);
+  const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
   const [brands, setBrands] = useState<Brand[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [stock, setStock] = useState<string>("");
@@ -65,8 +66,8 @@ export const AddProduct: React.FC = () => {
   };
 
   const handleSubmit = async () => {
-    if (!brand || !category) {
-      alert("Please select a brand and category.");
+    if (!brand || selectedCategories.length === 0) {
+      alert("Please select a brand and at least one category.");
       return;
     }
 
@@ -74,7 +75,7 @@ export const AddProduct: React.FC = () => {
       name,
       model_name: modelName,
       price: parseFloat(price),
-      category_id: category.id,
+      category_id: selectedCategories.map((category) => category.id),
       brand_id: brand.id,
       stock: parseInt(stock, 10),
       auto_part_info: autoPartInfo,
@@ -103,7 +104,15 @@ export const AddProduct: React.FC = () => {
   };
 
   const handleCategoryChange = (category: Category) => {
-    setCategory(category);
+    setSelectedCategories([...selectedCategories, category]);
+  };
+
+  const handleDeleteCategory = (categoryToDelete: Category) => {
+    setSelectedCategories(
+      selectedCategories.filter(
+        (category) => category.id !== categoryToDelete.id
+      )
+    );
   };
 
   const handleBrandChange = (brand: Brand) => {
@@ -158,11 +167,10 @@ export const AddProduct: React.FC = () => {
               </DropdownMenu>
             </Dropdown>
 
+            <label>Категории</label>
             <Dropdown>
               <DropdownTrigger>
-                <Button variant="bordered">
-                  {category ? category.name : "Выберите категорию"}
-                </Button>
+                <Button variant="bordered">Добавить категорию</Button>
               </DropdownTrigger>
               <DropdownMenu>
                 {categories.map((category) => (
@@ -175,6 +183,17 @@ export const AddProduct: React.FC = () => {
                 ))}
               </DropdownMenu>
             </Dropdown>
+            <div className="mt-4">
+              {selectedCategories.map((category) => (
+                <Chip
+                  key={category.id}
+                  onClose={() => handleDeleteCategory(category)}
+                  variant="shadow"
+                >
+                  {category.name}
+                </Chip>
+              ))}
+            </div>
 
             <label>Наличие</label>
             <Input
