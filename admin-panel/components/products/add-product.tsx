@@ -82,6 +82,8 @@ export const AddProduct: React.FC = () => {
       img: "https://example.com/images/brake_pad.jpg", // Замените на реальную ссылку на изображение
     };
 
+    console.log("Submitting data:", data);
+
     try {
       const response = await fetch("http://localhost:4000/admin/part/create", {
         method: "POST",
@@ -138,7 +140,8 @@ export const AddProduct: React.FC = () => {
             />
             <label>Модель</label>
             <Input
-              value={modelName}
+              defaultValue={modelName}
+              name="model_name"
               onChange={(e) => setModelName(e.target.value)}
               variant="bordered"
             />

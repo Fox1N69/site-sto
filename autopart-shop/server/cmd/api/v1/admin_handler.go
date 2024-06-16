@@ -36,6 +36,7 @@ func (h *adminHandler) Test(c *gin.Context) {
 
 type CreateAutoPartRequest struct {
 	Name         string               `json:"name" binding:"required"`
+	ModelName    string               `json:"model_name"`
 	Price        int                  `json:"price" binding:"required"`
 	Img          string               `json:"img"`
 	CategoryIDs  []uint               `json:"category_id" binding:"required"`
@@ -52,11 +53,12 @@ func (h *adminHandler) CreateAutoPart(c *gin.Context) {
 	}
 
 	autoPart := model.AutoPart{
-		Name:    req.Name,
-		Price:   req.Price,
-		Img:     req.Img,
-		BrandID: req.BrandID,
-		Stock:   req.Stock,
+		Name:      req.Name,
+		ModelName: req.ModelName,
+		Price:     req.Price,
+		Img:       req.Img,
+		BrandID:   req.BrandID,
+		Stock:     req.Stock,
 	}
 
 	for _, info := range req.AutoPartInfo {
