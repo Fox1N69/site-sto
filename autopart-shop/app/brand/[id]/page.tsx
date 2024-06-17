@@ -1,7 +1,9 @@
 export default function BrandPage({ params }: { params: { id: number } }) {
 	return (
 		<div>
-			<div className='container'>{params.id}</div>
+			<div className='container'>
+				
+			</div>
 		</div>
 	);
 }
