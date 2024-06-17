@@ -9,6 +9,3 @@ const ModelAutoCard: React.FC<ModelCardProps> = () => {
 };
 
 export default ModelAutoCard;
-
-
-
