@@ -5,8 +5,9 @@ import Link from 'next/link';
 interface CategoryCard {
 	id: number;
 	name: string;
+	img_url?: string;
 }
-export const CategoryCard: React.FC<CategoryCard> = ({ id, name }) => {
+export const CategoryCard: React.FC<CategoryCard> = ({ id, name, img_url }) => {
 	return (
 		<Card isFooterBlurred radius='lg' className='border-none'>
 			<Image

@@ -14,6 +14,7 @@ import Example from '@/components/cart/CartModal';
 import { Button } from '@nextui-org/button';
 import { PartCard } from '@/components/product/ProductCard/PartCard';
 import { CategoryCard } from '@/components/home/CategoryCard';
+import BrandCard from '@/components/home/BrandCard';
 
 export default function Home() {
 	const router = useRouter();
@@ -23,7 +24,13 @@ export default function Home() {
 		<main className='flex min-h-screen flex-col items-center p-24 gap-20'>
 			<div className='main__container'>
 				<Banner />
-				<div className='category__cards flex flex-col gap-4'>
+				<section className='brand__cards flex flex-col gap-4'>
+					<h3 className='font-bold text-2xl'>Бренды</h3>
+					<div className='flex gap-5'>
+						<BrandCard />
+					</div>
+				</section>
+				<section className='category__cards flex flex-col gap-4 mt-20'>
 					<h3 className='font-bold text-2xl'>Категории</h3>
 					<div className='flex gap-5'>
 						<CategoryCard key={1} id={1} name='Двигатель' />
@@ -33,7 +40,7 @@ export default function Home() {
 						<CategoryCard key={2} id={2} name='Кузов' />
 						<CategoryCard key={2} id={2} name='Кузов' />
 					</div>
-				</div>
+				</section>
 				<section className='flex flex-col mt-20 gap-4'>
 					<h3 className='font-bold text-2xl'>Новые автозапчасти</h3>
 					<div className='autopart__cards flex gap-5 justify-center '>
