@@ -48,6 +48,7 @@ type AutoPartInfo struct {
 type Category struct {
 	ShopCustom
 	Name      string     `json:"name"`
+	ImageUrl  string     `json:"image_url"`
 	AutoParts []AutoPart `json:"auto_parts" gorm:"many2many:auto_part_categories;"`
 	Brands    []Brand    `gorm:"many2many:brand_categories;"`
 }
@@ -62,6 +63,7 @@ type AutoPartCategory struct {
 type Brand struct {
 	ShopCustom
 	Name       string     `json:"name"`
+	ImageUrl   string     `json:"image_url"`
 	AutoParts  []AutoPart `gorm:"foreignKey:BrandID"`
 	Categories []Category `gorm:"many2many:brand_categories;"`
 }
