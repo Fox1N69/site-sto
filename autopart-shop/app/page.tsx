@@ -9,7 +9,7 @@ import { useEffect, useState } from 'react';
 import { Navbar } from '@nextui-org/navbar';
 import { AuthProvider } from '@/components/context/authContext';
 import { useRouter } from 'next/navigation';
-import { useFetchAutoParts } from '@/hooks/fetching';
+import { useFetchAutoParts, useFetchBrands } from '@/hooks/fetching';
 import Example from '@/components/cart/CartModal';
 import { Button } from '@nextui-org/button';
 import { PartCard } from '@/components/product/ProductCard/PartCard';
@@ -19,6 +19,7 @@ import BrandCard from '@/components/home/BrandCard';
 export default function Home() {
 	const router = useRouter();
 	const autoParts = useFetchAutoParts();
+	const brands = useFetchBrands();
 
 	return (
 		<main className='flex min-h-screen flex-col items-center p-24 gap-20'>
@@ -27,7 +28,9 @@ export default function Home() {
 				<section className='brand__cards flex flex-col gap-4'>
 					<h3 className='font-bold text-2xl'>Бренды</h3>
 					<div className='flex gap-5'>
-						<BrandCard key={1} brand={{ id: 2, name: 'bmw', img_url: '' }} />
+						{brands.slice(0, 5).map(brand => (
+							<BrandCard key={brand.id} brand={brand} />
+						))}
 					</div>
 				</section>
 				<section className='category__cards flex flex-col gap-4 mt-20'>
