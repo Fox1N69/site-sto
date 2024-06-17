@@ -23,14 +23,25 @@ export default function Home() {
 		<main className='flex min-h-screen flex-col items-center p-24 gap-20'>
 			<div className='main__container'>
 				<Banner />
-				<div className='category__cards w-[200px]'>
-					<CategoryCard key={1} id={1} name='Двигатель' />
+				<div className='category__cards flex flex-col gap-4'>
+					<h3 className='font-bold text-2xl'>Категории</h3>
+					<div className='flex gap-5'>
+						<CategoryCard key={1} id={1} name='Двигатель' />
+						<CategoryCard key={2} id={2} name='Кузов' />
+						<CategoryCard key={2} id={2} name='Кузов' />
+						<CategoryCard key={2} id={2} name='Кузов' />
+						<CategoryCard key={2} id={2} name='Кузов' />
+						<CategoryCard key={2} id={2} name='Кузов' />
+					</div>
 				</div>
-				<div className='autopart__cards flex gap-5 justify-center mt-20'>
-					{autoParts.slice(0, 5).map(part => (
-						<PartCard key={part.id} part={part} />
-					))}
-				</div>
+				<section className='flex flex-col mt-20 gap-4'>
+					<h3 className='font-bold text-2xl'>Новые автозапчасти</h3>
+					<div className='autopart__cards flex gap-5 justify-center '>
+						{autoParts.slice(0, 5).map(part => (
+							<PartCard key={part.id} part={part} />
+						))}
+					</div>
+				</section>
 			</div>
 		</main>
 	);
