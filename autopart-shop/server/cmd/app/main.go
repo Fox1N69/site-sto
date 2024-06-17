@@ -15,6 +15,7 @@ func main() {
 		&model.Category{},
 		&model.Brand{},
 		&model.Basket{},
+		&model.ModelAuto{},
 		&model.AutoPart{},
 		&model.BasketItem{},
 		&model.AutoPartInfo{},
