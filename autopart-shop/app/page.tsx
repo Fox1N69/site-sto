@@ -27,7 +27,7 @@ export default function Home() {
 				<section className='brand__cards flex flex-col gap-4'>
 					<h3 className='font-bold text-2xl'>Бренды</h3>
 					<div className='flex gap-5'>
-						<BrandCard />
+						<BrandCard id={1} key={1} name='BMW' img_url='/bmw.png' />
 					</div>
 				</section>
 				<section className='category__cards flex flex-col gap-4 mt-20'>
