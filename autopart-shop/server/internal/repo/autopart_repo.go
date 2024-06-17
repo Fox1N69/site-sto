@@ -2,7 +2,9 @@ package repo
 
 import (
 	"errors"
+	"log"
 	"shop-server/internal/model"
+	"strings"
 
 	"gorm.io/gorm"
 )
@@ -129,15 +131,35 @@ func (r *autoPartRepo) Exists(id uint) (bool, error) {
 }
 
 func (r *autoPartRepo) Search(query string) ([]model.AutoPart, error) {
-	var product []model.AutoPart
+	var products []model.AutoPart
+
+	// Разбиваем запрос на отдельные слова
+	terms := strings.Fields(query)
+	likeClauses := make([]string, len(terms))
+	likeValues := make([]interface{}, len(terms)*4) // 4 - количество полей для проверки
+
+	for i, term := range terms {
+		likeClauses[i] = `(auto_parts.name ILIKE ? OR categories.name ILIKE ? OR brands.name ILIKE ? OR auto_parts.model_name ILIKE ?)`
+		for j := 0; j < 4; j++ {
+			likeValues[i*4+j] = "%" + term + "%"
+		}
+	}
+
+	// Формируем окончательный WHERE запрос
+	whereClause := strings.Join(likeClauses, " AND ")
 
 	if err := r.db.Table("auto_parts").
-		Select("auto_parts.*, categories.name AS category_name, brands.name AS brand_name").
-		Joins("JOIN categories ON auto_parts.category_id = categories.id").
-		Joins("JOIN brands ON auto_parts.brand_id = brands.id").
-		Where("auto_parts.name ILIKE ? OR categories.name ILIKE ? OR brands.name ILIKE ? OR model_name ILIKE ?", "%"+query+"%", "%"+query+"%", "%"+query+"%", "%"+query+"%").
-		Find(&product).Error; err != nil {
+		Select("auto_parts.*, array_agg(categories.name) AS category_names, brands.name AS brand_name").
+		Joins("LEFT JOIN auto_part_categories ON auto_parts.id = auto_part_categories.auto_part_id").
+		Joins("LEFT JOIN categories ON auto_part_categories.category_id = categories.id").
+		Joins("LEFT JOIN brands ON auto_parts.brand_id = brands.id").
+		Where(whereClause, likeValues...).
+		Group("auto_parts.id, brands.name").
+		Find(&products).Error; err != nil {
+		// Логирование ошибки
+		log.Printf("Error searching auto parts: %v", err)
 		return nil, err
 	}
-	return product, nil
+	return products, nil
+
 }
