@@ -48,6 +48,8 @@ export interface ModelAuto {
   id: number;
   name: number;
   img_url: string;
-  brand: Brand.id;
+  Brand: Brand;
+  brand_id: number;
+  brand_name?: string;
   release_year: number;
 }

@@ -15,6 +15,8 @@ import { writeTextFile } from "@tauri-apps/api/fs";
 import { save } from "@tauri-apps/api/dialog";
 import { SessionProvider, useSession } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
+import { TableWrapperModels } from "./auto-table/table-model";
+import { AddModel } from "./auto-table/add-model";
 
 interface ModelAutoProps {}
 
@@ -57,6 +59,7 @@ export const ModelAuto: React.FC<ModelAutoProps> = () => {
             <DotsIcon />
           </div>
           <div className="flex flex-row gap-3.5 flex-wrap">
+            <AddModel />
             <Button
               color="primary"
               startContent={<ExportIcon />}
@@ -66,7 +69,9 @@ export const ModelAuto: React.FC<ModelAutoProps> = () => {
             </Button>
           </div>
         </div>
-        <div className="max-w-[95rem] mx-auto w-full"></div>
+        <div className="max-w-[95rem] mx-auto w-full">
+          <TableWrapperModels />
+        </div>
       </div>
     </SessionProvider>
   );

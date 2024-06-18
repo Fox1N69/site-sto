@@ -26,10 +26,12 @@ export const RenderCell: React.FC<Props> = ({
   const cellValue = model[columnKey];
   switch (columnKey) {
     case "id":
-      return <Chip>{cellValue}</Chip>;
+      return <span>{cellValue}</span>;
     case "name":
       return <span>{cellValue}</span>;
-    case "brand":
+    case "img_url":
+      return <img src={cellValue} alt="" width={100} height={100} />;
+    case "brand_name":
       return <span>{cellValue}</span>;
     case "release_year":
       return <span>{cellValue}</span>;

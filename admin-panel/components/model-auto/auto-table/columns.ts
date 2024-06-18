@@ -1,9 +1,10 @@
+import { useId } from "react";
+
 export const columns = [
+  { name: "id", uid: "id" },
   { name: "Название", uid: "name" },
-  { name: "Модель", uid: "model_name" },
-  { name: "Цена", uid: "price" },
+  { name: "Изображение", uid: "img_url" },
   { name: "Бренд", uid: "brand_name" },
-  { name: "Категория", uid: "category_name" },
-  {name: "Наличие", uid: "stock"},
-  { name: "ACTIONS", uid: "actions" },
+  { name: "Год выпуска", uid: "release_year" },
+  { name: "-", uid: "actions" },
 ];

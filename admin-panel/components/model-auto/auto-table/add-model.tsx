@@ -24,24 +24,25 @@ interface AutoPartInfo {
   description: string;
 }
 
-export const AddProduct: React.FC = () => {
+export const AddModel: React.FC = () => {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const { data: session } = useSession();
 
   return (
     <div>
       <Button onPress={onOpen} color="primary">
-        Добавить продукт
+        Добавить модель
       </Button>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} placement="top-center">
         <ModalContent>
           <ModalHeader className="flex flex-col gap-1">
-            Новый продукт
+            Новая модель
           </ModalHeader>
           <ModalBody>
-            <Button onPress={() => {}} color="secondary">
-              Добавить информацию
-            </Button>
+            <Input />
+            <Input />
+            <Input />
+            <Input />
           </ModalBody>
           <ModalFooter>
             <Button onPress={onClose}>Отмена</Button>
