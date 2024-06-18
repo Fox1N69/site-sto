@@ -2,13 +2,13 @@
 import { Button, Input } from "@nextui-org/react";
 import Link from "next/link";
 import React, { useContext, useEffect, useState } from "react";
-import { DotsIcon } from "@/components/icons/accounts/dots-icon";
-import { ExportIcon } from "@/components/icons/accounts/export-icon";
-import { InfoIcon } from "@/components/icons/accounts/info-icon";
-import { TrashIcon } from "@/components/icons/accounts/trash-icon";
-import { UsersIcon } from "@/components/icons/breadcrumb/users-icon";
-import { SettingsIcon } from "@/components/icons/sidebar/settings-icon";
-import { TableWrapper } from "@/components/table/table";
+import { DotsIcon } from "@components/icons/accounts/dots-icon";
+import { ExportIcon } from "@components/icons/accounts/export-icon";
+import { InfoIcon } from "@components/icons/accounts/info-icon";
+import { TrashIcon } from "@components/icons/accounts/trash-icon";
+import { UsersIcon } from "@components/icons/breadcrumb/users-icon";
+import { SettingsIcon } from "@components/icons/sidebar/settings-icon";
+import { TableWrapper } from "@components/table/table";
 import { AddOrders } from "./add-order";
 import { HouseIcon } from "../icons/breadcrumb/house-icon";
 import Papa from "papaparse";
@@ -34,8 +34,6 @@ export const Orders = () => {
   const [searchValue, setSearchValue] = useState("");
   const [items, setItems] = useState<Item[]>([]);
   const [filteredItems, setFilteredItems] = useState<Item[]>([]);
-
-  
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
