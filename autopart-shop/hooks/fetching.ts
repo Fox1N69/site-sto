@@ -199,13 +199,14 @@ export const useFetchBrands = () => {
 	return brands;
 };
 
-export const useFetchModelAuto = ({ brandID }: { brandID: number }) => {
+export const useFetchModelAuto = ({ brandId }: { brandId: number }) => {
 	const [modelAuto, setModelAuto] = useState<ModelAuto[]>([]);
+
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
 				const response = await axios.get<ModelAuto[]>(
-					`http://localhost:4000/shop/modelauto/${brandID}`
+					`http://localhost:4000/shop/modelauto/${brandId}`
 				);
 				setModelAuto(response.data);
 			} catch (error) {

@@ -9,8 +9,8 @@ interface ModelCardProps {
 }
 
 const ModelAutoCard: React.FC<ModelCardProps> = ({ model }) => {
-	const brandID = model.brand_id;
-	const modelAuto = useFetchModelAuto({ brandID });
+	const brandId = model.brand;
+	const modelAuto = useFetchModelAuto({ brandId });
 
 	return (
 		<>
