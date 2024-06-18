@@ -41,11 +41,12 @@ type AutoPart struct {
 
 type ModelAuto struct {
 	ShopCustom
-	Name     string     `json:"name"`
-	Image    string     `json:"img_url"`
-	AutoPart []AutoPart `json:"auto_part" gorm:"foreginKey:ModelAutoID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
-	BrandID  uint       `json:"brand_id"`
-	Brand    Brand      `gorm:"primaryKey:BrandID"`
+	Name        string     `json:"name"`
+	Image       string     `json:"img_url"`
+	AutoPart    []AutoPart `json:"auto_part" gorm:"foreginKey:ModelAutoID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	BrandID     uint       `json:"brand_id"`
+	Brand       Brand      `gorm:"primaryKey:BrandID"`
+	ReleaseYear int        `json:"release_year"`
 }
 
 type AutoPartInfo struct {

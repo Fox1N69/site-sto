@@ -52,7 +52,7 @@ func (c *server) handlers() {
 
 func (c *server) v1() {
 	authHandler := v1.NewAuthHandler(c.service.AuthService(), c.infra, c.service.BasketService(), c.service.Blacklist())
-	adminHandler := v1.NewAdminHandler(c.infra, c.service.AutoPartService())
+	adminHandler := v1.NewAdminHandler(c.infra, c.service.AutoPartService(), c.service.AutoService())
 	categoryHandler := v1.NewCategoryHandler(c.service.CategoryService())
 	brandHandler := v1.NewBrandHandler(c.service.BrandService())
 	basketHnalder := v1.NewBasketHandler(c.service.BasketService())
@@ -86,6 +86,11 @@ func (c *server) v1() {
 		category := admin.Group("/category")
 		{
 			category.POST("/create", categoryHandler.CreateCategory)
+		}
+
+		modelauto := admin.Group("/model-auto")
+		{
+			modelauto.POST("/create", adminHandler.CreateModelAuto)
 		}
 	}
 

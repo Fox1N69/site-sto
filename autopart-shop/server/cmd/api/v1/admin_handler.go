@@ -16,17 +16,20 @@ type AdminHandler interface {
 	CreateAutoPart(c *gin.Context)
 	DeleteAutoPart(c *gin.Context)
 	UpdateAutoPart(c *gin.Context)
+	CreateModelAuto(c *gin.Context)
 }
 
 type adminHandler struct {
-	service service.AutoPartService
-	infra   infra.Infra
+	service     service.AutoPartService
+	autoService service.AutoService
+	infra       infra.Infra
 }
 
-func NewAdminHandler(infra infra.Infra, autopartService service.AutoPartService) AdminHandler {
+func NewAdminHandler(infra infra.Infra, autopartService service.AutoPartService, autoService service.AutoService) AdminHandler {
 	return &adminHandler{
-		infra:   infra,
-		service: autopartService,
+		infra:       infra,
+		service:     autopartService,
+		autoService: autoService,
 	}
 }
 
@@ -118,4 +121,15 @@ func (h *adminHandler) UpdateAutoPart(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "Auto part updated successfully"})
+}
+func (h *adminHandler) CreateModelAuto(c *gin.Context) {
+	data := new(model.ModelAuto)
+	c.ShouldBind(data)
+
+	if err := h.autoService.CreateModelAuto(data); err != nil {
+		response.New(c).Write(http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Model create success"})
 }

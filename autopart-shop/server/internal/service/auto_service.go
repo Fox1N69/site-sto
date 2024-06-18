@@ -6,6 +6,7 @@ import (
 )
 
 type AutoService interface {
+	CreateModelAuto(auto *model.ModelAuto) error
 	GetAllModelAuto() ([]model.ModelAuto, error)
 	GetModelAutoByBrandID(brandID uint) ([]model.ModelAuto, error)
 }
@@ -18,6 +19,9 @@ func NewAutoService(repo repo.AutoRepo) AutoService {
 	return &autoService{repo: repo}
 }
 
+func (s *autoService) CreateModelAuto(auto *model.ModelAuto) error {
+	return s.repo.Create(auto)
+}
 func (s *autoService) GetAllModelAuto() ([]model.ModelAuto, error) {
 	return s.repo.GetAll()
 }

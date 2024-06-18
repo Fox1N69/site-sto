@@ -7,6 +7,7 @@ import (
 )
 
 type AutoRepo interface {
+	Create(auto *model.ModelAuto) error
 	GetAll() ([]model.ModelAuto, error)
 	GetByBrandID(brandID uint) ([]model.ModelAuto, error)
 }
@@ -17,6 +18,10 @@ type autoRepo struct {
 
 func NewAutoRepo(db *gorm.DB) AutoRepo {
 	return &autoRepo{db: db}
+}
+
+func (r *autoRepo) Create(auto *model.ModelAuto) error {
+	return r.db.Create(&auto).Error
 }
 
 func (r *autoRepo) GetAll() ([]model.ModelAuto, error) {
