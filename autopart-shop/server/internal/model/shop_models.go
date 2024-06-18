@@ -2,6 +2,7 @@ package model
 
 import (
 	"database/sql"
+	"encoding/json"
 )
 
 type ShopCustom struct {
@@ -41,12 +42,12 @@ type AutoPart struct {
 
 type ModelAuto struct {
 	ShopCustom
-	Name        string     `json:"name"`
-	Image       string     `json:"img_url"`
-	AutoPart    []AutoPart `json:"auto_part" gorm:"foreginKey:ModelAutoID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
-	BrandID     uint       `json:"brand_id"`
-	Brand       Brand      `gorm:"primaryKey:BrandID"`
-	ReleaseYear int        `json:"release_year"`
+	Name        string          `json:"name"`
+	Image       string          `json:"img_url"`
+	AutoPart    []AutoPart      `json:"auto_part" gorm:"foreginKey:ModelAutoID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	BrandID     uint            `json:"brand_id"`
+	Brand       Brand           `gorm:"primaryKey:BrandID"`
+	ReleaseYear json.RawMessage `json:"release_year" gorm:"type:jsonb"`
 }
 
 type AutoPartInfo struct {

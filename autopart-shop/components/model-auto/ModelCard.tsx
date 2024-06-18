@@ -1,6 +1,6 @@
 'use client';
 import { useFetchModelAuto } from '@/hooks/fetching';
-import { ModelAuto } from '@/types';
+import { Brand, ModelAuto } from '@/types';
 import { Card, CardBody } from '@nextui-org/react';
 import Image from 'next/image';
 
@@ -9,6 +9,8 @@ interface ModelAutoCardProps {
 }
 
 const ModelAutoCard: React.FC<ModelAutoCardProps> = ({ model }) => {
+	const brand_name = model.Brand?.name;
+	const modelName = `${brand_name} ${model.name}`;
 	return (
 		<>
 			<Card
@@ -20,7 +22,7 @@ const ModelAutoCard: React.FC<ModelAutoCardProps> = ({ model }) => {
 					<div className='flex w-[350px] items-center gap-5'>
 						<img src={model.img_url} alt='' width={100} />
 						<div className='font-medium text-2xl'>
-							<p>{model.name}</p>
+							<p>{modelName}</p>
 						</div>
 					</div>
 				</CardBody>

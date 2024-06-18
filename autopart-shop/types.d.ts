@@ -52,5 +52,6 @@ export interface ModelAuto {
 	id: number;
 	name: string;
 	brand: Brand.id;
+	Brand?: Brand;
 	img_url: string;
 }
