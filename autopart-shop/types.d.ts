@@ -51,7 +51,8 @@ export interface User {
 export interface ModelAuto {
 	id: number;
 	name: string;
-	brand: Brand.id;
+	brand: number;
 	Brand?: Brand;
 	img_url: string;
+	release_year: number[];
 }

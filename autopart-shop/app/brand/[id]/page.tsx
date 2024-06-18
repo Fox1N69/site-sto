@@ -2,6 +2,7 @@
 import ModelAutoCard from '@/components/model-auto/ModelCard';
 import { useFetchAllModelAuto, useFetchModelAuto } from '@/hooks/fetching';
 import { ModelAuto } from '@/types';
+import { useEffect } from 'react';
 
 export default function BrandPage({
 	params,
@@ -18,6 +19,8 @@ export default function BrandPage({
 		chunkedModelAuto.push(modelAuto.slice(i, i + 4));
 	}
 
+
+
 	return (
 		<div className='container mx-auto'>
 			{chunkedModelAuto.map((chunk, chunkIndex) => (
@@ -30,7 +33,7 @@ export default function BrandPage({
 							key={index}
 							className='flex w-full justify-center items-center'
 						>
-							<ModelAutoCard model={model} />
+							<ModelAutoCard key={model.id} model={model} />
 						</div>
 					))}
 				</div>

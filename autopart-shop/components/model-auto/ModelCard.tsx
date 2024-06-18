@@ -1,8 +1,18 @@
 'use client';
 import { useFetchModelAuto } from '@/hooks/fetching';
 import { Brand, ModelAuto } from '@/types';
-import { Card, CardBody } from '@nextui-org/react';
+import { Icon } from '@iconify/react';
+import {
+	Card,
+	CardBody,
+	Dropdown,
+	DropdownItem,
+	DropdownMenu,
+	DropdownTrigger
+} from '@nextui-org/react';
 import Image from 'next/image';
+import { release } from 'os';
+import { useEffect, useState } from 'react';
 
 interface ModelAutoCardProps {
 	model: ModelAuto;
@@ -11,6 +21,10 @@ interface ModelAutoCardProps {
 const ModelAutoCard: React.FC<ModelAutoCardProps> = ({ model }) => {
 	const brand_name = model.Brand?.name;
 	const modelName = `${brand_name} ${model.name}`;
+	const [selectedYear, setSelectedYear] = useState<number[]>(
+		model.release_year ? [model.release_year[0]] : []
+	);
+
 	return (
 		<>
 			<Card
@@ -23,6 +37,25 @@ const ModelAutoCard: React.FC<ModelAutoCardProps> = ({ model }) => {
 						<img src={model.img_url} alt='' width={100} />
 						<div className='font-medium text-2xl'>
 							<p>{modelName}</p>
+							<Dropdown>
+								<DropdownTrigger className='gap-2 items-center text-sm cursor-pointer'>
+									<p className='flex'>
+										Выберите год
+										<Icon
+											icon='ic:round-keyboard-arrow-down'
+											width={20}
+											height={20}
+										/>
+									</p>
+								</DropdownTrigger>
+								{model.release_year && model.release_year.length > 0 && (
+									<DropdownMenu aria-label='Dynamic Actions'>
+										{model.release_year.map(year => (
+											<DropdownItem key={year}>{year}</DropdownItem>
+										))}
+									</DropdownMenu>
+								)}
+							</Dropdown>
 						</div>
 					</div>
 				</CardBody>
