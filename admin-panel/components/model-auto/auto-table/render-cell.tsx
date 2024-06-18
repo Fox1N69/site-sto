@@ -28,7 +28,8 @@ export const RenderCell: React.FC<Props> = ({
     case "id":
       return <span>{cellValue}</span>;
     case "name":
-      return <span>{cellValue}</span>;
+      const concatenatedName = `${model.brand_name} ${model.name}`;
+      return <span>{concatenatedName}</span>;
     case "img_url":
       return <img src={cellValue} alt="" width={100} height={100} />;
     case "brand_name":

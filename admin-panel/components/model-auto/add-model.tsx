@@ -64,7 +64,7 @@ export const AddModel: React.FC = () => {
           </ModalHeader>
           <ModalBody>
             <Input
-              label="Название модели"
+              label="Модель"
               type="text"
               variant="bordered"
               value={name}
