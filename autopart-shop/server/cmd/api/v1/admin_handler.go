@@ -56,7 +56,7 @@ func (h *adminHandler) CreateAutoPart(c *gin.Context) {
 		Name:      req.Name,
 		ModelName: req.ModelName,
 		Price:     req.Price,
-		Img:       req.Img,
+		Image:     req.Img,
 		BrandID:   req.BrandID,
 		Stock:     req.Stock,
 	}

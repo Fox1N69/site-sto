@@ -14,6 +14,7 @@ type ServiceManager interface {
 	CategoryService() service.CategoryService
 	BrandService() service.BrandService
 	Blacklist() service.BlacklistService
+	AutoService() service.AutoService
 }
 
 type serviceManager struct {
@@ -46,6 +47,9 @@ var (
 
 	blacklistServiceOnce sync.Once
 	blacklistService     service.BlacklistService
+
+	autoServiceOnce sync.Once
+	autoService     service.AutoService
 )
 
 func (sm *serviceManager) AutoPartService() service.AutoPartService {
@@ -98,4 +102,13 @@ func (sm *serviceManager) Blacklist() service.BlacklistService {
 	})
 
 	return blacklistService
+}
+
+func (sm *serviceManager) AutoService() service.AutoService {
+	autoServiceOnce.Do(func() {
+		autoRepo = sm.repo.BrandRepo()
+		autoService = service.NewAutoService(autoRepo)
+	})
+
+	return autoService
 }
