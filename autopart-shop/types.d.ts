@@ -47,3 +47,10 @@ export interface User {
 	username?: string;
 	role?: string;
 }
+
+export interface ModelAuto {
+	id: number;
+	name: string;
+	brand: number;
+	img_url: string;
+}
