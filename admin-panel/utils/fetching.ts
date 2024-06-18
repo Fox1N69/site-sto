@@ -75,15 +75,7 @@ export const useFetchModel = () => {
 
 export const useAddModel = (
   token: { token: string | undefined },
-  data: {
-    data: {
-      id: number;
-      name: string;
-      img_url: string;
-      brand_id: number;
-      realese_date: string;
-    };
-  }
+  data: { data: ModelAuto[] }
 ) => {
   useEffect(() => {
     const fetchData = async () => {
