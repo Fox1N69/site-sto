@@ -21,9 +21,9 @@ interface ModelAutoCardProps {
 const ModelAutoCard: React.FC<ModelAutoCardProps> = ({ model }) => {
 	const brand_name = model.Brand?.name;
 	const modelName = `${brand_name} ${model.name}`;
-	const [selectedYear, setSelectedYear] = useState<number[]>(
-		model.release_year ? [model.release_year[0]] : []
-	);
+	const [selectedYear, setSelectedYear] = useState<number>(0);
+
+	console.log(selectedYear);
 
 	return (
 		<>
@@ -49,7 +49,10 @@ const ModelAutoCard: React.FC<ModelAutoCardProps> = ({ model }) => {
 									</p>
 								</DropdownTrigger>
 								{model.release_year && model.release_year.length > 0 && (
-									<DropdownMenu aria-label='Dynamic Actions'>
+									<DropdownMenu
+										aria-label='Dynamic Actions'
+										onAction={year => setSelectedYear(year as number)}
+									>
 										{model.release_year.map(year => (
 											<DropdownItem key={year}>{year}</DropdownItem>
 										))}
