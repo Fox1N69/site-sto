@@ -12,13 +12,29 @@ export default function BrandPage({
 }) {
 	const brandId = params.id;
 	const modelAuto = useFetchModelAuto({ brandId });
+
+	const chunkedModelAuto = [];
+	for (let i = 0; i < modelAuto.length; i += 4) {
+		chunkedModelAuto.push(modelAuto.slice(i, i + 4));
+	}
+
 	return (
-		<div>
-			<div className='container'>
-				{modelAuto.map(model => (
-					<ModelAutoCard model={model} />
-				))}
-			</div>
+		<div className='container mx-auto'>
+			{chunkedModelAuto.map((chunk, chunkIndex) => (
+				<div
+					key={chunkIndex}
+					className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4'
+				>
+					{chunk.map((model, index) => (
+						<div
+							key={index}
+							className='flex w-full justify-center items-center'
+						>
+							<ModelAutoCard model={model} />
+						</div>
+					))}
+				</div>
+			))}
 		</div>
 	);
 }

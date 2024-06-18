@@ -13,11 +13,11 @@ const ModelAutoCard: React.FC<ModelAutoCardProps> = ({ model }) => {
 		<>
 			<Card
 				isBlurred
-				className='border-none bg-background/60 dark:bg-default-100/50 max-w-[300px] px-4'
+				className='border-none bg-background/60 dark:bg-default-100/50 max-w-[350px] px-4 h-[100px]'
 				shadow='sm'
 			>
-				<CardBody>
-					<div className='flex w-full items-center justify-between'>
+				<CardBody className=''>
+					<div className='flex w-[350px] items-center gap-5'>
 						<img src={model.img_url} alt='' width={100} />
 						<div className='font-medium text-2xl'>
 							<p>{model.name}</p>
