@@ -28,7 +28,7 @@ type AutoPart struct {
 	ShopCustom
 	Name         string         `json:"name"`
 	Price        int            `json:"price"`
-	Img          string         `json:"img"`
+	Image        string         `json:"img_url"`
 	ModelName    string         `json:"model_name"`
 	Categories   []Category     `json:"categories" gorm:"many2many:auto_part_categories;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 	BrandID      uint           `json:"brand_id"`
@@ -42,6 +42,7 @@ type AutoPart struct {
 type ModelAuto struct {
 	ShopCustom
 	Name     string     `json:"name"`
+	Image    string     `json:"img_url"`
 	AutoPart []AutoPart `json:"auto_part" gorm:"foreginKey:ModelAutoID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 	BrandID  uint       `json:"brand_id"`
 	Brand    Brand      `gorm:"primaryKey:BrandID"`
