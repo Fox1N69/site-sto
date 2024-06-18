@@ -4,6 +4,7 @@ import axios from "axios";
 import { METHODS } from "http";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
+import { w3cwebsocket as W3CWebSocket } from "websocket";
 
 export const fetchCategories = async () => {
   try {
@@ -57,19 +58,31 @@ export const deleteProduct = async (
 
 export const useFetchModel = () => {
   const [model, setModel] = useState<ModelAuto[]>([]);
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get<ModelAuto[]>(
-          "http://localhost:4000/shop/modelautos"
-        );
-        setModel(response.data);
-      } catch (error) {
-        console.error(error);
-      }
+    const client = new W3CWebSocket(
+      "ws://localhost:4000/admin/model-auto/ws/all"
+    );
+
+    client.onopen = () => {
+      console.log("WebSocket Client Connected");
     };
-    fetchData();
+
+    client.onmessage = (message) => {
+      let data: string | ArrayBuffer | Buffer = message.data;
+      if (typeof data !== "string") {
+        // Преобразуем данные в строку, если они не являются строкой
+        data = Buffer.from(data).toString("utf-8");
+      }
+      const parsedData = JSON.parse(data);
+      setModel(parsedData);
+    };
+
+    return () => {
+      client.close();
+    };
   }, []);
+
   return model;
 };
 

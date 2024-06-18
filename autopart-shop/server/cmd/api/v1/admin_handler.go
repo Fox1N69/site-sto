@@ -3,7 +3,6 @@ package v1
 import (
 	"net/http"
 	"shop-server/common/http/response"
-	"shop-server/common/util/token"
 	"shop-server/infra"
 	"shop-server/internal/model"
 	"shop-server/internal/service"
@@ -148,23 +147,6 @@ func (h *adminHandler) CreateModelAuto(c *gin.Context) {
 }
 
 func (h *adminHandler) GetAllModelAutoWS(c *gin.Context) {
-	strinToken := c.GetHeader("Authorization")
-	if strinToken == "" {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
-		return
-	}
-
-	token, err := token.NewToken(h.secretKey).ValidateToken(strinToken)
-	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
-		return
-	}
-
-	if !token.Valid {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invaled token"})
-		return
-	}
-
 	conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
 	if err != nil {
 		http.Error(c.Writer, "Failed to set websocket upgrade", http.StatusInternalServerError)

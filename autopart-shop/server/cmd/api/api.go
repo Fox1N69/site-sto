@@ -68,6 +68,7 @@ func (c *server) v1() {
 		shop.GET("/brands", brandHandler.GetAllBrands)
 		shop.GET("/modelautos", shopHandler.GetAllModelAuto)
 		shop.GET("/modelauto/:brand_id", shopHandler.GetModelAutoByBrandID)
+		shop.GET("model-auto/ws/all", adminHandler.GetAllModelAutoWS)
 	}
 
 	admin := c.gin.Group("/admin")
@@ -90,7 +91,6 @@ func (c *server) v1() {
 		modelauto := admin.Group("/model-auto")
 		{
 			modelauto.POST("/create", adminHandler.CreateModelAuto)
-			modelauto.GET("/ws/all", adminHandler.GetAllModelAutoWS)
 		}
 	}
 

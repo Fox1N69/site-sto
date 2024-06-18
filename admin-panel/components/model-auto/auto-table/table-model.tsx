@@ -21,8 +21,8 @@ export const TableWrapperModels = () => {
   const { isOpen, onOpen } = useDisclosure();
   const [isLoading, setIsLoading] = React.useState(true);
 
-  const handleEditUser = (product: any) => {
-    setEditedUser(product);
+  const handleEditUser = (model: any) => {
+    setEditedUser(model);
     onOpen();
   };
 
