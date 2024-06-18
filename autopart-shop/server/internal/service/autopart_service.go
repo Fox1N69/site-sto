@@ -15,6 +15,7 @@ type AutoPartService interface {
 	CheckStock(id uint) (int, error)
 	ReduceStock(id uint, quantity int) error
 	Search(query string) ([]model.AutoPart, error)
+	FindByModelAndYear(modelName string, year int) ([]model.AutoPart, error)
 }
 
 type autoPartService struct {
@@ -72,4 +73,8 @@ func (s *autoPartService) ReduceStock(id uint, quantity int) error {
 
 func (s *autoPartService) Search(query string) ([]model.AutoPart, error) {
 	return s.autoPartRepo.Search(query)
+}
+
+func (s *autoPartService) FindByModelAndYear(modelName string, year int) ([]model.AutoPart, error) {
+	return s.autoPartRepo.FindByModelAndYear(modelName, year)
 }

@@ -19,6 +19,7 @@ type AutoPartRepo interface {
 	UpdateStock(id uint, quantity int) error
 	Exists(id uint) (bool, error)
 	Search(query string) ([]model.AutoPart, error)
+	FindByModelAndYear(modelName string, year int) ([]model.AutoPart, error)
 }
 
 type autoPartRepo struct {
@@ -29,14 +30,20 @@ func NewAutoPartRepo(db *gorm.DB) AutoPartRepo {
 	return &autoPartRepo{db: db}
 }
 
-func (ar *autoPartRepo) Create(product *model.AutoPart) error {
+func (ar *autoPartRepo) Create(autoPart *model.AutoPart) error {
 	return ar.db.Transaction(func(tx *gorm.DB) error {
-		if err := tx.Create(product).Error; err != nil {
+		if err := tx.Create(autoPart).Error; err != nil {
 			return err
 		}
 
-		if len(product.Categories) > 0 {
-			if err := tx.Model(product).Association("Categories").Replace(product.Categories); err != nil {
+		if len(autoPart.Categories) > 0 {
+			if err := tx.Model(autoPart).Association("Categories").Replace(autoPart.Categories); err != nil {
+				return err
+			}
+		}
+
+		if len(autoPart.ModelAutos) > 0 {
+			if err := tx.Model(autoPart).Association("ModelAutos").Replace(autoPart.ModelAutos); err != nil {
 				return err
 			}
 		}
@@ -162,4 +169,24 @@ func (r *autoPartRepo) Search(query string) ([]model.AutoPart, error) {
 	}
 	return products, nil
 
+}
+
+func (ar *autoPartRepo) FindByModelAndYear(modelName string, year int) ([]model.AutoPart, error) {
+	var autoParts []model.AutoPart
+
+	err := ar.db.
+		Table("auto_parts").
+		Select("auto_parts.*, model_autos.name AS model_name").
+		Joins("JOIN model_auto_auto_parts ON auto_parts.id = model_auto_auto_parts.auto_part_id").
+		Joins("JOIN model_autos ON model_auto_auto_parts.model_auto_id = model_autos.id").
+		Where("auto_parts.for_years @> ?", []int{year}).
+		Where("model_autos.name = ?", modelName).
+		Find(&autoParts).Error
+
+	if err != nil {
+		log.Printf("Error finding auto parts by model and year: %v", err)
+		return nil, err
+	}
+
+	return autoParts, nil
 }

@@ -55,6 +55,7 @@ type CreateAutoPartRequest struct {
 	Price        int                  `json:"price" binding:"required"`
 	Img          string               `json:"img"`
 	CategoryIDs  []uint               `json:"category_id" binding:"required"`
+	ModelAutoIDs []uint               `json:"model_auto_id" binding:"required"`
 	BrandID      uint                 `json:"brand_id" binding:"required"`
 	AutoPartInfo []model.AutoPartInfo `json:"auto_part_info"`
 	Stock        uint                 `json:"stock" binding:"required"`
@@ -85,6 +86,10 @@ func (h *adminHandler) CreateAutoPart(c *gin.Context) {
 
 	for _, categoryID := range req.CategoryIDs {
 		autoPart.Categories = append(autoPart.Categories, model.Category{ShopCustom: model.ShopCustom{ID: categoryID}})
+	}
+
+	for _, modelAutoID := range req.ModelAutoIDs {
+		autoPart.ModelAutos = append(autoPart.ModelAutos, model.ModelAuto{ShopCustom: model.ShopCustom{ID: modelAutoID}})
 	}
 
 	if err := h.service.CreateAutoPart(&autoPart); err != nil {

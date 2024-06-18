@@ -15,6 +15,7 @@ type ShopHandler interface {
 	GetAllModelAuto(c *gin.Context)
 	SearchAutoPart(c *gin.Context)
 	GetModelAutoByBrandID(c *gin.Context)
+	GetAutoPartByBrandAndYear(c *gin.Context)
 }
 
 type shopHandler struct {
@@ -84,4 +85,23 @@ func (h *shopHandler) GetModelAutoByBrandID(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, data)
+}
+
+func (h *shopHandler) GetAutoPartByBrandAndYear(c *gin.Context) {
+	modelName := c.Query("model_name")
+	yearParam := c.Query("year")
+
+	year, err := strconv.Atoi(yearParam)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid year parameter"})
+		return
+	}
+
+	autoParts, err := h.autopartService.FindByModelAndYear(modelName, year)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch auto parts"})
+		return
+	}
+
+	c.JSON(http.StatusOK, autoParts)
 }

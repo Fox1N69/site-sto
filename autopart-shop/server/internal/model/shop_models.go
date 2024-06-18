@@ -27,27 +27,35 @@ type BasketItem struct {
 
 type AutoPart struct {
 	ShopCustom
-	Name         string         `json:"name"`
-	Price        int            `json:"price"`
-	Image        string         `json:"img_url"`
-	ModelName    string         `json:"model_name"`
-	Categories   []Category     `json:"categories" gorm:"many2many:auto_part_categories;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
-	BrandID      uint           `json:"brand_id"`
-	Brand        Brand          `gorm:"foreignKey:BrandID"`
-	AutoPartInfo []AutoPartInfo `json:"auto_part_info" gorm:"foreignKey:AutoPartID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
-	Stock        uint           `json:"stock"`
-	ModelAutoID  uint           `json:"mode_auto_id"`
-	ModelAuto    ModelAuto      `gorm:"foreignKey:ModelAutoID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	Name         string          `json:"name"`
+	Price        int             `json:"price"`
+	Image        string          `json:"img_url"`
+	ModelName    string          `json:"model_name"`
+	Categories   []Category      `json:"categories" gorm:"many2many:auto_part_categories;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	BrandID      uint            `json:"brand_id"`
+	Brand        Brand           `gorm:"foreignKey:BrandID"`
+	AutoPartInfo []AutoPartInfo  `json:"auto_part_info" gorm:"foreignKey:AutoPartID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	Stock        uint            `json:"stock"`
+	ModelAutos   []ModelAuto     `gorm:"many2many:model_auto_auto_parts;" json:"model_autos"`
+	ForYears     json.RawMessage `json:"for_years" gorm:"type:jsonb"`
 }
 
 type ModelAuto struct {
 	ShopCustom
 	Name        string          `json:"name"`
 	Image       string          `json:"img_url"`
-	AutoPart    []AutoPart      `json:"auto_part" gorm:"foreginKey:ModelAutoID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	AutoPart    []AutoPart      `json:"auto_part" gorm:"many2many:model_auto_auto_parts;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 	BrandID     uint            `json:"brand_id"`
-	Brand       Brand           `gorm:"primaryKey:BrandID"`
+	Brand       Brand           `gorm:"foreignKey:BrandID"`
 	ReleaseYear json.RawMessage `json:"release_year" gorm:"type:jsonb"`
+}
+
+type ModelAutoAutoPart struct {
+	ModelAutoID uint `gorm:"primaryKey"`
+	AutoPartID  uint `gorm:"primaryKey"`
+
+	ModelAuto ModelAuto `gorm:"foreignKey:ModelAutoID"`
+	AutoPart  AutoPart  `gorm:"foreignKey:AutoPartID"`
 }
 
 type AutoPartInfo struct {
