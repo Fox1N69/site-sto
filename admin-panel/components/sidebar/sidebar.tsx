@@ -63,6 +63,14 @@ export const SidebarWrapper = () => {
                 title="Бюджет"
                 icon={<PaymentsIcon />}
               />
+              <CollapseItems icon={<BalanceIcon />} title="База данных">
+                <SidebarItem
+                  isActive={pathname === "/model-auto"}
+                  title="Модели авто"
+                  href="model-auto"
+                  icon={<BalanceIcon />}
+                />
+              </CollapseItems>
               <SidebarItem
                 isActive={pathname === "/product"}
                 title="Товар"

@@ -43,3 +43,11 @@ export interface User {
   username?: string;
   role?: string;
 }
+
+export interface ModelAuto {
+  id: number;
+  name: number;
+  img_url: string;
+  brand: Brand.id;
+  release_year: number;
+}

@@ -1,4 +1,8 @@
+import { ModelAuto } from "@/types";
+import axios from "axios";
+import { METHODS } from "http";
 import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 
 export const fetchCategories = async () => {
   try {
@@ -48,4 +52,29 @@ export const deleteProduct = async (
     console.error("Ошибка при удалении продукта:", error);
     // Обработка ошибок
   }
+};
+
+export const useFetchModelAuto = (token: { token: string }) => {
+  const [modelAuto, setModelAtuo] = useState<ModelAuto[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get<ModelAuto[]>(
+          `http://localhost:4000/admin/model-auto/create`,
+          {
+            method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setModelAtuo(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchData();
+  }, []);
+  return modelAuto;
 };
