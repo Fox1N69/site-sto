@@ -199,6 +199,24 @@ export const useFetchBrands = () => {
 	return brands;
 };
 
+export const useFetchAllModelAuto = () => {
+	const [models, setModels] = useState<ModelAuto[]>([]);
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				const response = await axios.get<ModelAuto[]>(
+					'http://localhost:4000/shop/modelautos'
+				);
+				setModels(response.data);
+			} catch (error) {
+				console.error('Error fetching models:', error);
+			}
+			fetchData();
+		};
+	}, []);
+	return models;
+};
+
 export const useFetchModelAuto = ({ brandId }: { brandId: number }) => {
 	const [modelAuto, setModelAuto] = useState<ModelAuto[]>([]);
 

@@ -4,29 +4,25 @@ import { ModelAuto } from '@/types';
 import { Card, CardBody } from '@nextui-org/react';
 import Image from 'next/image';
 
-interface ModelCardProps {
+interface ModelAutoCardProps {
 	model: ModelAuto;
 }
 
-const ModelAutoCard: React.FC<ModelCardProps> = ({ model }) => {
-	const brandId = model.brand;
-	const modelAuto = useFetchModelAuto({ brandId });
-
+const ModelAutoCard: React.FC<ModelAutoCardProps> = ({ model }) => {
 	return (
 		<>
 			<Card
 				isBlurred
-				className='border-none bg-background/60 dark:bg-default-100/50 max-w-[810px]'
+				className='border-none bg-background/60 dark:bg-default-100/50 max-w-[300px] px-4'
 				shadow='sm'
 			>
 				<CardBody>
-					{modelAuto.map(model => (
-						<div className='flex gap-5'>
-							<Image src={model.img_url} alt='' />
-							<div className='flex flex-col'>{model.id}</div>
-							<div>{model.name}</div>
+					<div className='flex w-full items-center justify-between'>
+						<img src={model.img_url} alt='' width={100} />
+						<div className='font-medium text-2xl'>
+							<p>{model.name}</p>
 						</div>
-					))}
+					</div>
 				</CardBody>
 			</Card>
 		</>
