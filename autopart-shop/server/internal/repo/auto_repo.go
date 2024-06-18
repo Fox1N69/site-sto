@@ -8,6 +8,7 @@ import (
 
 type AutoRepo interface {
 	GetAll() ([]model.ModelAuto, error)
+	GetByBrandID(brandID uint) ([]model.ModelAuto, error)
 }
 
 type autoRepo struct {
@@ -23,5 +24,15 @@ func (r *autoRepo) GetAll() ([]model.ModelAuto, error) {
 	if err := r.db.Preload("Brand").Find(&modelAuto).Error; err != nil {
 		return nil, err
 	}
+	return modelAuto, nil
+}
+
+func (r *autoRepo) GetByBrandID(brandID uint) ([]model.ModelAuto, error) {
+	var modelAuto []model.ModelAuto
+
+	if err := r.db.Preload("Brand").Where("brand_id = ?", brandID).Find(&modelAuto).Error; err != nil {
+		return nil, err
+	}
+
 	return modelAuto, nil
 }

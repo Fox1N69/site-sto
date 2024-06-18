@@ -7,6 +7,7 @@ import (
 
 type AutoService interface {
 	GetAllModelAuto() ([]model.ModelAuto, error)
+	GetModelAutoByBrandID(brandID uint) ([]model.ModelAuto, error)
 }
 
 type autoService struct {
@@ -19,4 +20,8 @@ func NewAutoService(repo repo.AutoRepo) AutoService {
 
 func (s *autoService) GetAllModelAuto() ([]model.ModelAuto, error) {
 	return s.repo.GetAll()
+}
+
+func (s *autoService) GetModelAutoByBrandID(brandID uint) ([]model.ModelAuto, error) {
+	return s.repo.GetByBrandID(brandID)
 }

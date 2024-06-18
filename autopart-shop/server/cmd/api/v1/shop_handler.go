@@ -5,6 +5,7 @@ import (
 	"shop-server/common/http/response"
 	"shop-server/infra"
 	"shop-server/internal/service"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -13,6 +14,7 @@ type ShopHandler interface {
 	GetAllAutoPart(c *gin.Context)
 	GetAllModelAuto(c *gin.Context)
 	SearchAutoPart(c *gin.Context)
+	GetModelAutoByBrandID(c *gin.Context)
 }
 
 type shopHandler struct {
@@ -62,6 +64,22 @@ func (h *shopHandler) GetAllModelAuto(c *gin.Context) {
 	data, err := h.autoService.GetAllModelAuto()
 	if err != nil {
 		response.New(c).Write(http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, data)
+}
+
+func (h *shopHandler) GetModelAutoByBrandID(c *gin.Context) {
+	brandID, err := strconv.Atoi(c.Param("brand_id"))
+	if err != nil {
+		response.New(c).Error(http.StatusBadRequest, err)
+		return
+	}
+
+	data, err := h.autoService.GetModelAutoByBrandID(uint(brandID))
+	if err != nil {
+		response.New(c).Error(http.StatusInternalServerError, err)
 		return
 	}
 
