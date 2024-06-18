@@ -11,6 +11,8 @@ import {
 	DropdownTrigger
 } from '@nextui-org/react';
 import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { release } from 'os';
 import { useEffect, useState } from 'react';
 
@@ -22,8 +24,12 @@ const ModelAutoCard: React.FC<ModelAutoCardProps> = ({ model }) => {
 	const brand_name = model.Brand?.name;
 	const modelName = `${brand_name} ${model.name}`;
 	const [selectedYear, setSelectedYear] = useState<number>(0);
+	const navigation = useRouter();
 
-	console.log(selectedYear);
+	const handleYearSelect = (year: number) => {
+		setSelectedYear(year);
+		navigation.push(`/autopart/${encodeURIComponent(model.name)}/${year}`);
+	};
 
 	return (
 		<>
@@ -54,7 +60,12 @@ const ModelAutoCard: React.FC<ModelAutoCardProps> = ({ model }) => {
 										onAction={year => setSelectedYear(year as number)}
 									>
 										{model.release_year.map(year => (
-											<DropdownItem key={year}>{year}</DropdownItem>
+											<DropdownItem
+												key={year}
+												onClick={() => handleYearSelect(year)}
+											>
+												{year}
+											</DropdownItem>
 										))}
 									</DropdownMenu>
 								)}
