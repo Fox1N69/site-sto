@@ -73,27 +73,37 @@ export const useFetchModel = () => {
   return model;
 };
 
-export const useAddModel = (
-  token: { token: string | undefined },
-  data: { data: ModelAuto[] }
-) => {
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        await axios.post<ModelAuto[]>(
-          `http://localhost:4000/admin/model-auto/create`,
-          {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify(data),
-          }
-        );
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetchData();
-  }, []);
+export const useAddModel = () => {
+  const [success, setSuccess] = useState<boolean | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const addModel = async (
+    token: string | undefined,
+    data: {
+      name: string;
+      img_url: string;
+      brand_id: number;
+      release_year: number;
+    }
+  ) => {
+    setLoading(true);
+    try {
+      await axios.post("http://localhost:4000/admin/model-auto/create", data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      setSuccess(true);
+    } catch (error) {
+      console.error(error);
+      setError("error create model auto");
+      setSuccess(false);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { addModel, success, error, loading };
 };
