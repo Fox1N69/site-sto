@@ -1,3 +1,4 @@
+import { Body } from "./../components/sidebar/sidebar.styles";
 import { ModelAuto } from "@/types";
 import axios from "axios";
 import { METHODS } from "http";
@@ -54,27 +55,53 @@ export const deleteProduct = async (
   }
 };
 
-export const useFetchModelAuto = (token: { token: string }) => {
-  const [modelAuto, setModelAtuo] = useState<ModelAuto[]>([]);
-
+export const useFetchModel = () => {
+  const [model, setModel] = useState<ModelAuto[]>([]);
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get<ModelAuto[]>(
-          `http://localhost:4000/admin/model-auto/create`,
-          {
-            method: "DELETE",
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
+          "http://localhost:4000/shop/modelautos"
         );
-        setModelAtuo(response.data);
+        setModel(response.data);
       } catch (error) {
         console.error(error);
       }
     };
     fetchData();
   }, []);
-  return modelAuto;
+  return model;
+};
+
+export const useAddModel = (
+  token: { token: string | undefined },
+  data: {
+    data: {
+      id: number;
+      name: string;
+      img_url: string;
+      brand_id: number;
+      realese_date: string;
+    };
+  }
+) => {
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        await axios.post<ModelAuto[]>(
+          `http://localhost:4000/admin/model-auto/create`,
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(data),
+          }
+        );
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchData();
+  }, []);
 };

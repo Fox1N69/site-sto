@@ -16,7 +16,7 @@ import { save } from "@tauri-apps/api/dialog";
 import { SessionProvider, useSession } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 import { TableWrapperModels } from "./auto-table/table-model";
-import { AddModel } from "./auto-table/add-model";
+import { AddModel } from "./add-model";
 
 interface ModelAutoProps {}
 
