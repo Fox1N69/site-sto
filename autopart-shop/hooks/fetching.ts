@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
 
 // Типы
-import { AutoPart, Brand, Product } from '@/types';
+import { AutoPart, Brand, ModelAuto, Product } from '@/types';
 
 // Хук для получения автозапчастей
 export const useFetchAutoParts = () => {
@@ -199,6 +199,22 @@ export const useFetchBrands = () => {
 	return brands;
 };
 
-export const useFetchModelAuto = () => {
-	const [modelAuto, setModelAuto] = useState();
-}
+export const useFetchModelAuto = ({ brandID }: { brandID: number }) => {
+	const [modelAuto, setModelAuto] = useState<ModelAuto[]>([]);
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				const response = await axios.get<ModelAuto[]>(
+					`http://localhost:4000/shop/modelauto/${brandID}`
+				);
+				setModelAuto(response.data);
+			} catch (error) {
+				console.error('Failed to fetch modelAuto', error);
+			}
+		};
+
+		fetchData();
+	}, []);
+
+	return modelAuto;
+};

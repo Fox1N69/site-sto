@@ -1,3 +1,5 @@
+'use client';
+import { useFetchModelAuto } from '@/hooks/fetching';
 import { ModelAuto } from '@/types';
 import { Card, CardBody } from '@nextui-org/react';
 import Image from 'next/image';
@@ -6,7 +8,10 @@ interface ModelCardProps {
 	model: ModelAuto;
 }
 
-const ModelAutoCard: FC<ModelCardProps> = ({ model }) => {
+const ModelAutoCard: React.FC<ModelCardProps> = ({ model }) => {
+	const brandID = model.brand_id;
+	const modelAuto = useFetchModelAuto({ brandID });
+
 	return (
 		<>
 			<Card
@@ -15,10 +20,13 @@ const ModelAutoCard: FC<ModelCardProps> = ({ model }) => {
 				shadow='sm'
 			>
 				<CardBody>
-					<div className='flex gap-5'>
-						<Image src={model.img_url} alt='' />
-						<div className='flex flex-col'>{model.id}</div>
-					</div>
+					{modelAuto.map(model => (
+						<div className='flex gap-5'>
+							<Image src={model.img_url} alt='' />
+							<div className='flex flex-col'>{model.id}</div>
+							<div>{model.name}</div>
+						</div>
+					))}
 				</CardBody>
 			</Card>
 		</>
