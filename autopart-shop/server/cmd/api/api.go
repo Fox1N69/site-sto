@@ -52,7 +52,7 @@ func (c *server) handlers() {
 
 func (c *server) v1() {
 	authHandler := v1.NewAuthHandler(c.service.AuthService(), c.infra, c.service.BasketService(), c.service.Blacklist())
-	adminHandler := v1.NewAdminHandler(c.infra, c.service.AutoPartService(), c.service.AutoService())
+	adminHandler := v1.NewAdminHandler(c.infra, c.service.AutoPartService(), c.service.AutoService(), c.infra.Config().GetString("secret.key"))
 	categoryHandler := v1.NewCategoryHandler(c.service.CategoryService())
 	brandHandler := v1.NewBrandHandler(c.service.BrandService())
 	basketHnalder := v1.NewBasketHandler(c.service.BasketService())
@@ -73,7 +73,6 @@ func (c *server) v1() {
 	admin := c.gin.Group("/admin")
 	{
 		admin.Use(c.middleware.Role("admin"))
-		admin.GET("/test", adminHandler.Test)
 		admin.POST("/part/create", adminHandler.CreateAutoPart)
 		admin.DELETE("/part/delete/:id", adminHandler.DeleteAutoPart)
 		admin.PUT("/part/update/:id", adminHandler.UpdateAutoPart)
@@ -91,6 +90,7 @@ func (c *server) v1() {
 		modelauto := admin.Group("/model-auto")
 		{
 			modelauto.POST("/create", adminHandler.CreateModelAuto)
+			modelauto.GET("/ws/all", adminHandler.GetAllModelAutoWS)
 		}
 	}
 

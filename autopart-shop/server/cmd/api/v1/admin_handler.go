@@ -3,12 +3,14 @@ package v1
 import (
 	"net/http"
 	"shop-server/common/http/response"
+	"shop-server/common/util/token"
 	"shop-server/infra"
 	"shop-server/internal/model"
 	"shop-server/internal/service"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/gorilla/websocket"
 )
 
 type AdminHandler interface {
@@ -17,24 +19,35 @@ type AdminHandler interface {
 	DeleteAutoPart(c *gin.Context)
 	UpdateAutoPart(c *gin.Context)
 	CreateModelAuto(c *gin.Context)
+	GetAllModelAutoWS(c *gin.Context)
 }
 
 type adminHandler struct {
 	service     service.AutoPartService
 	autoService service.AutoService
 	infra       infra.Infra
+	secretKey   string
 }
 
-func NewAdminHandler(infra infra.Infra, autopartService service.AutoPartService, autoService service.AutoService) AdminHandler {
+func NewAdminHandler(infra infra.Infra, autopartService service.AutoPartService, autoService service.AutoService, secretKey string) AdminHandler {
 	return &adminHandler{
 		infra:       infra,
 		service:     autopartService,
 		autoService: autoService,
+		secretKey:   secretKey,
 	}
 }
 
 func (h *adminHandler) Test(c *gin.Context) {
 	response.New(c).Write(http.StatusOK, "success")
+}
+
+var upgrader = websocket.Upgrader{
+	ReadBufferSize:  1024,
+	WriteBufferSize: 1024,
+	CheckOrigin: func(r *http.Request) bool {
+		return true
+	},
 }
 
 type CreateAutoPartRequest struct {
@@ -132,4 +145,56 @@ func (h *adminHandler) CreateModelAuto(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "Model create success"})
+}
+
+func (h *adminHandler) GetAllModelAutoWS(c *gin.Context) {
+	strinToken := c.GetHeader("Authorization")
+	if strinToken == "" {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		return
+	}
+
+	token, err := token.NewToken(h.secretKey).ValidateToken(strinToken)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		return
+	}
+
+	if !token.Valid {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invaled token"})
+		return
+	}
+
+	conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
+	if err != nil {
+		http.Error(c.Writer, "Failed to set websocket upgrade", http.StatusInternalServerError)
+		return
+	}
+	defer conn.Close()
+
+	for {
+		_, message, err := conn.ReadMessage()
+		if err != nil {
+			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
+				c.Writer.WriteHeader(http.StatusInternalServerError)
+				return
+			}
+			break
+		}
+
+		switch string(message) {
+		case "getAllModel":
+			{
+				data, err := h.autoService.GetAllModelAuto()
+				if err != nil {
+					response.New(c).Write(http.StatusInternalServerError, err.Error())
+					return
+				}
+
+				conn.WriteJSON(data)
+			}
+		default:
+			conn.WriteMessage(websocket.TextMessage, []byte("Unknown command"))
+		}
+	}
 }
