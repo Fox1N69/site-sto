@@ -198,3 +198,7 @@ export const useFetchBrands = () => {
 	}, []);
 	return brands;
 };
+
+export const useFetchModelAuto = () => {
+	const [modelAuto, setModelAuto] = useState();
+}

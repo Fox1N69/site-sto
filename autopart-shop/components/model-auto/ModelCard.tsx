@@ -1,12 +1,12 @@
 import { ModelAuto } from '@/types';
-import { Button, Card, CardBody } from '@nextui-org/react';
+import { Card, CardBody } from '@nextui-org/react';
 import Image from 'next/image';
 
 interface ModelCardProps {
 	model: ModelAuto;
 }
 
-const ModelAutoCard: React.FC<ModelCardProps> = ({ model }) => {
+const ModelAutoCard: FC<ModelCardProps> = ({ model }) => {
 	return (
 		<>
 			<Card

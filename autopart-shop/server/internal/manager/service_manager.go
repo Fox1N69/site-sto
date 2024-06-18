@@ -106,8 +106,7 @@ func (sm *serviceManager) Blacklist() service.BlacklistService {
 
 func (sm *serviceManager) AutoService() service.AutoService {
 	autoServiceOnce.Do(func() {
-		autoRepo = sm.repo.BrandRepo()
-		autoService = service.NewAutoService(autoRepo)
+		autoService = service.NewAutoService(sm.repo.AutoRepo())
 	})
 
 	return autoService

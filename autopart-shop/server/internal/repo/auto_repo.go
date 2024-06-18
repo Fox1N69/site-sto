@@ -7,6 +7,7 @@ import (
 )
 
 type AutoRepo interface {
+	GetAll() ([]model.ModelAuto, error)
 }
 
 type autoRepo struct {

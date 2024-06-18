@@ -1,8 +1,12 @@
 package service
 
-import "shop-server/internal/repo"
+import (
+	"shop-server/internal/model"
+	"shop-server/internal/repo"
+)
 
 type AutoService interface {
+	GetAllModelAuto() ([]model.ModelAuto, error)
 }
 
 type autoService struct {
@@ -11,4 +15,8 @@ type autoService struct {
 
 func NewAutoService(repo repo.AutoRepo) AutoService {
 	return &autoService{repo: repo}
+}
+
+func (s *autoService) GetAllModelAuto() ([]model.ModelAuto, error) {
+	return s.repo.GetAll()
 }

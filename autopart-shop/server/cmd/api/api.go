@@ -56,7 +56,7 @@ func (c *server) v1() {
 	categoryHandler := v1.NewCategoryHandler(c.service.CategoryService())
 	brandHandler := v1.NewBrandHandler(c.service.BrandService())
 	basketHnalder := v1.NewBasketHandler(c.service.BasketService())
-	shopHandler := v1.NewShopHandler(c.service.BasketService(), c.service.AutoPartService(), c.infra)
+	shopHandler := v1.NewShopHandler(c.service.AutoService(), c.service.BasketService(), c.service.AutoPartService(), c.infra)
 
 	c.gin.Use(sessions.Sessions("user", c.store))
 

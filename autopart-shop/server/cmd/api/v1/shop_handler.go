@@ -11,19 +11,22 @@ import (
 
 type ShopHandler interface {
 	GetAllAutoPart(c *gin.Context)
+	GetAllModelAuto(c *gin.Context)
 	SearchAutoPart(c *gin.Context)
 }
 
 type shopHandler struct {
 	basketService   service.BasketService
 	autopartService service.AutoPartService
+	autoService     service.AutoService
 	infra           infra.Infra
 }
 
-func NewShopHandler(basketService service.BasketService, autopartService service.AutoPartService, infra infra.Infra) ShopHandler {
+func NewShopHandler(autoService service.AutoService, basketService service.BasketService, autopartService service.AutoPartService, infra infra.Infra) ShopHandler {
 	return &shopHandler{
 		basketService:   basketService,
 		autopartService: autopartService,
+		autoService:     autoService,
 		infra:           infra,
 	}
 }
@@ -47,6 +50,16 @@ func (h *shopHandler) SearchAutoPart(c *gin.Context) {
 	rawQuery := c.Query("query")
 
 	data, err := h.autopartService.Search(rawQuery)
+	if err != nil {
+		response.New(c).Write(http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, data)
+}
+
+func (h *shopHandler) GetAllModelAuto(c *gin.Context) {
+	data, err := h.autoService.GetAllModelAuto()
 	if err != nil {
 		response.New(c).Write(http.StatusInternalServerError, err.Error())
 		return
