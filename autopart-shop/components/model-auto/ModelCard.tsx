@@ -26,9 +26,11 @@ const ModelAutoCard: React.FC<ModelAutoCardProps> = ({ model }) => {
 	const [selectedYear, setSelectedYear] = useState<number>(0);
 	const navigation = useRouter();
 
+	const router = useRouter();
+
 	const handleYearSelect = (year: number) => {
 		setSelectedYear(year);
-		navigation.push(`/autopart/${encodeURIComponent(model.name)}/${year}`);
+		router.push(`/model-parts/${encodeURIComponent(model.name)}/${year}`);
 	};
 
 	return (

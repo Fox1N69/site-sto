@@ -19,8 +19,6 @@ export default function BrandPage({
 		chunkedModelAuto.push(modelAuto.slice(i, i + 4));
 	}
 
-
-
 	return (
 		<div className='container mx-auto'>
 			{chunkedModelAuto.map((chunk, chunkIndex) => (
