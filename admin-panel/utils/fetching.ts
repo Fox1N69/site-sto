@@ -3,6 +3,7 @@ import { ModelAuto } from "@/types";
 import axios from "axios";
 import { METHODS } from "http";
 import { useSession } from "next-auth/react";
+import { headers } from "next/headers";
 import { useEffect, useState } from "react";
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 
@@ -52,6 +53,24 @@ export const deleteProduct = async (
     }
   } catch (error) {
     console.error("Ошибка при удалении продукта:", error);
+  }
+};
+
+export const useDeleteModel = async (
+  token: string | undefined,
+  modelID: number
+) => {
+  try {
+    const response = await axios.delete(
+      `http://localhost:4000/admin/model-auto/delete/${modelID}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+  } catch (err) {
+    console.log("Ошибка удаления");
   }
 };
 
