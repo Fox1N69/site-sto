@@ -30,12 +30,12 @@ const AutoPartPage: React.FC<AutoPartPageProps> = ({ params }) => {
 	}, [model_name, year]);
 
 	return (
-		<div className='container mx-auto'>
+		<div className='container'>
 			<h4>
 				Запчасти для: {model_name} {year} года
 			</h4>
-			<div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4'>
-				<div className='flex w-full justify-center items-center'>
+			<div className='flex flex-col'>
+				<div className='flex gap-20'>
 					{autoParts.map(part => (
 						<PartCard key={part.id} part={part} />
 					))}
