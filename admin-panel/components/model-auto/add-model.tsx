@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import {
   Button,
   Dropdown,
@@ -25,6 +25,7 @@ import {
 import { Category, Brand } from "@/types";
 import { ModelAuto } from ".";
 import { useModelStore } from "@/store/modelStroe";
+import { event } from "@tauri-apps/api";
 
 export const AddModel: React.FC = () => {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
@@ -41,13 +42,35 @@ export const AddModel: React.FC = () => {
     setReleaseYear,
   } = useModelStore((state) => state);
   const { addModel, success, error, loading } = useAddModel();
+  const [inputYear, setYearValue] = useState<string>("");
+  const [tags, setTags] = useState<number[]>([]);
+
+  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setYearValue(event.target.value);
+  };
+
+  const handleInputKeyPress = (
+    event: React.KeyboardEvent<HTMLInputElement>
+  ) => {
+    if (event.key === "Enter") {
+      const year = parseInt(inputYear.trim());
+      if (!isNaN(year) && !tags.includes(year)) {
+        setTags([...tags, year]);
+        setYearValue("");
+      }
+    }
+  };
+
+  const handleDeleteTag = (tagToDelete: number) => {
+    setTags(tags.filter((tag) => tag !== tagToDelete));
+  };
 
   const handleAddModel = async () => {
     const data = {
       name,
       img_url: img_url,
       brand_id: brand_id,
-      release_year: release_year,
+      release_year: tags,
     };
     await addModel(token, data);
     onClose();
@@ -86,12 +109,25 @@ export const AddModel: React.FC = () => {
               onChange={(e) => setBrandId(Number(e.target.value))}
             />
             <Input
-              label="Год выпуска"
-              type="text"
+              label="Года выпуска"
               variant="bordered"
-              value={release_year.toString()}
-              onChange={(e) => setReleaseYear(Number(e.target.value))}
+              value={inputYear}
+              onKeyPress={handleInputKeyPress}
+              onChange={handleInputChange}
             />
+            <div className="flex gap-2 mr-3">
+              {tags.map((tag, index) => (
+                <Chip
+                  key={index}
+                  size="sm"
+                  variant="shadow"
+                  color="primary"
+                  onClose={() => handleDeleteTag(tag)}
+                >
+                  {tag.toString()}
+                </Chip>
+              ))}
+            </div>
           </ModalBody>
           <ModalFooter>
             <Button onPress={onClose}>Отмена</Button>

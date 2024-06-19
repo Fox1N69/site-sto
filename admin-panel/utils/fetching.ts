@@ -97,7 +97,7 @@ export const useAddModel = () => {
       name: string;
       img_url: string;
       brand_id: number;
-      release_year: number;
+      release_year: number[];
     }
   ) => {
     setLoading(true);

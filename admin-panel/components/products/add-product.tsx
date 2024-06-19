@@ -186,7 +186,7 @@ export const AddProduct: React.FC = () => {
                 ))}
               </DropdownMenu>
             </Dropdown>
-            <div className="mt-4">
+            <div className="mt-4 gap-2 flex">
               {selectedCategories.map((category) => (
                 <Chip
                   key={category.id}
