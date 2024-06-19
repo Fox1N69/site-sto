@@ -143,6 +143,7 @@ export const AddProduct: React.FC = () => {
         !isNaN(year) &&
         year.toString().length === 4 &&
         year <= currentYear &&
+        year >= 1900 &&
         !tags.includes(year)
       ) {
         setTags([...tags, year]);
