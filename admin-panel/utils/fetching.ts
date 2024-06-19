@@ -52,7 +52,6 @@ export const deleteProduct = async (
     }
   } catch (error) {
     console.error("Ошибка при удалении продукта:", error);
-    // Обработка ошибок
   }
 };
 

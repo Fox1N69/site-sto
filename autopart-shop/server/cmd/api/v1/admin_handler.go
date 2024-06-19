@@ -18,6 +18,7 @@ type AdminHandler interface {
 	DeleteAutoPart(c *gin.Context)
 	UpdateAutoPart(c *gin.Context)
 	CreateModelAuto(c *gin.Context)
+	DeleteModelAuto(c *gin.Context)
 	GetAllModelAutoWS(c *gin.Context)
 }
 
@@ -149,6 +150,21 @@ func (h *adminHandler) CreateModelAuto(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "Model create success"})
+}
+
+func (h *adminHandler) DeleteModelAuto(c *gin.Context) {
+	modelID, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		response.New(c).Write(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	if err := h.autoService.DeleteModelAuto(uint(modelID)); err != nil {
+		response.New(c).Write(http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(200, gin.H{"message": "ModelAuto delete success"})
 }
 
 func (h *adminHandler) GetAllModelAutoWS(c *gin.Context) {

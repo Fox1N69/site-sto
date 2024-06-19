@@ -9,6 +9,7 @@ type AutoService interface {
 	CreateModelAuto(auto *model.ModelAuto) error
 	GetAllModelAuto() ([]model.ModelAuto, error)
 	GetModelAutoByBrandID(brandID uint) ([]model.ModelAuto, error)
+	DeleteModelAuto(id uint) error
 }
 
 type autoService struct {
@@ -28,4 +29,8 @@ func (s *autoService) GetAllModelAuto() ([]model.ModelAuto, error) {
 
 func (s *autoService) GetModelAutoByBrandID(brandID uint) ([]model.ModelAuto, error) {
 	return s.repo.GetByBrandID(brandID)
+}
+
+func (s *autoService) DeleteModelAuto(id uint) error {
+	return s.repo.Delete(id)
 }
