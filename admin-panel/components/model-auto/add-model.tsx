@@ -26,6 +26,8 @@ import { Category, Brand } from "@/types";
 import { ModelAuto } from ".";
 import { useModelStore } from "@/store/modelStroe";
 import { event } from "@tauri-apps/api";
+import { appendFile } from "fs";
+import { Icon } from "@iconify/react";
 
 export const AddModel: React.FC = () => {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
@@ -44,9 +46,11 @@ export const AddModel: React.FC = () => {
   const { addModel, success, error, loading } = useAddModel();
   const [inputYear, setYearValue] = useState<string>("");
   const [tags, setTags] = useState<number[]>([]);
+  const [showEnter, setShowEnter] = useState<boolean>(false);
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setYearValue(event.target.value);
+    setShowEnter(event.target.value !== "");
   };
 
   const handleInputKeyPress = (
@@ -114,6 +118,13 @@ export const AddModel: React.FC = () => {
               value={inputYear}
               onKeyPress={handleInputKeyPress}
               onChange={handleInputChange}
+              endContent={
+                showEnter && (
+                  <div className="flex items-center my-[6px]">
+                    Enter <Icon icon={"uil:enter"} />
+                  </div>
+                )
+              }
             />
             <div className="flex gap-2 mr-3">
               {tags.map((tag, index) => (
