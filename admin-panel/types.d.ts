@@ -47,7 +47,7 @@ export interface User {
 
 export interface ModelAuto {
   id: number;
-  name: number;
+  name: string;
   img_url: string;
   Brand: Brand;
   brand_id: number;

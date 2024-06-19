@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"encoding/json"
 	"net/http"
 	"shop-server/common/http/response"
 	"shop-server/infra"
@@ -20,6 +21,7 @@ type AdminHandler interface {
 	CreateModelAuto(c *gin.Context)
 	DeleteModelAuto(c *gin.Context)
 	GetAllModelAutoWS(c *gin.Context)
+	UpdateModelAuto(c *gin.Context)
 }
 
 type adminHandler struct {
@@ -200,4 +202,31 @@ func (h *adminHandler) GetAllModelAutoWS(c *gin.Context) {
 			conn.WriteMessage(websocket.TextMessage, []byte("Unknown command"))
 		}
 	}
+}
+
+func (h *adminHandler) UpdateModelAuto(c *gin.Context) {
+	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	if err != nil {
+		response.New(c).Write(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	var request struct {
+		Name        string          `json:"name"`
+		ImgUrl      string          `json:"img_url"`
+		BrandID     uint            `json:"brand_id"`
+		ReleaseYear json.RawMessage `json:"release_year"`
+	}
+
+	if err := c.ShouldBindJSON(&request); err != nil {
+		response.New(c).Write(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	if err := h.autoService.UpdateModelAuto(uint(id), request.Name, request.ImgUrl, request.BrandID, request.ReleaseYear); err != nil {
+		response.New(c).Write(http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	response.New(c).Write(http.StatusOK, "ModelAuto updated successfully")
 }

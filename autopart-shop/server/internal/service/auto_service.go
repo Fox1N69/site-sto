@@ -1,6 +1,7 @@
 package service
 
 import (
+	"encoding/json"
 	"shop-server/internal/model"
 	"shop-server/internal/repo"
 )
@@ -10,6 +11,7 @@ type AutoService interface {
 	GetAllModelAuto() ([]model.ModelAuto, error)
 	GetModelAutoByBrandID(brandID uint) ([]model.ModelAuto, error)
 	DeleteModelAuto(id uint) error
+	UpdateModelAuto(id uint, name string, imgUrl string, brandID uint, releaseYear json.RawMessage) error
 }
 
 type autoService struct {
@@ -33,4 +35,18 @@ func (s *autoService) GetModelAutoByBrandID(brandID uint) ([]model.ModelAuto, er
 
 func (s *autoService) DeleteModelAuto(id uint) error {
 	return s.repo.Delete(id)
+}
+
+func (s *autoService) UpdateModelAuto(id uint, name string, imgUrl string, brandID uint, releaseYear json.RawMessage) error {
+	auto, err := s.repo.GetByID(id)
+	if err != nil {
+		return err
+	}
+
+	auto.Name = name
+	auto.Image = imgUrl
+	auto.BrandID = brandID
+	auto.ReleaseYear = releaseYear
+
+	return s.repo.Update(auto)
 }

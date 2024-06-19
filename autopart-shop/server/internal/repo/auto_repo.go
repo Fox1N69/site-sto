@@ -9,6 +9,7 @@ import (
 type AutoRepo interface {
 	Create(auto *model.ModelAuto) error
 	GetAll() ([]model.ModelAuto, error)
+	GetByID(id uint) (*model.ModelAuto, error)
 	GetByBrandID(brandID uint) ([]model.ModelAuto, error)
 	Update(auto *model.ModelAuto) error
 	Delete(id uint) error
@@ -34,6 +35,15 @@ func (r *autoRepo) GetAll() ([]model.ModelAuto, error) {
 	return modelAuto, nil
 }
 
+func (r *autoRepo) GetByID(id uint) (*model.ModelAuto, error) {
+	var model model.ModelAuto
+	if err := r.db.Where("id = ?", id).First(&model).Error; err != nil {
+		return nil, err
+	}
+
+	return &model, nil
+}
+
 func (r *autoRepo) GetByBrandID(brandID uint) ([]model.ModelAuto, error) {
 	var modelAuto []model.ModelAuto
 
@@ -45,7 +55,7 @@ func (r *autoRepo) GetByBrandID(brandID uint) ([]model.ModelAuto, error) {
 }
 
 func (r *autoRepo) Update(auto *model.ModelAuto) error {
-	return nil
+	return r.db.Session(&gorm.Session{FullSaveAssociations: true}).Updates(auto).Error
 }
 
 func (r *autoRepo) Delete(id uint) error {

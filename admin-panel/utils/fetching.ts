@@ -138,3 +138,38 @@ export const useAddModel = () => {
 
   return { addModel, success, error, loading };
 };
+
+export const useEditModel = () => {
+  const [success, setSuccess] = useState<boolean | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const editModel = async (
+    token: string | undefined,
+    modelId: number,
+    data: Partial<ModelAuto>
+  ) => {
+    setLoading(true);
+    try {
+      await axios.put(
+        `http://localhost:4000/admin/model-auto/update/${modelId}`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      setSuccess(true);
+    } catch (error) {
+      console.error(error);
+      setError("Ошибка при редактировании модели");
+      setSuccess(false);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { editModel, success, error, loading };
+};

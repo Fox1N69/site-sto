@@ -43,7 +43,6 @@ export const EditModel: React.FC<EditModelsProps> = ({
 
   const [editedModel, setEditedModel] = useState({
     id: selectedModelId,
-    brand_id: model.brand,
     name: model.name,
   });
 

@@ -92,6 +92,7 @@ func (c *server) v1() {
 		modelauto := admin.Group("/model-auto")
 		{
 			modelauto.POST("/create", adminHandler.CreateModelAuto)
+			modelauto.PUT("/update/:id", adminHandler.UpdateModelAuto)
 			modelauto.DELETE("/delete/:id", adminHandler.DeleteModelAuto)
 		}
 	}
