@@ -6,12 +6,13 @@ import { EyeIcon } from "../../icons/table/eye-icon";
 import { Category, ModelAuto, Product } from "@/types";
 import { Span } from "next/dist/trace";
 import { useSession } from "next-auth/react";
-import { deleteProduct } from "@/utils/fetching";
+import { deleteProduct, updateModelReleaseYear } from "@/utils/fetching";
 import DeleteButton from "./delete-button";
 import { EditModel } from "./edit-model";
 import DeleteModelButton from "./delete-button";
 import { appendFile } from "fs";
 import { release } from "os";
+import Cookies from "js-cookie";
 
 interface Props {
   model: ModelAuto;
@@ -24,7 +25,6 @@ export const RenderCell: React.FC<Props> = ({
   columnKey,
   onEdit,
 }: Props) => {
-  console.log(model.release_year);
   // @ts-ignore
   const cellValue = model[columnKey];
   switch (columnKey) {

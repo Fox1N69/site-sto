@@ -49,7 +49,7 @@ export interface ModelAuto {
   id: number;
   name: string;
   img_url: string;
-  Brand: Brand;
+  Brand?: Brand;
   brand_id: number;
   brand_name?: string;
   release_year: number[];

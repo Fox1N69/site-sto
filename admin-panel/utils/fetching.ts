@@ -173,3 +173,37 @@ export const useEditModel = () => {
 
   return { editModel, success, error, loading };
 };
+
+interface ModelAutoUpdateParams {
+  id: number;
+  releaseYear: number[];
+}
+
+export const updateModelReleaseYear = async (
+  modelId: number,
+  updatedReleaseYears: number[],
+  token: string | undefined
+): Promise<boolean> => {
+  try {
+    const response = await fetch(
+      `http://localhost:4000/admin/model-auto/update/${modelId}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ releaseYear: updatedReleaseYears }),
+      }
+    );
+
+    if (response.ok) {
+      return true;
+    } else {
+      throw new Error("Failed to update release year");
+    }
+  } catch (error) {
+    console.error("Error updating release year:", error);
+    return false;
+  }
+};
