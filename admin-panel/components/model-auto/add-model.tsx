@@ -47,6 +47,7 @@ export const AddModel: React.FC = () => {
   const [inputYear, setYearValue] = useState<string>("");
   const [tags, setTags] = useState<number[]>([]);
   const [showEnter, setShowEnter] = useState<boolean>(false);
+  const [yearError, setYearError] = useState<string>("");
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setYearValue(event.target.value);
@@ -58,9 +59,21 @@ export const AddModel: React.FC = () => {
   ) => {
     if (event.key === "Enter") {
       const year = parseInt(inputYear.trim());
-      if (!isNaN(year) && !tags.includes(year)) {
+      const currentYear = new Date().getFullYear();
+
+      if (
+        !isNaN(year) &&
+        year.toString().length === 4 &&
+        year <= currentYear &&
+        year >= 1900 &&
+        !tags.includes(year)
+      ) {
         setTags([...tags, year]);
+        setYearError("");
         setYearValue("");
+        setShowEnter(false);
+      } else {
+        setYearError("Год указан неправильно");
       }
     }
   };
@@ -138,6 +151,7 @@ export const AddModel: React.FC = () => {
                   {tag.toString()}
                 </Chip>
               ))}
+              {yearError != "" && <p className="text-red-600">{yearError}</p>}
             </div>
           </ModalBody>
           <ModalFooter>
