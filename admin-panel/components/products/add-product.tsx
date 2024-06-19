@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import {
   Button,
   Dropdown,
@@ -18,6 +18,7 @@ import {
 import { useSession } from "next-auth/react";
 import { fetchBrands, fetchCategories } from "@/utils/fetching";
 import { Category, Brand } from "@/types";
+import { Icon } from "@iconify/react";
 
 interface AutoPartInfo {
   title: string;
@@ -38,6 +39,10 @@ export const AddProduct: React.FC = () => {
     { title: "", description: "" },
   ]);
   const { data: session } = useSession();
+
+  const [inputYear, setYearValue] = useState<string>("");
+  const [tags, setTags] = useState<number[]>([]);
+  const [showEnter, setShowEnter] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchInitialData = async () => {
@@ -119,6 +124,27 @@ export const AddProduct: React.FC = () => {
 
   const handleBrandChange = (brand: Brand) => {
     setBrand(brand);
+  };
+
+  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setYearValue(event.target.value);
+    setShowEnter(event.target.value !== "");
+  };
+
+  const handleInputKeyPress = (
+    event: React.KeyboardEvent<HTMLInputElement>
+  ) => {
+    if (event.key === "Enter") {
+      const year = parseInt(inputYear.trim());
+      if (!isNaN(year) && !tags.includes(year)) {
+        setTags([...tags, year]);
+        setYearValue("");
+      }
+    }
+  };
+
+  const handleDeleteTag = (tagToDelete: number) => {
+    setTags(tags.filter((tag) => tag !== tagToDelete));
   };
 
   return (
@@ -229,9 +255,40 @@ export const AddProduct: React.FC = () => {
                 />
               </div>
             ))}
-            <Button onPress={addAutoPartInfo} color="secondary">
-              Добавить информацию
+            <Button
+              onPress={addAutoPartInfo}
+              color="primary"
+              variant="bordered"
+            >
+              Еще
             </Button>
+            <Input
+              label="Года выпуска"
+              variant="bordered"
+              value={inputYear}
+              onKeyPress={handleInputKeyPress}
+              onChange={handleInputChange}
+              endContent={
+                showEnter && (
+                  <div className="flex items-center my-[6px]">
+                    Enter <Icon icon={"uil:enter"} />
+                  </div>
+                )
+              }
+            />
+            <div className="flex gap-2 mr-3">
+              {tags.map((tag, index) => (
+                <Chip
+                  key={index}
+                  size="sm"
+                  variant="shadow"
+                  color="primary"
+                  onClose={() => handleDeleteTag(tag)}
+                >
+                  {tag.toString()}
+                </Chip>
+              ))}
+            </div>
           </ModalBody>
           <ModalFooter>
             <Button onPress={onClose}>Отмена</Button>
