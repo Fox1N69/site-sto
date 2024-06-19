@@ -51,5 +51,5 @@ export interface ModelAuto {
   Brand: Brand;
   brand_id: number;
   brand_name?: string;
-  release_year: number;
+  release_year: number[];
 }

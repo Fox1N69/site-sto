@@ -17,6 +17,7 @@ import { SessionProvider, useSession } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 import { TableWrapperModels } from "./auto-table/table-model";
 import { AddModel } from "./add-model";
+import { Icon } from "@iconify/react";
 
 interface ModelAutoProps {}
 
@@ -34,12 +35,12 @@ export const ModelAuto: React.FC<ModelAutoProps> = () => {
           </li>
 
           <li className="flex gap-2">
-            <UsersIcon />
-            <span>Товар</span>
+            <Icon icon={"gravity-ui:car"} width={24} height={24} />
+            <span>Машины</span>
             <span> / </span>{" "}
           </li>
           <li className="flex gap-2">
-            <span>Список</span>
+            <span>Модели авто</span>
           </li>
         </ul>
 

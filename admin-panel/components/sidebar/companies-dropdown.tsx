@@ -26,9 +26,11 @@ export const CompaniesDropdown: React.FC<{
         <div className="flex items-center gap-2">
           <div className="flex flex-col gap-4">
             <h3 className="text-xl font-medium m-0 text-default-900 -mb-4 whitespace-nowrap">
-              test
+              RemZona
             </h3>
-            <span className="text-xs font-medium text-default-500">test</span>
+            <span className="text-xs font-medium text-default-500">
+              мариуполь
+            </span>
           </div>
           <BottomIcon />
         </div>
@@ -46,7 +48,7 @@ export const CompaniesDropdown: React.FC<{
             }}
             onClick={() => {}}
           >
-            test
+            RemZona
           </DropdownItem>
 
           <DropdownItem
@@ -59,7 +61,7 @@ export const CompaniesDropdown: React.FC<{
             }}
             onClick={() => {}}
           >
-            test
+            RemZona
           </DropdownItem>
         </DropdownSection>
       </DropdownMenu>

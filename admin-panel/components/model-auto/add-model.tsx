@@ -41,6 +41,7 @@ export const AddModel: React.FC = () => {
     setReleaseYear,
   } = useModelStore((state) => state);
   const { addModel, success, error, loading } = useAddModel();
+
   const handleAddModel = async () => {
     const data = {
       name,

@@ -10,6 +10,8 @@ import { deleteProduct } from "@/utils/fetching";
 import DeleteButton from "./delete-button";
 import { EditModel } from "./edit-model";
 import DeleteModelButton from "./delete-button";
+import { appendFile } from "fs";
+import { release } from "os";
 
 interface Props {
   model: ModelAuto;
@@ -22,6 +24,7 @@ export const RenderCell: React.FC<Props> = ({
   columnKey,
   onEdit,
 }: Props) => {
+  console.log(model.release_year);
   // @ts-ignore
   const cellValue = model[columnKey];
   switch (columnKey) {
@@ -35,7 +38,15 @@ export const RenderCell: React.FC<Props> = ({
     case "brand_name":
       return <span>{cellValue}</span>;
     case "release_year":
-      return <span>{cellValue}</span>;
+      return (
+        <div className="flex flex-wrap gap-2">
+          {model.release_year.map((year: number) => (
+            <Chip size="sm" variant="shadow" color="primary" key={year}>
+              {year}
+            </Chip>
+          ))}
+        </div>
+      );
     case "actions":
       return (
         <div className="flex items-center gap-4 ">

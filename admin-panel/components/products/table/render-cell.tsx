@@ -34,7 +34,7 @@ export const RenderCell: React.FC<Props> = ({
       return (
         <span className="flex gap-2 items-center">
           {product.categories.map((category: Category, index: number) => (
-            <Chip variant="faded" key={index} >
+            <Chip variant="faded" key={index}>
               {category.name}
             </Chip>
           ))}

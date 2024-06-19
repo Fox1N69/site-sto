@@ -46,6 +46,7 @@
     "zustand": "^4.5.2"
   },
   "devDependencies": {
+    "@iconify/react": "^5.0.1",
     "@tauri-apps/cli": "^1.5.14",
     "@types/node": "18.7.18",
     "@types/papaparse": "^5.3.14",
