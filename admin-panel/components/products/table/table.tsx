@@ -128,8 +128,7 @@ export const TableWrapperProducts = () => {
                     columnKey: columnKey as
                       | keyof Product
                       | "actions"
-                      | "category_name"
-                      | "brand_name",
+                      | "for_years",
                     onEdit: handleEditUser,
                   })}
                 </TableCell>

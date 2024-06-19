@@ -35,6 +35,7 @@ export interface Product {
   auto_part_info: any;
   stock: number;
   categories: any;
+  for_years: number[]
 }
 
 export interface User {

@@ -12,7 +12,12 @@ import DeleteButton from "./delete-button";
 
 interface Props {
   product: Product;
-  columnKey: keyof Product | "actions" | "category_name" | "brand_name";
+  columnKey:
+    | keyof Product
+    | "actions"
+    | "category_name"
+    | "brand_name"
+    | "for_years";
   onEdit: (product: any) => void;
 }
 
@@ -42,6 +47,16 @@ export const RenderCell: React.FC<Props> = ({
       );
     case "brand_name":
       return <span>{cellValue}</span>;
+    case "for_years":
+      return (
+        <div className="flex gap-2">
+          {product.for_years.map((year, index) => (
+            <Chip key={index} size="sm" variant="bordered" color="primary">
+              {year}
+            </Chip>
+          ))}
+        </div>
+      );
 
     case "actions":
       return (
