@@ -11,17 +11,17 @@ interface BrandCardProps {
 
 const BrandCard: React.FC<BrandCardProps> = ({ brand }) => {
 	return (
-		<Card style={{ width: 100, height: 100 }}>
-			<Link href={`/brand/${brand.id}`}>
-				<Image
-					alt={''}
+		<>
+			<Link href={`/brand/${brand.id}`} style={{ width: 100, height: 100 }} className='flex items-center'>
+				<img
+					alt={`Изображение логотипа бренда ${brand.name} для перехода на экран со всеми машиннами данного бренда`}
 					className='object-cover'
 					height={200}
-					src={brand.img_url}
+					src={brand.image_url}
 					width={200}
 				/>
 			</Link>
-		</Card>
+		</>
 	);
 };
 

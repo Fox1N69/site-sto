@@ -38,7 +38,7 @@ export interface Category {
 export interface Brand {
 	id: number;
 	name: string;
-	img_url: string;
+	image_url: string;
 }
 
 export interface User {
