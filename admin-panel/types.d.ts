@@ -35,7 +35,10 @@ export interface Product {
   auto_part_info: any;
   stock: number;
   categories: any;
-  for_years: number[]
+  for_years: number[];
+  model_auto_id: number;
+  ModelAuto: ModelAuto;
+  model_auto_name?: string;
 }
 
 export interface User {

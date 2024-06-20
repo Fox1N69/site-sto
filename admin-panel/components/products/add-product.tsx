@@ -17,7 +17,7 @@ import {
 } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import { fetchBrands, fetchCategories } from "@/utils/fetching";
-import { Category, Brand } from "@/types";
+import { Category, Brand, ModelAuto } from "@/types";
 import { Icon } from "@iconify/react";
 
 interface AutoPartInfo {
@@ -38,6 +38,7 @@ export const AddProduct: React.FC = () => {
   const [autoPartInfo, setAutoPartInfo] = useState<AutoPartInfo[]>([
     { title: "", description: "" },
   ]);
+  const [modelAuto, setModelAuto] = useState<ModelAuto | null>(null);
   const { data: session } = useSession();
 
   const [inputYear, setYearValue] = useState<string>("");
@@ -86,6 +87,7 @@ export const AddProduct: React.FC = () => {
       stock: parseInt(stock, 10),
       auto_part_info: autoPartInfo,
       img: "https://example.com/images/brake_pad.jpg", // Замените на реальную ссылку на изображение
+      for_years: tags,
     };
 
     console.log("Submitting data:", data);

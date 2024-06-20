@@ -1,52 +1,43 @@
 'use client';
 
 import Banner from '@/components/Banner/banner';
-import Card from '@/components/product/ProductCard/Card';
-import { AutoPart } from '@/types';
-import axios from 'axios';
-import Image from 'next/image';
-import { useEffect, useState } from 'react';
-import { Navbar } from '@nextui-org/navbar';
-import { AuthProvider } from '@/components/context/authContext';
-import { useRouter } from 'next/navigation';
 import { useFetchAutoParts, useFetchBrands } from '@/hooks/fetching';
-import Example from '@/components/cart/CartModal';
-import { Button } from '@nextui-org/button';
 import { PartCard } from '@/components/product/ProductCard/PartCard';
 import { CategoryCard } from '@/components/home/CategoryCard';
 import BrandCard from '@/components/home/BrandCard';
 
 export default function Home() {
-	const router = useRouter();
 	const autoParts = useFetchAutoParts();
 	const brands = useFetchBrands();
 
 	return (
-		<main className='flex min-h-screen flex-col items-center p-24 gap-20'>
-			<div className='main__container'>
+		<main className='flex flex-col items-center p-4 gap-20'>
+			<div className='main__container w-full max-w-screen-xl'>
 				<Banner />
+
 				<section className='brand__cards flex flex-col gap-4'>
-					<h3 className='font-bold text-2xl'>Бренды</h3>
-					<div className='flex gap-5'>
+					<h3 className='font-bold text-xl md:text-2xl'>Бренды</h3>
+					<div className='flex flex-wrap gap-5 lg:flex-nowrap'>
 						{brands.slice(0, 5).map(brand => (
 							<BrandCard key={brand.id} brand={brand} />
 						))}
 					</div>
 				</section>
-				<section className='category__cards flex flex-col gap-4 mt-20'>
-					<h3 className='font-bold text-2xl'>Категории</h3>
-					<div className='flex gap-5'>
+
+				<section className='category__cards flex flex-col gap-4 mt-12 md:mt-20'>
+					<h3 className='font-bold text-xl md:text-2xl'>Категории</h3>
+					<div className='flex gap-5 flex-wrap lg:flex-nowrap'>
 						<CategoryCard key={1} id={1} name='Двигатель' />
 						<CategoryCard key={2} id={2} name='Кузов' />
-						<CategoryCard key={2} id={2} name='Кузов' />
-						<CategoryCard key={2} id={2} name='Кузов' />
-						<CategoryCard key={2} id={2} name='Кузов' />
-						<CategoryCard key={2} id={2} name='Кузов' />
+						<CategoryCard key={3} id={3} name='Электроника' />
+						<CategoryCard key={4} id={4} name='Ходовая часть' />
+						<CategoryCard key={5} id={5} name='Трансмиссия' />
 					</div>
 				</section>
-				<section className='flex flex-col mt-20 gap-4'>
-					<h3 className='font-bold text-2xl'>Новые автозапчасти</h3>
-					<div className='autopart__cards flex gap-5 justify-center '>
+
+				<section className='flex flex-col mt-12 md:mt-20 gap-4'>
+					<h3 className='font-bold text-xl md:text-2xl'>Новые автозапчасти</h3>
+					<div className='autopart__cards flex flex-wrap gap-5 justify-center lg:flex-nowrap'>
 						{autoParts.slice(0, 5).map(part => (
 							<PartCard key={part.id} part={part} />
 						))}

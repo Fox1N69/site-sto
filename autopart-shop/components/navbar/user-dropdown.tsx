@@ -17,6 +17,7 @@ import { User } from '@/types';
 import axios from 'axios';
 import { fetchData } from 'next-auth/client/_utils';
 import { signOut, useSession } from 'next-auth/react';
+import Link from 'next/link';
 
 interface Props {
 	user: string;
@@ -26,6 +27,7 @@ export const UserDropdown: React.FC<Props> = ({ user }) => {
 	const { data: session } = useSession();
 	const [fio, setFio] = useState<string>('');
 	const route = useRouter();
+	const isAdmin = session?.user.role === 'admin';
 
 	const handleLogout = async () => {
 		signOut({ callbackUrl: '/auth/login' });
@@ -76,6 +78,13 @@ export const UserDropdown: React.FC<Props> = ({ user }) => {
 					className='flex flex-col justify-start w-full items-start'
 				>
 					<p>{fio}</p>
+				</DropdownItem>
+				<DropdownItem>
+					{isAdmin && (
+						<>
+							<Link href={'http://localhost:3001/'}>Панель администратора</Link>
+						</>
+					)}
 				</DropdownItem>
 				<DropdownItem key='settings'>Настройки</DropdownItem>
 				<DropdownItem key='system'>Система</DropdownItem>
