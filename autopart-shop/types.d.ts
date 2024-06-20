@@ -10,6 +10,7 @@ export interface AutoPart {
 	Category?: Category;
 	Brand?: Brand;
 	model_name?: string;
+	model_auto_name?: string;
 }
 
 interface Product {
