@@ -142,14 +142,15 @@ func (r *autoPartRepo) Search(query string) ([]model.AutoPart, error) {
 
 	terms := strings.Fields(query)
 	likeClauses := make([]string, len(terms))
-	likeValues := make([]interface{}, len(terms)*6)
+	likeValues := make([]interface{}, len(terms)*7)
 
 	for i, term := range terms {
-		likeClauses[i] = `(auto_parts.name ILIKE ? OR categories.name ILIKE ? OR brands.name ILIKE ? OR auto_parts.model_name ILIKE ? OR model_autos.name ILIKE ? OR model_autos.release_year @> ?::jsonb)`
+		likeClauses[i] = `(auto_parts.name ILIKE ? OR categories.name ILIKE ? OR brands.name ILIKE ? OR auto_parts.model_name ILIKE ? OR model_autos.name ILIKE ? OR model_autos.release_year @> ?::jsonb OR auto_parts.for_years @> ?::jsonb)`
 		for j := 0; j < 5; j++ {
-			likeValues[i*6+j] = "%" + term + "%"
+			likeValues[i*7+j] = "%" + term + "%"
 		}
-		likeValues[i*6+5] = `"` + term + `"`
+		likeValues[i*7+5] = `"` + term + `"`
+		likeValues[i*7+6] = `"` + term + `"`
 	}
 
 	whereClause := strings.Join(likeClauses, " AND ")

@@ -62,6 +62,7 @@ type CreateAutoPartRequest struct {
 	BrandID      uint                 `json:"brand_id" binding:"required"`
 	AutoPartInfo []model.AutoPartInfo `json:"auto_part_info"`
 	Stock        uint                 `json:"stock" binding:"required"`
+	ForYears     json.RawMessage      `json:"for_years" binding:"required"`
 }
 
 func (h *adminHandler) CreateAutoPart(c *gin.Context) {
@@ -78,6 +79,7 @@ func (h *adminHandler) CreateAutoPart(c *gin.Context) {
 		Image:     req.Img,
 		BrandID:   req.BrandID,
 		Stock:     req.Stock,
+		ForYears:  req.ForYears,
 	}
 
 	for _, info := range req.AutoPartInfo {
