@@ -50,11 +50,12 @@ export const RenderCell: React.FC<Props> = ({
     case "for_years":
       return (
         <div className="flex gap-2">
-          {product.for_years.map((year, index) => (
-            <Chip key={index} size="sm" variant="bordered" color="primary">
-              {year}
-            </Chip>
-          ))}
+          {Array.isArray(product.for_years) &&
+            product.for_years.map((year, index) => (
+              <Chip key={index} size="sm" variant="bordered" color="primary">
+                {year}
+              </Chip>
+            ))}
         </div>
       );
 

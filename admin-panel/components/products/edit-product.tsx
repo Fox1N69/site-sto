@@ -96,6 +96,7 @@ export const EditProduct: React.FC<EditProductsProps> = ({
     model_name: product.model_name,
     price: product.price,
     stock: product.stock,
+    for_years: product.for_years,
   });
 
   useEffect(() => {
@@ -109,6 +110,13 @@ export const EditProduct: React.FC<EditProductsProps> = ({
 
     fetchInitialData();
   }, []);
+
+  useEffect(() => {
+    setEditedProduct((prevProduct) => ({
+      ...prevProduct,
+      for_years: tags,
+    }));
+  }, [tags]);
 
   const handleChange = (e: any) => {
     const { name, value } = e.target;

@@ -1,6 +1,7 @@
 package repo
 
 import (
+	"encoding/json"
 	"errors"
 	"log"
 	"shop-server/internal/model"
@@ -77,7 +78,6 @@ func (ar *autoPartRepo) Update(product model.AutoPart, fieldsToUpdate map[string
 		return err
 	}
 
-	// Update categories if provided
 	if categories, ok := fieldsToUpdate["categories"].([]uint); ok {
 		var newCategories []model.Category
 		if err := ar.db.Where("id IN ?", categories).Find(&newCategories).Error; err != nil {
@@ -92,6 +92,16 @@ func (ar *autoPartRepo) Update(product model.AutoPart, fieldsToUpdate map[string
 	if brandID, ok := fieldsToUpdate["brand_id"].(uint); ok {
 		existingProduct.BrandID = brandID
 		delete(fieldsToUpdate, "brand_id")
+	}
+
+	// Обработка поля for_years
+	if forYears, ok := fieldsToUpdate["for_years"]; ok {
+		// Предполагается, что for_years уже JSON строка, передаем ее как есть
+		forYearsJSON, err := json.Marshal(forYears)
+		if err != nil {
+			return errors.New("invalid JSON format for for_years")
+		}
+		fieldsToUpdate["for_years"] = string(forYearsJSON)
 	}
 
 	if len(fieldsToUpdate) > 0 {

@@ -144,6 +144,7 @@ func (h *adminHandler) UpdateAutoPart(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"message": "Auto part updated successfully"})
 }
+
 func (h *adminHandler) CreateModelAuto(c *gin.Context) {
 	data := new(model.ModelAuto)
 	c.ShouldBind(data)
