@@ -41,10 +41,17 @@ export const Navbar = () => {
 	) => {
 		const query = event.target.value;
 		setSearchQuery(query);
-		if (query.length > 1) {
+
+		// Разбиваем запрос на части по пробелу
+		const parts = query.split(' ');
+
+		if (parts.length > 0) {
+			const oneTerm = parts[0];
+			const twoTerm = parts.slice(1).join('&');
+
 			try {
 				const response = await axios.get(
-					`http://localhost:4000/shop/autoparts/search?query=${query}`
+					`http://localhost:4000/shop/autoparts/search?query=${encodeURIComponent(oneTerm)}&${encodeURIComponent(twoTerm)}`
 				);
 				setSearchResults(response.data);
 				setShowDropdown(true);
