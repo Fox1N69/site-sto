@@ -29,17 +29,24 @@ const AutoPartPage: React.FC<AutoPartPageProps> = ({ params }) => {
 		fetchAutoParts();
 	}, [model_name, year]);
 
+	const chunkedAutoParts = [];
+	for (let i = 0; i < autoParts.length; i += 4) {
+		chunkedAutoParts.push(autoParts.slice(i, i + 4));
+	}
+
 	return (
 		<div className='container'>
-			<h4>
+			<h3 className='text-3xl font-bold'>
 				Запчасти для: {model_name} {year} года
-			</h4>
-			<div className='flex flex-col'>
-				<div className='flex gap-20'>
-					{autoParts.map(part => (
-						<PartCard key={part.id} part={part} />
-					))}
-				</div>
+			</h3>
+			<div className=' mt-10 flex flex-col gap-20'>
+				{chunkedAutoParts.map((chunk, chunkIndex) => (
+					<div className='flex gap-20' key={chunkIndex}>
+						{chunk.map(part => (
+							<PartCard key={part.id} part={part} />
+						))}
+					</div>
+				))}
 			</div>
 		</div>
 	);
