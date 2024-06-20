@@ -3,11 +3,9 @@
 import {
 	Navbar as NextUINavbar,
 	NavbarContent,
-	NavbarMenu,
 	NavbarMenuToggle,
 	NavbarBrand,
-	NavbarItem,
-	NavbarMenuItem
+	NavbarItem
 } from '@nextui-org/navbar';
 import { Button } from '@nextui-org/button';
 import { Kbd } from '@nextui-org/kbd';
