@@ -1,6 +1,7 @@
 "use client";
 import {
   Button,
+  Chip,
   Dropdown,
   DropdownItem,
   DropdownMenu,
@@ -14,12 +15,13 @@ import {
   Tooltip,
   useDisclosure,
 } from "@nextui-org/react";
-import React, { useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { EditIcon } from "../icons/table/edit-icon";
 import { Brand, Category, Product } from "@/types";
 import { useSession } from "next-auth/react";
 import { useEditStore } from "@/store/editStore";
 import { fetchBrands, fetchCategories } from "@/utils/fetching";
+import { Icon } from "@iconify/react";
 
 interface EditProductsProps {
   selectedProductId: number;
@@ -40,6 +42,51 @@ export const EditProduct: React.FC<EditProductsProps> = ({
     setSelectedCategory,
     setSelectedBrand,
   } = useEditStore();
+
+  //Edit for_years on the product
+  const [inputYear, setYearValue] = useState<string>("");
+  const [tags, setTags] = useState<number[]>([]);
+  const [showEnter, setShowEnter] = useState<boolean>(false);
+  const [yearError, setYearError] = useState<string>("");
+
+  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setYearValue(event.target.value);
+    setShowEnter(event.target.value !== "");
+  };
+
+  useEffect(() => {
+    if (isOpen && product.for_years) {
+      setTags([...product.for_years]);
+    }
+  }, [isOpen, product]);
+
+  const handleInputKeyPress = (
+    event: React.KeyboardEvent<HTMLInputElement>
+  ) => {
+    if (event.key === "Enter") {
+      const year = parseInt(inputYear.trim());
+      const currentYear = new Date().getFullYear();
+
+      if (
+        !isNaN(year) &&
+        year.toString().length === 4 &&
+        year <= currentYear &&
+        year >= 1900 &&
+        !tags.includes(year)
+      ) {
+        setTags([...tags, year]);
+        setYearError("");
+        setYearValue("");
+        setShowEnter(false);
+      } else {
+        setYearError("Год указан неправильно");
+      }
+    }
+  };
+
+  const handleDeleteTag = (tagToDelete: number) => {
+    setTags(tags.filter((tag) => tag !== tagToDelete));
+  };
 
   const [editedProduct, setEditedProduct] = useState({
     id: selectedProductId,
@@ -189,6 +236,34 @@ export const EditProduct: React.FC<EditProductsProps> = ({
               defaultValue={String(product.stock)}
               onChange={handleChange}
             />
+            <Input
+              label="Года выпуска"
+              variant="bordered"
+              value={inputYear}
+              onKeyPress={handleInputKeyPress}
+              onChange={handleInputChange}
+              endContent={
+                showEnter && (
+                  <div className="flex items-center my-[6px]">
+                    Enter <Icon icon={"uil:enter"} />
+                  </div>
+                )
+              }
+            />
+            <div className="flex gap-2 mr-3">
+              {tags.map((tag, index) => (
+                <Chip
+                  key={index}
+                  size="sm"
+                  variant="bordered"
+                  color="primary"
+                  onClose={() => handleDeleteTag(tag)}
+                >
+                  {tag.toString()}
+                </Chip>
+              ))}
+              {yearError !== "" && <p className="text-red-600">{yearError}</p>}
+            </div>
           </ModalBody>
           <ModalFooter>
             <Button variant="flat" onClick={onClose}>

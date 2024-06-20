@@ -13,7 +13,6 @@ import { RenderCell } from "./render-cell";
 import axios from "axios";
 import { useAsyncList } from "@react-stately/data";
 import { Product } from "@/types";
-import { SessionContext, SessionProvider, useSession } from "next-auth/react";
 
 export const TableWrapperProducts = () => {
   const [selectedUser, setSelectedOrder] = useState(null);
