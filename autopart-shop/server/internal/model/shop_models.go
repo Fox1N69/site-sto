@@ -96,7 +96,12 @@ type BrandCategory struct {
 
 type Order struct {
 	GormCustom
-	Status string `json:"status"`
-	Total  int    `json:"total"`
-	UserID uint   `json:"user_id" gorm:"foreignKey:ID"`
+	Status          string `json:"status"`
+	Total           int    `json:"total"`
+	Email           string `json:"email" gorm:"unique"`
+	PhoneNumber     string `json:"phone_number"`
+	DeliveryAddress string `json:"delivery_address"`
+	IsPaid          bool   `json:"is_paid"`
+	UserID          uint   `json:"user_id"`
+	User            User   `gorm:"foreginKey:UserID"`
 }
