@@ -95,13 +95,18 @@ type BrandCategory struct {
 }
 
 type Order struct {
-	GormCustom
-	Status          string `json:"status"`
-	Total           int    `json:"total"`
-	Email           string `json:"email" gorm:"unique"`
-	PhoneNumber     string `json:"phone_number"`
-	DeliveryAddress string `json:"delivery_address"`
-	IsPaid          bool   `json:"is_paid"`
-	UserID          uint   `json:"user_id"`
-	User            User   `gorm:"foreginKey:UserID"`
+	ShopCustom
+	Status          string  `json:"status"`
+	Total           int     `json:"total"`
+	Email           string  `json:"email" gorm:"unique"`
+	PhoneNumber     string  `json:"phone_number"`
+	DeliveryCity    string  `json:"delivery_city"`
+	DeliveryAddress string  `json:"delivery_address"`
+	DeliveryCost    float64 `json:"delivery_cost"`
+	IsPaid          bool    `json:"is_paid"`
+	PaymentMethod   string  `json:"payment_method"`
+	Comment         string  `json:"comment"`
+	TrackingNumber  string  `json:"tracking_number"`
+	UserID          uint    `json:"user_id"`
+	User            User    `gorm:"foreginKey:UserID"`
 }
