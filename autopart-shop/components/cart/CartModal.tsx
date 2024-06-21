@@ -15,26 +15,21 @@ import CartCouter from './CartCouter';
 import { Product } from '@/types';
 import CartButton from './CartButton';
 import { useCartStore } from '@/store/cartStore';
-import { useSelect } from '@nextui-org/react';
-import { useTypedSelector } from '@/store/useTypedSelector';
-
-export const calculateTotalPrice = (products: Product[]) => {
-	const totalPrice = products.reduce((acc, product) => {
-		const price =
-			typeof product.price === 'string'
-				? product.price
-				: product.price.toString();
-		return acc + parseFloat(price) * product.quantity;
-	}, 0);
-	useCartStore.getState().setTotalPrice(totalPrice);
-};
+import { handleRemoveFromCart } from '../../hooks/fetching';
 
 export default function CartModal() {
 	const [open, setOpen] = useState<boolean>(false);
 	const [products, setProducts] = useState<Product[]>([]);
 	const { data: session } = useSession();
-	const { setItemsInCart, resetItemCount, setTotalPrice } = useCartStore();
-	const totalPrice = useCartStore(state => state.totalPrice);
+	const {
+		setItemsInCart,
+		resetItemCount,
+		setTotalPrice,
+		removeItemFromCart,
+		itemsInCart,
+		itemCount,
+		totalPrice
+	} = useCartStore();
 
 	const handleOpen = () => {
 		setOpen(true);
@@ -73,10 +68,14 @@ export default function CartModal() {
 			setProducts(extractedProducts);
 			const itemsInCart = extractedProducts.reduce(
 				(acc, product) => {
-					acc[product.id] = true;
+					acc[product.id] = {
+						id: product.id,
+						price: product.price,
+						quantity: product.quantity
+					};
 					return acc;
 				},
-				{} as { [key: number]: boolean }
+				{} as { [key: number]: { id: number; price: number; quantity: number } }
 			);
 			setItemsInCart(itemsInCart);
 		} catch (error) {
@@ -124,7 +123,6 @@ export default function CartModal() {
 			setProducts(prevProducts =>
 				prevProducts.filter(product => product.id !== partID)
 			);
-			const { removeItemFromCart } = useCartStore.getState();
 			removeItemFromCart(partID);
 		} catch (error) {
 			console.error('Failed to remove item from server', error);
@@ -134,7 +132,7 @@ export default function CartModal() {
 	const handleCountChange = (id: number, count: number) => {
 		setProducts(prevProducts =>
 			prevProducts.map(product =>
-				product.id === id ? { ...product, count } : product
+				product.id === id ? { ...product, quantity: count } : product
 			)
 		);
 	};
@@ -145,17 +143,17 @@ export default function CartModal() {
 		}
 	}, [open]);
 
-	const calculateTotalPrice = (products: Product[]) => {
-		return products.reduce((acc, product) => {
-			const price =
-				typeof product.price === 'string'
-					? parseFloat(product.price)
-					: product.price;
-			return acc + price * product.quantity;
-		}, 0);
-	};
-
 	useEffect(() => {
+		const calculateTotalPrice = (products: Product[]) => {
+			return products.reduce((acc, product) => {
+				const price =
+					typeof product.price === 'string'
+						? parseFloat(product.price)
+						: product.price;
+				return acc + price * product.quantity;
+			}, 0);
+		};
+
 		setTotalPrice(calculateTotalPrice(products));
 	}, [products, setTotalPrice]);
 
