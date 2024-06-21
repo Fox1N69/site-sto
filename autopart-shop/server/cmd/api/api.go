@@ -57,6 +57,7 @@ func (c *server) v1() {
 	brandHandler := v1.NewBrandHandler(c.service.BrandService())
 	basketHnalder := v1.NewBasketHandler(c.service.BasketService())
 	shopHandler := v1.NewShopHandler(c.service.AutoService(), c.service.BasketService(), c.service.AutoPartService(), c.infra)
+	orderHandler := v1.NewOrderHandler(c.service.OrderService())
 
 	c.gin.Use(sessions.Sessions("user", c.store))
 
@@ -95,6 +96,11 @@ func (c *server) v1() {
 			modelauto.PUT("/update/:id", adminHandler.UpdateModelAuto)
 			modelauto.DELETE("/delete/:id", adminHandler.DeleteModelAuto)
 		}
+
+		order := admin.Group("/order")
+		{
+			order.GET("/", orderHandler.GetAllOrders)
+		}
 	}
 
 	v1 := c.gin.Group("v1/account")
@@ -117,6 +123,7 @@ func (c *server) v1() {
 			user.DELETE("/delete", authHandler.Delete)
 			user.GET("/:id", authHandler.GetUsernameByID)
 			user.GET("/:id/check/:autopart_id", basketHnalder.CheckBasket)
+			user.POST("/order/create", orderHandler.CreateOrder)
 		}
 	}
 }

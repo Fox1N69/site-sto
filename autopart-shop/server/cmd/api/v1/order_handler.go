@@ -9,6 +9,8 @@ import (
 )
 
 type OrderHandler interface {
+	CreateOrder(c *gin.Context)
+	GetAllOrders(c *gin.Context)
 }
 
 type orderHandler struct {
