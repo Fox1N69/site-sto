@@ -11,6 +11,9 @@ import (
 )
 
 type OrderService interface {
+	CreateOrder(order *model.Order) error
+	GetAllOrders(ctx context.Context) ([]model.Order, error)
+	UpdateOrder(ctx context.Context, id uint, orderData map[string]interface{}) error
 }
 
 type orderService struct {
@@ -18,7 +21,7 @@ type orderService struct {
 }
 
 func NewOrderService(orderRepo repo.OrderRepo) OrderService {
-	return orderService{repo: orderRepo}
+	return &orderService{repo: orderRepo}
 }
 
 func (s *orderService) CreateOrder(order *model.Order) error {
