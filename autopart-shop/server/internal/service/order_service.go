@@ -44,6 +44,7 @@ func (s *orderService) UpdateOrder(ctx context.Context, id uint, orderData map[s
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return fmt.Errorf("order not found: %w", err)
 		}
+
 		return fmt.Errorf("failed to update order: %w", err)
 	}
 
