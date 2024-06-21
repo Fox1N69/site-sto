@@ -26,7 +26,7 @@ export default function Home() {
 
 				<section className='category__cards flex flex-col gap-4 mt-12 md:mt-20'>
 					<h3 className='font-bold text-xl md:text-2xl'>Категории</h3>
-					<div className='flex gap-5 flex-wrap lg:flex-nowrap'>
+					<div className='flex gap-12 flex-wrap lg:flex-nowrap'>
 						<CategoryCard key={1} id={1} name='Двигатель' />
 						<CategoryCard key={2} id={2} name='Кузов' />
 						<CategoryCard key={3} id={3} name='Электроника' />
