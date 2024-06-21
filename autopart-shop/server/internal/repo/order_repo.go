@@ -24,7 +24,6 @@ func NewOrderRepo(db *gorm.DB) OrderRepo {
 }
 
 func (r *orderRepo) CreateOrder(ctx context.Context, order *model.Order) error {
-	// Check if the user exists
 	var user model.User
 	if result := r.db.First(&user, order.UserID); result.Error != nil {
 		if result.Error == gorm.ErrRecordNotFound {
@@ -33,7 +32,6 @@ func (r *orderRepo) CreateOrder(ctx context.Context, order *model.Order) error {
 		return result.Error
 	}
 
-	// Populate order email if not provided
 	if order.Email == "" {
 		if user.Email == "" {
 			return fmt.Errorf("user with ID %d does not have an email and order email is not provided", order.UserID)
@@ -41,7 +39,6 @@ func (r *orderRepo) CreateOrder(ctx context.Context, order *model.Order) error {
 		order.Email = user.Email
 	}
 
-	// Populate order phone number if not provided
 	if order.PhoneNumber == "" {
 		if user.PhoneNumber == "" {
 			return fmt.Errorf("user with ID %d does not have a phone number and order phone number is not provided", order.UserID)
@@ -49,9 +46,8 @@ func (r *orderRepo) CreateOrder(ctx context.Context, order *model.Order) error {
 		order.PhoneNumber = user.PhoneNumber
 	}
 
-	// Populate order address if not provided
 	if order.DeliveryAddress == "" {
-		if user.DeliveryAddress == "" { // Assuming user has an Address field
+		if user.DeliveryAddress == "" {
 			return fmt.Errorf("user with ID %d does not have an address and order address is not provided", order.UserID)
 		}
 		order.DeliveryAddress = user.DeliveryAddress
