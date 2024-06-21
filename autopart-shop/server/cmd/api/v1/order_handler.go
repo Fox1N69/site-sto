@@ -28,7 +28,7 @@ func (h *orderHandler) CreateOrder(c *gin.Context) {
 		return
 	}
 
-	if err := h.orderService.CreateOrder(&order); err != nil {
+	if err := h.orderService.CreateOrder(c.Request.Context(), &order); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}

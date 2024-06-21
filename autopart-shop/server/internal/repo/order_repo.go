@@ -1,13 +1,15 @@
 package repo
 
 import (
+	"context"
+	"fmt"
 	"shop-server/internal/model"
 
 	"gorm.io/gorm"
 )
 
 type OrderRepo interface {
-	CreateOrder(order *model.Order) error
+	CreateOrder(ctx context.Context, order *model.Order) error
 	GetAllOrders() ([]model.Order, error)
 	UpdateOrder(id uint, orderData map[string]interface{}) error
 	DeleteOrder(id uint) error
@@ -21,14 +23,59 @@ func NewOrderRepo(db *gorm.DB) OrderRepo {
 	return &orderRepo{db: db}
 }
 
-func (r *orderRepo) CreateOrder(order *model.Order) error {
-	return r.db.Create(order).Error
+func (r *orderRepo) CreateOrder(ctx context.Context, order *model.Order) error {
+	// Check if the user exists
+	var user model.User
+	if result := r.db.First(&user, order.UserID); result.Error != nil {
+		if result.Error == gorm.ErrRecordNotFound {
+			return fmt.Errorf("user with ID %d not found", order.UserID)
+		}
+		return result.Error
+	}
+
+	// Populate order email if not provided
+	if order.Email == "" {
+		if user.Email == "" {
+			return fmt.Errorf("user with ID %d does not have an email and order email is not provided", order.UserID)
+		}
+		order.Email = user.Email
+	}
+
+	// Populate order phone number if not provided
+	if order.PhoneNumber == "" {
+		if user.PhoneNumber == "" {
+			return fmt.Errorf("user with ID %d does not have a phone number and order phone number is not provided", order.UserID)
+		}
+		order.PhoneNumber = user.PhoneNumber
+	}
+
+	// Populate order address if not provided
+	if order.DeliveryAddress == "" {
+		if user.DeliveryAddress == "" { // Assuming user has an Address field
+			return fmt.Errorf("user with ID %d does not have an address and order address is not provided", order.UserID)
+		}
+		order.DeliveryAddress = user.DeliveryAddress
+	}
+
+	if order.DeliveryCity == "" {
+		if user.DeliveryCity == "" {
+			return fmt.Errorf("user with ID %d does not have and addres city and order address in not provided", order.UserID)
+		}
+		order.DeliveryCity = user.DeliveryCity
+	}
+
+	// Create the order
+	if err := r.db.Create(order).Error; err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (r *orderRepo) GetAllOrders() ([]model.Order, error) {
 	var order []model.Order
 
-	result := r.db.Preload("Users").Find(&order)
+	result := r.db.Preload("User").Find(&order)
 	if result.Error != nil {
 		return nil, result.Error
 	}

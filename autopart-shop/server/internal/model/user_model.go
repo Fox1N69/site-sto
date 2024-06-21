@@ -20,6 +20,7 @@ type User struct {
 	Email           string  `json:"email" gorm:"unique"`
 	Role            string  `json:"role" gorm:"default:'user'"`
 	DeliveryAddress string  `json:"delivery_address"`
+	DeliveryCity    string  `json:"delivery_city"`
 	PhoneNumber     string  `json:"phone_number"`
 	Basket          *Basket `gorm:"foreignKey:UserID"`
 }

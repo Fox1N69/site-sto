@@ -97,7 +97,7 @@ func (c *server) v1() {
 			modelauto.DELETE("/delete/:id", adminHandler.DeleteModelAuto)
 		}
 
-		order := admin.Group("/order")
+		order := admin.Group("/orders")
 		{
 			order.GET("/", orderHandler.GetAllOrders)
 		}

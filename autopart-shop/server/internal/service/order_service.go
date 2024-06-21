@@ -11,7 +11,7 @@ import (
 )
 
 type OrderService interface {
-	CreateOrder(order *model.Order) error
+	CreateOrder(ctx context.Context, order *model.Order) error
 	GetAllOrders(ctx context.Context) ([]model.Order, error)
 	UpdateOrder(ctx context.Context, id uint, orderData map[string]interface{}) error
 }
@@ -24,8 +24,8 @@ func NewOrderService(orderRepo repo.OrderRepo) OrderService {
 	return &orderService{repo: orderRepo}
 }
 
-func (s *orderService) CreateOrder(order *model.Order) error {
-	if err := s.repo.CreateOrder(order); err != nil {
+func (s *orderService) CreateOrder(ctx context.Context, order *model.Order) error {
+	if err := s.repo.CreateOrder(ctx, order); err != nil {
 		return err
 	}
 
