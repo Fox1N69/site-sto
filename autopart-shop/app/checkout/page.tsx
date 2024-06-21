@@ -5,14 +5,19 @@ import { useState } from 'react';
 
 export default function CheckOutPage() {
 	const [products, setProducts] = useState<Product[]>([]);
+	const { itemsInCart, totalPrice } = useCartStore();
 
 	return (
 		<section>
-			<div>
-				{products.map(product => (
-					<div>{product.id}</div>
+			<ul>
+				{Object.values(itemsInCart).map(item => (
+					<li key={item.id}>
+						<p>{item.name}</p>
+						<p>{item.price}</p>
+						<p>{item.quantity}</p>
+					</li>
 				))}
-			</div>
+			</ul>
 		</section>
 	);
 }

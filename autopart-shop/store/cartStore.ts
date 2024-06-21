@@ -5,6 +5,8 @@ type CartItem = {
 	id: number;
 	price: number;
 	quantity: number;
+	name: string; // Новое поле name
+	img_url: string; // Новое поле img_url
 };
 
 type CartStore = {
@@ -12,7 +14,12 @@ type CartStore = {
 	itemCount: number;
 	totalPrice: number;
 	setItemsInCart: (items: { [key: number]: CartItem }) => void;
-	addItemToCart: (id: number, price: number) => void;
+	addItemToCart: (
+		id: number,
+		price: number,
+		name: string,
+		img_url: string
+	) => void;
 	removeItemFromCart: (id: number) => void;
 	resetItemCount: () => void;
 	calculateTotalPrice: () => void;
@@ -27,13 +34,13 @@ export const useCartStore = create<CartStore>()(
 			totalPrice: 0,
 			setItemsInCart: items =>
 				set(state => ({ itemsInCart: { ...state.itemsInCart, ...items } })),
-			addItemToCart: (id, price) =>
+			addItemToCart: (id, price, name, img_url) =>
 				set(state => {
 					const updatedItems = { ...state.itemsInCart };
 					if (updatedItems[id]) {
 						updatedItems[id].quantity += 1;
 					} else {
-						updatedItems[id] = { id, price, quantity: 1 };
+						updatedItems[id] = { id, price, quantity: 1, name, img_url };
 					}
 					return {
 						itemsInCart: updatedItems,

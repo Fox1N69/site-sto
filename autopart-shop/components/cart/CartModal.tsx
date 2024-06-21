@@ -17,6 +17,14 @@ import CartButton from './CartButton';
 import { useCartStore } from '@/store/cartStore';
 import { handleRemoveFromCart } from '../../hooks/fetching';
 
+type CartItem = {
+	id: number;
+	price: number;
+	quantity: number;
+	name: string;
+	img_url: string;
+};
+
 export default function CartModal() {
 	const [open, setOpen] = useState<boolean>(false);
 	const [products, setProducts] = useState<Product[]>([]);
@@ -66,17 +74,23 @@ export default function CartModal() {
 			);
 
 			setProducts(extractedProducts);
+
 			const itemsInCart = extractedProducts.reduce(
 				(acc, product) => {
 					acc[product.id] = {
 						id: product.id,
 						price: product.price,
-						quantity: product.quantity
+						quantity: product.quantity,
+						name: product.name,
+						img_url: product.imageSrc
 					};
 					return acc;
 				},
-				{} as { [key: number]: { id: number; price: number; quantity: number } }
+				{} as {
+					[key: number]: CartItem;
+				}
 			);
+
 			setItemsInCart(itemsInCart);
 		} catch (error) {
 			console.error('Failed to fetch cart items', error);
