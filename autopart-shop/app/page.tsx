@@ -1,6 +1,5 @@
 'use client';
 
-import Banner from '@/components/Banner/banner';
 import { useFetchAutoParts, useFetchBrands } from '@/hooks/fetching';
 import { PartCard } from '@/components/product/ProductCard/PartCard';
 import { CategoryCard } from '@/components/home/CategoryCard';
@@ -13,8 +12,6 @@ export default function Home() {
 	return (
 		<main className='flex flex-col items-center p-4 gap-20'>
 			<div className='main__container w-full max-w-screen-xl'>
-				<Banner />
-
 				<section className='brand__cards flex flex-col gap-4'>
 					<h3 className='font-bold text-xl md:text-2xl'>Бренды</h3>
 					<div className='flex flex-wrap gap-5 lg:flex-nowrap'>
