@@ -1,12 +1,10 @@
 'use client';
 import ModelAutoCard from '@/components/model-auto/ModelCard';
-import { useFetchAllModelAuto, useFetchModelAuto } from '@/hooks/fetching';
+import { useFetchModelAuto } from '@/hooks/fetching';
 import { ModelAuto } from '@/types';
-import { useEffect } from 'react';
 
 export default function BrandPage({
-	params,
-	model
+	params
 }: {
 	params: { id: number };
 	model: ModelAuto;
