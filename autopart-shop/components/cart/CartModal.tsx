@@ -158,6 +158,15 @@ export default function CartModal() {
 	}, [open]);
 
 	useEffect(() => {
+		const savedCart = localStorage.getItem('cart-storage');
+		if (savedCart) {
+			const parsedCart = JSON.parse(savedCart);
+			setItemsInCart(parsedCart.state.itemsInCart);
+			setTotalPrice(parsedCart.state.totalPrice);
+		}
+	}, [setItemsInCart, setTotalPrice]);
+
+	useEffect(() => {
 		const calculateTotalPrice = (products: Product[]) => {
 			return products.reduce((acc, product) => {
 				const price =
@@ -249,7 +258,7 @@ export default function CartModal() {
 																				<p className='ml-4'>{product.price}</p>
 																			</div>
 																			<p className='mt-1 text-sm text-gray-500'>
-																				{product.color}
+																				{product.model_name}
 																			</p>
 																		</div>
 																		<div className='flex flex-1 items-end justify-between text-sm'>

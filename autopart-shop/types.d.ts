@@ -16,13 +16,13 @@ export interface AutoPart {
 interface Product {
 	id: number;
 	name: string;
-	href: string;
-	color: string;
+	href?: string;
+	model_name: string;
 	price: number;
 	quantity: number;
 	imageSrc: string;
-	imageAlt: string;
-	cartItemID: number;
+	imageAlt?: string;
+	cartItemID?: number;
 }
 
 export interface AutoPartInfo {

@@ -5,8 +5,8 @@ type CartItem = {
 	id: number;
 	price: number;
 	quantity: number;
-	name: string; // Новое поле name
-	img_url: string; // Новое поле img_url
+	name: string;
+	img_url: string;
 };
 
 type CartStore = {
@@ -73,7 +73,8 @@ export const useCartStore = create<CartStore>()(
 			setTotalPrice: newTotalPrice => set({ totalPrice: newTotalPrice })
 		}),
 		{
-			name: 'cart-storage'
+			name: 'cart-storage',
+			getStorage: () => localStorage
 		}
 	)
 );

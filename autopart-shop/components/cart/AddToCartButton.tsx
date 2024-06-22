@@ -15,8 +15,7 @@ interface ButtonCartProps {
 
 const ButtonCart: React.FC<ButtonCartProps> = ({ part }) => {
 	const { data: session } = useSession();
-	const { itemsInCart, addItemToCart, setItemsInCart, removeItemFromCart } =
-		useCartStore();
+	const { itemsInCart, addItemToCart, removeItemFromCart } = useCartStore();
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 
@@ -37,7 +36,7 @@ const ButtonCart: React.FC<ButtonCartProps> = ({ part }) => {
 		};
 
 		fetchCartStatus();
-	}, [part.id, session?.user, setItemsInCart]);
+	}, [part.id, session?.user, addItemToCart, removeItemFromCart]);
 
 	const onToggleCart = async () => {
 		if (session?.user) {
@@ -55,7 +54,7 @@ const ButtonCart: React.FC<ButtonCartProps> = ({ part }) => {
 						userId: session.user.id,
 						token: session.user.token,
 						autopartID: part.id,
-						quantity: 1, // Указываем количество товара для добавления
+						quantity: 1,
 						setIsLoading,
 						setError
 					});

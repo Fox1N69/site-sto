@@ -119,6 +119,7 @@ func (h *basketHandler) UpdateBasketItemQuantity(c *gin.Context) {
 func (h *basketHandler) CheckBasket(c *gin.Context) {
 	autoPartID, _ := strconv.ParseUint(c.Param("autopart_id"), 10, 32)
 	userID, _ := strconv.ParseUint(c.Param("id"), 10, 32)
+
 	basket, err := h.service.GetBasketByUserID(uint(userID))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
