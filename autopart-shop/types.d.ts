@@ -57,3 +57,10 @@ export interface ModelAuto {
 	img_url: string;
 	release_year: number[];
 }
+
+export interface IconSvgProps {
+	size?: number;
+	width?: string;
+	height?: string;
+	className?: string;
+}
