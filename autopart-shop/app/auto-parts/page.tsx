@@ -19,7 +19,7 @@ export default function AutoParts() {
 	const autoPartChunks = chunkedAutoParts(autoParts, 5);
 
 	return (
-		<div className='flex min-h-screen flex-col items-center pt-24 pl-0 pr-24 gap-20'>
+		<section className='flex min-h-screen flex-col items-center pt-24 pl-0 pr-24 gap-20'>
 			<div className='main__container flex justify-between w-full'>
 				<div className='fileter'>
 					<Filters />
@@ -30,6 +30,6 @@ export default function AutoParts() {
 					))}
 				</div>
 			</div>
-		</div>
+		</section>
 	);
 }

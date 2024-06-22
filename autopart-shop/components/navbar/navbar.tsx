@@ -118,7 +118,7 @@ export const Navbar = () => {
 							key={result.id}
 							className='p-2 hover:bg-gray-100 cursor-pointer'
 						>
-							<Link href={`/autopart/${result.id}`}>
+							<Link href={`/auto-parts/${result.id}`}>
 								{result.name ||
 									result.model_name ||
 									result.Category?.name ||
