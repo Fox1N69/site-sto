@@ -10,7 +10,7 @@ export const siteConfig = {
 		},
 		{
 			label: 'Все запчасти',
-			href: '/auto-parts'
+			href: '/auto-part'
 		},
 		{
 			label: 'About',
