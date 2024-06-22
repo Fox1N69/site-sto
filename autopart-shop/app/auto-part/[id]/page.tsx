@@ -1,7 +1,7 @@
 const AutoPart = ({ params }: { params: { id: number } }) => {
 	return (
 		<section>
-			<div>{}</div>
+			<div>{params.id}</div>
 		</section>
 	);
 };
