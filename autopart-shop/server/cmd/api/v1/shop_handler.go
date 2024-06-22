@@ -12,6 +12,7 @@ import (
 
 type ShopHandler interface {
 	GetAllAutoPart(c *gin.Context)
+	GetAutoPartByID(c *gin.Context)
 	GetAllModelAuto(c *gin.Context)
 	SearchAutoPart(c *gin.Context)
 	GetModelAutoByBrandID(c *gin.Context)
@@ -104,4 +105,21 @@ func (h *shopHandler) GetAutoPartByBrandAndYear(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, autoParts)
+}
+
+func (h *shopHandler) GetAutoPartByID(c *gin.Context) {
+	partId, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	if err != nil {
+		response.New(c).Error(http.StatusBadRequest, err)
+		return
+	}
+
+	data, err := h.autopartService.GetAutoPartByID(uint(partId))
+	if err != nil {
+		response.New(c).Error(http.StatusBadRequest, err)
+		return
+	}
+
+	c.JSON(200, data)
+
 }

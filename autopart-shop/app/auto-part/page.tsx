@@ -1,7 +1,7 @@
 'use client';
 
 import Filters from '@/components/filters';
-import FullCard from '@/components/product/ProductCard/FullCard';
+import FullCard from '@/components/autopart/ProductCard/FullCard';
 import { useFetchAutoParts } from '@/hooks/fetching';
 import { AutoPart } from '@/types';
 

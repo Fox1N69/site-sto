@@ -34,6 +34,8 @@
 		"@typescript-eslint/parser": "^7.13.0",
 		"autoprefixer": "10.4.19",
 		"clsx": "2.1.1",
+		"embla-carousel": "^8.1.5",
+		"embla-carousel-react": "^8.1.5",
 		"eslint": "^8.57.0",
 		"eslint-config-next": "14.2.1",
 		"eslint-config-prettier": "^8.10.0",

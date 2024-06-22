@@ -2,8 +2,8 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSearchParams } from 'next/navigation';
-import FullCard from '@/components/product/ProductCard/FullCard';
-import { PartCard } from '@/components/product/ProductCard/PartCard';
+import FullCard from '@/components/autopart/ProductCard/FullCard';
+import { PartCard } from '@/components/autopart/ProductCard/PartCard';
 import { AutoPart } from '@/types';
 
 interface AutoPartPageProps {

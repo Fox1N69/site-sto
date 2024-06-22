@@ -1,3 +1,4 @@
+'use client';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
@@ -238,3 +239,33 @@ export const useFetchModelAuto = ({ brandId }: { brandId: number }) => {
 	return modelAuto;
 };
 
+export const useFetchPartById = (id: number) => {
+	const [part, setPart] = useState<AutoPart | null>(null); // State to hold the fetched part data
+	const [error, setError] = useState<string | null>(null); // State to hold any errors
+	const [isLoading, setIsLoading] = useState<boolean>(true); // Flag for loading state
+
+	useEffect(() => {
+		const fetchPart = async () => {
+			try {
+				setIsLoading(true); // Set loading state to true
+				const response = await axios.get<AutoPart>(
+					`http://localhost:4000/shop/auto-part/${id}`
+				); // Make the API request
+				const fetchedPart = response.data; // Extract the part data from the response
+				setPart(fetchedPart); // Update the part state
+			} catch (error) {
+				setError('Error fetching in hooks'); // Set the error message
+			} finally {
+				setIsLoading(false); // Set loading state to false
+			}
+		};
+
+		fetchPart(); // Call the fetchPart function on component mount
+	}, [id]); // Re-fetch data on ID change
+
+	return {
+		part, // Expose the part data
+		error, // Expose the error
+		isLoading // Expose the loading flag
+	};
+};
