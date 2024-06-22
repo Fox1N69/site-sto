@@ -29,7 +29,7 @@ const ButtonCart: React.FC<ButtonCartProps> = ({ part }) => {
 					part.id
 				);
 				if (inCart) {
-					addItemToCart(part.id, part.price);
+					addItemToCart(part.id, part.price, part.name, part.img);
 				} else {
 					removeItemFromCart(part.id);
 				}
@@ -59,7 +59,7 @@ const ButtonCart: React.FC<ButtonCartProps> = ({ part }) => {
 						setIsLoading,
 						setError
 					});
-					addItemToCart(part.id, part.price);
+					addItemToCart(part.id, part.price, part.name, part.img);
 				}
 			} catch (error) {
 				setError('Failed to add item to cart');

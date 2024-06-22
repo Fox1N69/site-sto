@@ -3,12 +3,7 @@ import ModelAutoCard from '@/components/model-auto/ModelCard';
 import { useFetchModelAuto } from '@/hooks/fetching';
 import { ModelAuto } from '@/types';
 
-export default function BrandPage({
-	params
-}: {
-	params: { id: number };
-	model: ModelAuto;
-}) {
+export default function BrandPage({ params }: { params: { id: number } }) {
 	const brandId = params.id;
 	const modelAuto = useFetchModelAuto({ brandId });
 

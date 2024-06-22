@@ -1,4 +1,3 @@
-// components/navbar/navbar.tsx
 'use client';
 import {
 	Navbar as NextUINavbar,
@@ -23,9 +22,12 @@ import { UserDropdown } from './user-dropdown';
 import { useSession } from 'next-auth/react';
 import axios from 'axios';
 import Loaded from '@icons/lottie/loaded.json';
-import Lottie from 'lottie-react';
+const Lottie = dynamic(() => import('lottie-react'), {
+	ssr: false
+});
 import CartModal from '../cart/CartModal';
 import { AutoPart } from '@/types';
+import dynamic from 'next/dynamic';
 
 export const Navbar = () => {
 	const { data: session, status } = useSession();
@@ -74,9 +76,13 @@ export const Navbar = () => {
 	};
 
 	useEffect(() => {
-		document.addEventListener('mousedown', handleClickOutside);
+		if (typeof document !== 'undefined') {
+			document.addEventListener('mousedown', handleClickOutside);
+		}
 		return () => {
-			document.removeEventListener('mousedown', handleClickOutside);
+			if (typeof document !== 'undefined') {
+				document.removeEventListener('mousedown', handleClickOutside);
+			}
 		};
 	}, []);
 
