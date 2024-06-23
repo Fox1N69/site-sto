@@ -7,10 +7,15 @@ import { useFetchPartById } from '@/hooks/fetching';
 import { DevIcon } from '../icons/sidebar/dev-icon';
 import { Button } from '@nextui-org/button';
 import { Card, CardBody, CardFooter, CardHeader } from '@nextui-org/react';
+import AddToCartButton from '@/components/cart/AddToCartButton';
+import { useCartStore } from '@/store/cartStore';
 
 export const AutoPartContent = ({ id }: { id: number }) => {
 	const { part, error, isLoading } = useFetchPartById(id);
 	const [isBtnActive, setBtnActive] = useState<boolean>(false);
+	const { itemsInCart, removeItemFromCart, addItemToCart } = useCartStore();
+	const buttonText =
+		isBtnActive === false ? 'Добавить в корзину' : 'Перейти в корзину';
 
 	return (
 		<>
@@ -46,15 +51,13 @@ export const AutoPartContent = ({ id }: { id: number }) => {
 								</>
 							</CardHeader>
 							<CardBody>
-								{isBtnActive ? (
-									<Button className='w-full' variant='flat' color='primary'>
-										Перейти в корзину
-									</Button>
-								) : (
-									<Button className='w-full' variant='shadow' color='primary'>
-										В корзину
-									</Button>
-								)}
+								<Button
+									className='w-full'
+									variant={isBtnActive === false ? 'shadow' : 'ghost'}
+									color={isBtnActive === false ? 'primary' : 'success'}
+								>
+									{buttonText}
+								</Button>
 							</CardBody>
 						</Card>
 					</div>
