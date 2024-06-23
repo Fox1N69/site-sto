@@ -64,7 +64,7 @@ func (r *autoPartRepo) GetAll() ([]model.AutoPart, error) {
 
 func (r *autoPartRepo) GetByID(id uint) (*model.AutoPart, error) {
 	var part model.AutoPart
-	if err := r.db.Preload("Categories").Preload("Brand").Preload("AutoPartInfo").First(&part).Error; err != nil {
+	if err := r.db.Preload("Categories").Preload("Brand").Preload("AutoPartInfo").Where("id = ?", id).Find(&part).Error; err != nil {
 		return nil, err
 	}
 
