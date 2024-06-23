@@ -9,6 +9,7 @@ import { Button } from '@nextui-org/button';
 import { Card, CardBody, CardFooter, CardHeader } from '@nextui-org/react';
 import AddToCartButton from '@/components/cart/AddToCartButton';
 import { useCartStore } from '@/store/cartStore';
+import { PartAction } from './actions/part-action';
 
 export const AutoPartContent = ({ id }: { id: number }) => {
 	const { part, error, isLoading } = useFetchPartById(id);
@@ -41,7 +42,7 @@ export const AutoPartContent = ({ id }: { id: number }) => {
 						</div>
 					</div>
 					<div>
-						<Card className='w-[225px] h-[160px] pb-3 '>
+						<Card className='w-[250px] h-[160px] pb-3 '>
 							<CardHeader className='flex justify-between'>
 								<>
 									<p className='font-semibold text-2xl'>Цена: </p>
@@ -50,15 +51,7 @@ export const AutoPartContent = ({ id }: { id: number }) => {
 									</div>
 								</>
 							</CardHeader>
-							<CardBody>
-								<Button
-									className='w-full'
-									variant={isBtnActive === false ? 'shadow' : 'ghost'}
-									color={isBtnActive === false ? 'primary' : 'success'}
-								>
-									{buttonText}
-								</Button>
-							</CardBody>
+							<CardBody>{part && <PartAction part={part} />}</CardBody>
 						</Card>
 					</div>
 				</div>
