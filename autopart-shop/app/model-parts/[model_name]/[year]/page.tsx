@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import FullCard from '@/components/autopart/ProductCard/FullCard';
 import { PartCard } from '@/components/autopart/ProductCard/PartCard';
 import { AutoPart } from '@/types';
+import Grid from '@/components/grid';
 
 interface AutoPartPageProps {
 	params: {
@@ -45,6 +46,7 @@ const AutoPartPage: React.FC<AutoPartPageProps> = ({ params }) => {
 						{chunk.map(part => (
 							<PartCard key={part.id} part={part} />
 						))}
+						
 					</div>
 				))}
 			</div>

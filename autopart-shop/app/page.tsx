@@ -4,6 +4,7 @@ import { useFetchAutoParts, useFetchBrands } from '@/hooks/fetching';
 import { PartCard } from '@/components/autopart/ProductCard/PartCard';
 import { CategoryCard } from '@/components/home/CategoryCard';
 import BrandCard from '@/components/home/BrandCard';
+import Grid from '@/components/grid';
 
 export default function Home() {
 	const autoParts = useFetchAutoParts();

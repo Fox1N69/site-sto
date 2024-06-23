@@ -13,17 +13,13 @@ import { PartAction } from './actions/part-action';
 
 export const AutoPartContent = ({ id }: { id: number }) => {
 	const { part, error, isLoading } = useFetchPartById(id);
-	const [isBtnActive, setBtnActive] = useState<boolean>(false);
-	const { itemsInCart, removeItemFromCart, addItemToCart } = useCartStore();
-	const buttonText =
-		isBtnActive === false ? 'Добавить в корзину' : 'Перейти в корзину';
 
 	return (
 		<>
 			{isLoading ? (
 				<p>loading...</p>
 			) : (
-				<div className='flex justify-between items-center'>
+				<div className='flex justify-between'>
 					<div className='flex gap-10'>
 						<div className='min-w-[325px] h-[250px] border-1'>{part?.img}</div>
 						<div className='flex flex-col gap-14'>
@@ -42,7 +38,7 @@ export const AutoPartContent = ({ id }: { id: number }) => {
 						</div>
 					</div>
 					<div>
-						<Card className='w-[250px] h-[160px] pb-3 '>
+						<Card className='w-[300px] h-[200px] pb-3' shadow='sm'>
 							<CardHeader className='flex justify-between'>
 								<>
 									<p className='font-semibold text-2xl'>Цена: </p>
@@ -51,7 +47,9 @@ export const AutoPartContent = ({ id }: { id: number }) => {
 									</div>
 								</>
 							</CardHeader>
-							<CardBody>{part && <PartAction part={part} />}</CardBody>
+							<CardBody className='mt-6'>
+								{part && <PartAction part={part} />}
+							</CardBody>
 						</Card>
 					</div>
 				</div>
