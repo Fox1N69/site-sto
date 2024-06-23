@@ -120,6 +120,7 @@ func (h *shopHandler) GetAutoPartByID(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, data)
+	h.infra.GormDB().Preload("Category").Preload("Brand").Find(&data)
 
+	c.JSON(200, data)
 }

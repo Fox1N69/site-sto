@@ -3,10 +3,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
 
-// Типы
 import { AutoPart, Brand, ModelAuto, Product } from '@/types';
 
-// Хук для получения автозапчастей
 export const useFetchAutoParts = () => {
 	const [autoParts, setAutoParts] = useState<AutoPart[]>([]);
 
@@ -28,7 +26,6 @@ export const useFetchAutoParts = () => {
 	return autoParts;
 };
 
-// Хук для получения товаров из корзины
 export const useFetchCartItems = () => {
 	const [products, setProducts] = useState<Product[]>([]);
 	const { data: session } = useSession();
@@ -240,32 +237,32 @@ export const useFetchModelAuto = ({ brandId }: { brandId: number }) => {
 };
 
 export const useFetchPartById = (id: number) => {
-	const [part, setPart] = useState<AutoPart | null>(null); // State to hold the fetched part data
-	const [error, setError] = useState<string | null>(null); // State to hold any errors
-	const [isLoading, setIsLoading] = useState<boolean>(true); // Flag for loading state
+	const [part, setPart] = useState<AutoPart | null>(null);
+	const [error, setError] = useState<string | null>(null);
+	const [isLoading, setIsLoading] = useState<boolean>(true);
 
 	useEffect(() => {
 		const fetchPart = async () => {
 			try {
-				setIsLoading(true); // Set loading state to true
+				setIsLoading(true);
 				const response = await axios.get<AutoPart>(
 					`http://localhost:4000/shop/auto-part/${id}`
-				); // Make the API request
-				const fetchedPart = response.data; // Extract the part data from the response
-				setPart(fetchedPart); // Update the part state
+				);
+				const fetchedPart = response.data;
+				setPart(fetchedPart);
 			} catch (error) {
-				setError('Error fetching in hooks'); // Set the error message
+				setError('Error fetching in hooks');
 			} finally {
-				setIsLoading(false); // Set loading state to false
+				setIsLoading(false);
 			}
 		};
 
-		fetchPart(); // Call the fetchPart function on component mount
-	}, [id]); // Re-fetch data on ID change
+		fetchPart();
+	}, [id]);
 
 	return {
-		part, // Expose the part data
-		error, // Expose the error
-		isLoading // Expose the loading flag
+		part,
+		error,
+		isLoading
 	};
 };

@@ -58,15 +58,17 @@ func (r *autoPartRepo) GetAll() ([]model.AutoPart, error) {
 	if err := r.db.Preload("Categories").Preload("Brand").Preload("AutoPartInfo").Find(&autoParts).Error; err != nil {
 		return nil, err
 	}
+
 	return autoParts, nil
 }
 
-func (ar *autoPartRepo) GetByID(id uint) (*model.AutoPart, error) {
-	var product model.AutoPart
-	if err := ar.db.First(&product, id).Error; err != nil {
+func (r *autoPartRepo) GetByID(id uint) (*model.AutoPart, error) {
+	var part model.AutoPart
+	if err := r.db.Preload("Categories").Preload("Brand").Preload("AutoPartInfo").First(&part).Error; err != nil {
 		return nil, err
 	}
-	return &product, nil
+
+	return &part, nil
 }
 
 func (ar *autoPartRepo) Update(product model.AutoPart, fieldsToUpdate map[string]interface{}) error {
