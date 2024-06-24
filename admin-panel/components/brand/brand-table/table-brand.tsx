@@ -13,7 +13,7 @@ import { columns } from "./columns";
 import { RenderCellBrand } from "./render-cell";
 import axios from "axios";
 import { useAsyncList } from "@react-stately/data";
-import { ModelAuto, Product } from "@/types";
+import { Brand } from "@/types";
 import { SessionContext, SessionProvider, useSession } from "next-auth/react";
 
 export const TableWrapperBrands = () => {
@@ -21,21 +21,21 @@ export const TableWrapperBrands = () => {
   const { isOpen, onOpen } = useDisclosure();
   const [isLoading, setIsLoading] = React.useState(true);
 
-  const handleEditUser = (model: any) => {
-    setEditedUser(model);
+  const handleEditUser = (brand: any) => {
+    setEditedUser(brand);
     onOpen();
   };
 
-  const flattenModels = (model: any[]): ModelAuto[] => {
-    return model.map((model) => ({
-      ...model,
-      brand_name: model.Brand?.name,
+  const flattenModels = (brand: any[]): Brand[] => {
+    return brand.map((brand) => ({
+      ...brand,
+      brand_name: brand.Brand?.name,
     }));
   };
 
-  const list = useAsyncList<ModelAuto>({
+  const list = useAsyncList<Brand>({
     async load({ signal }) {
-      let res = await fetch("http://localhost:4000/shop/modelautos", {
+      let res = await fetch("http://localhost:4000/shop/brands", {
         signal,
       });
       let json = await res.json();
@@ -50,8 +50,8 @@ export const TableWrapperBrands = () => {
     async sort({ items, sortDescriptor }) {
       return {
         items: items.sort((a, b) => {
-          let first = a[sortDescriptor.column as keyof ModelAuto];
-          let second = b[sortDescriptor.column as keyof ModelAuto];
+          let first = a[sortDescriptor.column as keyof Brand];
+          let second = b[sortDescriptor.column as keyof Brand];
           if (first == null || second == null) {
             return 0;
           }
@@ -108,7 +108,7 @@ export const TableWrapperBrands = () => {
               {(columnKey: Key) => (
                 <TableCell>
                   {RenderCellBrand({
-                    model: item,
+                    brand: item,
                     columnKey: columnKey,
                     onEdit: handleEditUser,
                   })}

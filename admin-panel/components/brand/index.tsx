@@ -14,7 +14,7 @@ import { writeTextFile } from "@tauri-apps/api/fs";
 import { save } from "@tauri-apps/api/dialog";
 import { useBranch } from "../context/BranchContext";
 import { BalanceIcon } from "../icons/sidebar/balance-icon";
-import { TableWrapperBrands } from "./brand-table/table-model";
+import { TableWrapperBrands } from "./brand-table/table-brand";
 
 interface Item {
   id: number;

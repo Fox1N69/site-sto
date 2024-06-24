@@ -207,3 +207,22 @@ export const updateModelReleaseYear = async (
     return false;
   }
 };
+
+export const useDeleteBrand = async (
+  token: string | undefined,
+  brandID: number
+) => {
+  try {
+    const response = await axios.delete(
+      `http://localhost:4000/admin/brand/delete/${brandID}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+  } catch (error) {
+    console.log(error, "Error delete brand");
+  }
+};

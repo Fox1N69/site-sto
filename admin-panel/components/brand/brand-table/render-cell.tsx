@@ -3,58 +3,62 @@ import { User, Tooltip, Chip } from "@nextui-org/react";
 import React from "react";
 import { DeleteIcon } from "../../icons/table/delete-icon";
 import { EyeIcon } from "../../icons/table/eye-icon";
-import { Category, ModelAuto, Product } from "@/types";
+import { Brand, Category, ModelAuto, Product } from "@/types";
 import { Span } from "next/dist/trace";
 import { useSession } from "next-auth/react";
 import { deleteProduct, updateModelReleaseYear } from "@/utils/fetching";
 import DeleteButton from "./delete-button";
-import { EditModel } from "./edit-model";
+import { EditBrand } from "./edit-brand";
 import DeleteModelButton from "./delete-button";
 import { appendFile } from "fs";
 import { release } from "os";
 import Cookies from "js-cookie";
 
 interface Props {
-  model: ModelAuto;
+  brand: Brand;
   columnKey: string | React.Key;
-  onEdit: (model: any) => void;
+  onEdit: (brand: any) => void;
 }
 
 export const RenderCellBrand: React.FC<Props> = ({
-  model,
+  brand,
   columnKey,
   onEdit,
 }: Props) => {
   // @ts-ignore
-  const cellValue = model[columnKey];
+  const cellValue = brand[columnKey];
   switch (columnKey) {
     case "id":
       return <span>{cellValue}</span>;
     case "image_url":
-      return <img src={cellValue} alt="" width={100} height={100} />;
+      return (
+        <div>
+          <img className="ml-4" src={cellValue} alt="" width={50} height={50} />
+        </div>
+      );
+
     case "name":
-      const concatenatedName = `${model.brand_name} ${model.name}`;
-      return <span>{concatenatedName}</span>;
+      return <span>{cellValue}</span>;
     case "actions":
       return (
         <div className="flex items-center gap-4 ">
           <div>
             <Tooltip content="Подробнее">
-              <button onClick={() => console.log("View user", model.id)}>
+              <button onClick={() => console.log("View user", brand.id)}>
                 <EyeIcon size={20} fill="#979797" />
               </button>
             </Tooltip>
           </div>
           <div>
-            <EditModel model={model} selectedModelId={model.id} />
+            <EditBrand brand={brand} selectedModelId={brand.id} />
           </div>
           <div>
             <Tooltip
               content="Удалить"
               color="danger"
-              onClick={() => console.log("Delete user", model.id)}
+              onClick={() => console.log("Delete user", brand.id)}
             >
-              <DeleteModelButton modelId={model.id} />
+              <DeleteModelButton brandID={brand.id} />
             </Tooltip>
           </div>
         </div>
