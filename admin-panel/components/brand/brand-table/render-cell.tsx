@@ -50,7 +50,7 @@ export const RenderCellBrand: React.FC<Props> = ({
             </Tooltip>
           </div>
           <div>
-            <EditBrand brand={brand} selectedModelId={brand.id} />
+            <EditBrand brand={brand} selectedBrandlID={brand.id} />
           </div>
           <div>
             <Tooltip

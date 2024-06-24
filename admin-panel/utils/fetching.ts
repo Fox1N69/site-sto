@@ -258,3 +258,23 @@ export const useAddBrand = () => {
 
   return { addBrand, success, error, loading };
 };
+
+export const useUpdateBrand = async (
+  token: string | undefined,
+  selectBrandID: number,
+  data: { name: string; image_url: string }
+) => {
+  try {
+    const response = await axios.put(
+      `http://localhost:4000/admin/brand/update/${selectBrandID}`,
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+  } catch (error) {
+    console.log(error, "fatal update brand");
+  }
+};

@@ -16,54 +16,30 @@ import { EditIcon } from "@/components/icons/table/edit-icon";
 import { Brand, ModelAuto } from "@/types";
 import { useSession } from "next-auth/react";
 import { Icon } from "@iconify/react";
+import { useUpdateBrand } from "@/utils/fetching";
 
 interface EditBrandsProps {
-  selectedModelId: number;
+  selectedBrandlID: number;
   brand: Brand;
 }
 
 export const EditBrand: React.FC<EditBrandsProps> = ({
-  selectedModelId,
+  selectedBrandlID,
   brand,
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { data: session } = useSession();
-  const [inputYear, setYearValue] = useState<string>("");
-  const [tags, setTags] = useState<number[]>([]);
-  const [showEnter, setShowEnter] = useState<boolean>(false);
-  const [yearError, setYearError] = useState<string>("");
+  const [name, setName] = useState<string>("");
+  const [imgUrl, setImgUrl] = useState<string>("");
+  const token = session?.user.token;
 
-  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setYearValue(event.target.value);
-    setShowEnter(event.target.value !== "");
-  };
-
-  const handleInputKeyPress = (
-    event: React.KeyboardEvent<HTMLInputElement>
-  ) => {
-    if (event.key === "Enter") {
-      const year = parseInt(inputYear.trim());
-      const currentYear = new Date().getFullYear();
-
-      if (
-        !isNaN(year) &&
-        year.toString().length === 4 &&
-        year <= currentYear &&
-        year >= 1900 &&
-        !tags.includes(year)
-      ) {
-        setTags([...tags, year]);
-        setYearError("");
-        setYearValue("");
-        setShowEnter(false);
-      } else {
-        setYearError("Год указан неправильно");
-      }
-    }
-  };
-
-  const handleDeleteTag = (tagToDelete: number) => {
-    setTags(tags.filter((tag) => tag !== tagToDelete));
+  const handleUpdateBrand = async () => {
+    const data = {
+      name,
+      image_url: imgUrl,
+    };
+    await useUpdateBrand(token, selectedBrandlID, data);
+    onClose();
   };
 
   return (
@@ -80,14 +56,26 @@ export const EditBrand: React.FC<EditBrandsProps> = ({
             Редактировать модель
           </ModalHeader>
           <ModalBody>
-            <Input label="Имя модели" />
-            <Input label="Изображение" />
+            <Input
+              label="Название бренда"
+              name="brand"
+              type="text"
+              defaultValue={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+            <Input
+              label="Изображение"
+              name="image_url"
+              type="text"
+              defaultValue={imgUrl}
+              onChange={(e) => setImgUrl(e.target.value)}
+            />
           </ModalBody>
           <ModalFooter>
             <Button variant="flat" onClick={onClose}>
               Закрыть
             </Button>
-            <Button onClick={() => {}}>Сохранить модель</Button>
+            <Button onClick={handleUpdateBrand}>Сохранить модель</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
