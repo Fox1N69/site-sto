@@ -84,6 +84,7 @@ func (c *server) v1() {
 		brand := admin.Group("/brand")
 		{
 			brand.POST("/create", brandHandler.CreateBrand)
+			brand.PUT("/update/:id", brandHandler.UpdateBrand)
 		}
 
 		category := admin.Group("/category")
