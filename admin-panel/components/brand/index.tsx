@@ -14,6 +14,7 @@ import { writeTextFile } from "@tauri-apps/api/fs";
 import { save } from "@tauri-apps/api/dialog";
 import { useBranch } from "../context/BranchContext";
 import { BalanceIcon } from "../icons/sidebar/balance-icon";
+import { TableWrapperBrands } from "./brand-table/table-model";
 
 interface Item {
   id: number;
@@ -87,7 +88,9 @@ export const Brands = () => {
           </Button>
         </div>
       </div>
-      <div className="max-w-[95rem] mx-auto w-full"></div>
+      <div className="max-w-[95rem] mx-auto w-full">
+        <TableWrapperBrands />
+      </div>
     </div>
   );
 };
