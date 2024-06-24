@@ -15,6 +15,7 @@ import { save } from "@tauri-apps/api/dialog";
 import { useBranch } from "../context/BranchContext";
 import { BalanceIcon } from "../icons/sidebar/balance-icon";
 import { TableWrapperBrands } from "./brand-table/table-brand";
+import { AddBrands } from "./add-brand";
 
 interface Item {
   id: number;
@@ -83,6 +84,7 @@ export const Brands = () => {
           <DotsIcon />
         </div>
         <div className="flex flex-row gap-3.5 flex-wrap">
+          <AddBrands />
           <Button color="primary" startContent={<ExportIcon />}>
             Экспорт CSV
           </Button>

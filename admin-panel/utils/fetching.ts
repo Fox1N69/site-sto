@@ -1,5 +1,5 @@
 import { Body } from "./../components/sidebar/sidebar.styles";
-import { ModelAuto } from "@/types";
+import { Brand, ModelAuto } from "@/types";
 import axios from "axios";
 import { METHODS } from "http";
 import { useSession } from "next-auth/react";
@@ -216,7 +216,6 @@ export const useDeleteBrand = async (
     const response = await axios.delete(
       `http://localhost:4000/admin/brand/delete/${brandID}`,
       {
-        method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -225,4 +224,37 @@ export const useDeleteBrand = async (
   } catch (error) {
     console.log(error, "Error delete brand");
   }
+};
+
+export const useAddBrand = () => {
+  const [success, setSuccess] = useState<boolean | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const addBrand = async (
+    token: string | undefined,
+    data: {
+      name: string;
+      image_url: string;
+    }
+  ) => {
+    setLoading(true);
+    try {
+      await axios.post("http://localhost:4000/admin/brand/create", data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      setSuccess(true);
+    } catch (error) {
+      console.error(error);
+      setError("error create model auto");
+      setSuccess(false);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { addBrand, success, error, loading };
 };
