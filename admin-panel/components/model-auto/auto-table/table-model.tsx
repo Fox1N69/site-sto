@@ -44,7 +44,7 @@ export const TableWrapperModels: React.FC = () => {
   };
 
   useEffect(() => {
-    const ws = new WebSocket("ws://localhost:4000/shop/model-auto/ws/all");
+    const ws = new WebSocket("ws://localhost:4000/ws/model-auto");
 
     ws.onopen = () => {
       console.log("WebSocket connection opened");

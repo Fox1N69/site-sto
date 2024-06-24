@@ -21,7 +21,7 @@ type AdminHandler interface {
 	UpdateAutoPart(c *gin.Context)
 	CreateModelAuto(c *gin.Context)
 	DeleteModelAuto(c *gin.Context)
-	GetAllModelAutoWS(c *gin.Context)
+	ModelAutoWS(c *gin.Context)
 	UpdateModelAuto(c *gin.Context)
 }
 
@@ -200,7 +200,7 @@ func (h *adminHandler) UpdateModelAuto(c *gin.Context) {
 	response.New(c).Write(http.StatusOK, "ModelAuto updated successfully")
 }
 
-func (h *adminHandler) GetAllModelAutoWS(c *gin.Context) {
+func (h *adminHandler) ModelAutoWS(c *gin.Context) {
 	conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
 	if err != nil {
 		logrus.Println("Не удалось установить веб-сокет соединение:", err)
