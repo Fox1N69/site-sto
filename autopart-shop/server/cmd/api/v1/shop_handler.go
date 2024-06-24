@@ -42,7 +42,6 @@ func (h *shopHandler) GetAllAutoPart(c *gin.Context) {
 		return
 	}
 
-	// Загрузка связанных категорий и брендов
 	for i := range autoparts {
 		h.infra.GormDB().Preload("Category").Preload("Brand").Find(&autoparts[i])
 	}

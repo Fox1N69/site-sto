@@ -213,6 +213,7 @@ func (h *adminHandler) GetAllModelAutoWS(c *gin.Context) {
 	eventCh := make(chan model.ModelAuto)
 	doneCh := make(chan struct{})
 
+	// Goroutine для прослушивания новых моделей
 	go func() {
 		defer close(eventCh)
 		for {
@@ -249,12 +250,15 @@ func (h *adminHandler) GetAllModelAutoWS(c *gin.Context) {
 
 		switch msg["type"] {
 		case "getAllModel":
+			// Получение всех моделей
 			data, err := h.autoService.GetAllModelAuto()
 			if err != nil {
 				logrus.Println("Error getting all model auto:", err)
 				response.New(c).Write(http.StatusInternalServerError, err.Error())
 				return
 			}
+
+
 			conn.WriteJSON(map[string]interface{}{
 				"type":   "allModels",
 				"models": data,
@@ -268,10 +272,11 @@ func (h *adminHandler) GetAllModelAutoWS(c *gin.Context) {
 							logrus.Println("Event channel closed")
 							return
 						}
-						if err := conn.WriteJSON(event); err != nil {
-							logrus.Println("WebSocket write error:", err)
-							return
-						}
+						// Отправка нового авто в формате newModelAdded
+						conn.WriteJSON(map[string]interface{}{
+							"type":  "newModelAdded",
+							"model": event,
+						})
 					case <-doneCh:
 						logrus.Println("Done channel received, stopping subscription")
 						return

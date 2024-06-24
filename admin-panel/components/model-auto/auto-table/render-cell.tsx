@@ -40,8 +40,8 @@ export const RenderCell: React.FC<Props> = ({
     case "release_year":
       return (
         <div className="flex flex-wrap gap-2">
-          {model.release_year.map((year: number) => (
-            <Chip size="sm" variant="shadow" color="primary" key={year}>
+          {model.release_year.map((year: number, index) => (
+            <Chip size="sm" variant="shadow" color="primary" key={index}>
               {year}
             </Chip>
           ))}

@@ -16,15 +16,25 @@ type AutoRepo interface {
 }
 
 type autoRepo struct {
-	db *gorm.DB
+	db        *gorm.DB
+	brandRepo BrandRepo
 }
 
 func NewAutoRepo(db *gorm.DB) AutoRepo {
-	return &autoRepo{db: db}
+	return &autoRepo{db: db, brandRepo: NewBrandRepo(db)}
 }
 
 func (r *autoRepo) Create(auto *model.ModelAuto) error {
-	return r.db.Create(&auto).Error
+	if err := r.db.Create(&auto).Error; err != nil {
+		return err
+	}
+
+	// Предварительная загрузка связанных данных о бренде
+	if err := r.db.Preload("Brand").First(&auto, auto.ID).Error; err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (r *autoRepo) GetAll() ([]model.ModelAuto, error) {

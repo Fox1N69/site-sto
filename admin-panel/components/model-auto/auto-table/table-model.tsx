@@ -62,6 +62,14 @@ export const TableWrapperModels: React.FC = () => {
           setModels(flatModels);
           setIsLoading(false);
         }
+        if (data.type === "newModelAdded" && data.model) {
+          const newModel = data.model;
+          const updateModel = {
+            ...newModel,
+            brand_name: newModel.Brand?.name,
+          };
+          setModels((prevModels) => [...prevModels, updateModel]);
+        }
       } catch (error) {
         console.error("Failed to parse message: ", event.data, error);
       }
