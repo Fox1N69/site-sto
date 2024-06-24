@@ -8,6 +8,7 @@ import (
 
 type AutoService interface {
 	CreateModelAuto(auto *model.ModelAuto) error
+	AddModelAutoToChannel() <-chan model.ModelAuto
 	GetAllModelAuto() ([]model.ModelAuto, error)
 	GetModelAutoByBrandID(brandID uint) ([]model.ModelAuto, error)
 	DeleteModelAuto(id uint) error
@@ -15,16 +16,26 @@ type AutoService interface {
 }
 
 type autoService struct {
-	repo repo.AutoRepo
+	repo         repo.AutoRepo
+	AddToChannel chan model.ModelAuto
 }
 
 func NewAutoService(repo repo.AutoRepo) AutoService {
-	return &autoService{repo: repo}
+	return &autoService{repo: repo, AddToChannel: make(chan model.ModelAuto)}
 }
 
 func (s *autoService) CreateModelAuto(auto *model.ModelAuto) error {
-	return s.repo.Create(auto)
+	err := s.repo.Create(auto)
+	if err == nil {
+		s.AddToChannel <- *auto
+	}
+	return err
 }
+
+func (s *autoService) AddModelAutoToChannel() <-chan model.ModelAuto {
+	return s.AddToChannel
+}
+
 func (s *autoService) GetAllModelAuto() ([]model.ModelAuto, error) {
 	return s.repo.GetAll()
 }

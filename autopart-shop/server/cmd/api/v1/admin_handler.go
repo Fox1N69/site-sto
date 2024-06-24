@@ -180,6 +180,21 @@ func (h *adminHandler) GetAllModelAutoWS(c *gin.Context) {
 	}
 	defer conn.Close()
 
+	eventCh := make(chan model.ModelAuto)
+	doneCh := make(chan struct{})
+
+	go func() {
+		defer close(eventCh)
+		for {
+			select {
+			case newAuto := <-h.autoService.AddModelAutoToChannel():
+				eventCh <- newAuto
+			case <-doneCh:
+				return
+			}
+		}
+	}()
+
 	for {
 		_, message, err := conn.ReadMessage()
 		if err != nil {
@@ -192,19 +207,27 @@ func (h *adminHandler) GetAllModelAutoWS(c *gin.Context) {
 
 		switch string(message) {
 		case "getAllModel":
-			{
-				data, err := h.autoService.GetAllModelAuto()
-				if err != nil {
-					response.New(c).Write(http.StatusInternalServerError, err.Error())
-					return
-				}
-
-				conn.WriteJSON(data)
+			data, err := h.autoService.GetAllModelAuto()
+			if err != nil {
+				response.New(c).Write(http.StatusInternalServerError, err.Error())
+				return
 			}
+			conn.WriteJSON(data)
+		case "subscribeEvents":
+			go func(ch chan model.ModelAuto, conn *websocket.Conn, doneCh chan struct{}) {
+				for event := range ch {
+					if err := conn.WriteJSON(event); err != nil {
+						return
+					}
+				}
+				close(doneCh)
+			}(eventCh, conn, doneCh)
 		default:
 			conn.WriteMessage(websocket.TextMessage, []byte("Unknown command"))
 		}
 	}
+
+	close(doneCh)
 }
 
 func (h *adminHandler) UpdateModelAuto(c *gin.Context) {
