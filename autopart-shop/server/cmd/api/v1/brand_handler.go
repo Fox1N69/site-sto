@@ -14,6 +14,7 @@ type BrandHandler interface {
 	CreateBrand(c *gin.Context)
 	GetAllBrands(c *gin.Context)
 	UpdateBrand(c *gin.Context)
+	DeleteBrand(c *gin.Context)
 }
 
 type brandHandler struct {
@@ -70,4 +71,19 @@ func (h *brandHandler) UpdateBrand(c *gin.Context) {
 	}
 
 	c.JSON(200, brand)
+}
+
+func (h *brandHandler) DeleteBrand(c *gin.Context) {
+	brandID, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	if err != nil {
+		response.New(c).Error(400, err)
+		return
+	}
+
+	if err := h.service.DeleteBrand(uint(brandID)); err != nil {
+		response.New(c).Error(500, err)
+		return
+	}
+
+	response.New(c).Write(200, "brand detele success")
 }
