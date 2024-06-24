@@ -18,12 +18,14 @@ interface Props {
   model: ModelAuto;
   columnKey: string | React.Key;
   onEdit: (model: any) => void;
+  websocketRef: React.MutableRefObject<WebSocket | null>;
 }
 
 export const RenderCell: React.FC<Props> = ({
   model,
   columnKey,
   onEdit,
+  websocketRef,
 }: Props) => {
   // @ts-ignore
   const cellValue = model[columnKey];
@@ -66,7 +68,10 @@ export const RenderCell: React.FC<Props> = ({
               color="danger"
               onClick={() => console.log("Delete user", model.id)}
             >
-              <DeleteModelButton modelId={model.id} />
+              <DeleteModelButton
+                modelId={model.id}
+                websocketRef={websocketRef}
+              />
             </Tooltip>
           </div>
         </div>

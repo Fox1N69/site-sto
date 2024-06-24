@@ -1,18 +1,30 @@
 import React from "react";
 import { Tooltip } from "@nextui-org/react";
 import { DeleteIcon } from "../../icons/table/delete-icon";
-import { deleteProduct, deleteModel } from "@/utils/fetching";
 import { useSession } from "next-auth/react";
 
 interface DeleteButtonProps {
   modelId: number;
+  websocketRef?: React.MutableRefObject<WebSocket | null>;
 }
 
-const DeleteModelButton: React.FC<DeleteButtonProps> = ({ modelId }) => {
+const DeleteButton: React.FC<DeleteButtonProps> = ({
+  modelId,
+  websocketRef,
+}) => {
   const { data: session } = useSession();
   const token = session?.user.token;
-  const handleDelete = async () => {
-    await deleteModel(token, modelId);
+
+  const handleDelete = () => {
+    if (websocketRef?.current) {
+      const message = {
+        type: "deleteModel",
+        modelID: modelId.toString(),
+      };
+      websocketRef.current.send(JSON.stringify(message));
+    } else {
+      console.error("WebSocket connection is not available");
+    }
   };
 
   return (
@@ -24,4 +36,4 @@ const DeleteModelButton: React.FC<DeleteButtonProps> = ({ modelId }) => {
   );
 };
 
-export default DeleteModelButton;
+export default DeleteButton;

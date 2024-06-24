@@ -203,26 +203,32 @@ func (h *adminHandler) UpdateModelAuto(c *gin.Context) {
 func (h *adminHandler) GetAllModelAutoWS(c *gin.Context) {
 	conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
 	if err != nil {
-		logrus.Println("Failed to set websocket upgrade:", err)
-		http.Error(c.Writer, "Failed to set websocket upgrade", http.StatusInternalServerError)
+		logrus.Println("Не удалось установить веб-сокет соединение:", err)
+		http.Error(c.Writer, "Не удалось установить веб-сокет соединение", http.StatusInternalServerError)
 		return
 	}
 	defer conn.Close()
-	logrus.Println("WebSocket connection established")
+	logrus.Println("WebSocket соединение установлено")
 
 	eventCh := make(chan model.ModelAuto)
 	doneCh := make(chan struct{})
 
-	// Goroutine для прослушивания новых моделей
+	// Горутина для прослушивания новых моделей
 	go func() {
 		defer close(eventCh)
 		for {
 			select {
 			case newAuto := <-h.autoService.AddModelAutoToChannel():
-				logrus.Println("Received new model auto:", newAuto)
+				logrus.Println("Получена новая модель авто:", newAuto)
 				eventCh <- newAuto
+			case deletedModelID := <-h.autoService.DeleteModelFromChannel():
+				logrus.Println("Удалена модель авто с ID:", deletedModelID)
+				eventCh <- model.ModelAuto{
+					ShopCustom: model.ShopCustom{ID: deletedModelID},
+					Deleted:    true, // Флаг, указывающий, что модель удалена
+				}
 			case <-doneCh:
-				logrus.Println("Done channel closed")
+				logrus.Println("Канал done закрыт")
 				return
 			}
 		}
@@ -232,19 +238,19 @@ func (h *adminHandler) GetAllModelAutoWS(c *gin.Context) {
 		_, message, err := conn.ReadMessage()
 		if err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
-				logrus.Println("WebSocket unexpected close error:", err)
+				logrus.Println("Неожиданная ошибка закрытия WebSocket:", err)
 				c.Writer.WriteHeader(http.StatusInternalServerError)
 				return
 			}
-			logrus.Println("WebSocket read error:", err)
+			logrus.Println("Ошибка чтения WebSocket:", err)
 			break
 		}
 
-		logrus.Println("WebSocket message received:", string(message))
+		logrus.Println("Сообщение WebSocket получено:", string(message))
 
 		var msg map[string]interface{}
 		if err := json.Unmarshal(message, &msg); err != nil {
-			conn.WriteMessage(websocket.TextMessage, []byte("Invalid message format"))
+			conn.WriteMessage(websocket.TextMessage, []byte("Неверный формат сообщения"))
 			continue
 		}
 
@@ -253,15 +259,45 @@ func (h *adminHandler) GetAllModelAutoWS(c *gin.Context) {
 			// Получение всех моделей
 			data, err := h.autoService.GetAllModelAuto()
 			if err != nil {
-				logrus.Println("Error getting all model auto:", err)
+				logrus.Println("Ошибка получения всех моделей авто:", err)
 				response.New(c).Write(http.StatusInternalServerError, err.Error())
 				return
 			}
 
-
 			conn.WriteJSON(map[string]interface{}{
 				"type":   "allModels",
 				"models": data,
+			})
+		case "deleteModel":
+			var modelIDStr string
+			if val, ok := msg["modelID"].(string); ok {
+				modelIDStr = val
+			} else {
+				conn.WriteMessage(websocket.TextMessage, []byte("Неверный формат modelID"))
+				continue
+			}
+
+			// Преобразование modelID из строки в тип uint
+			modelID, err := strconv.ParseUint(modelIDStr, 10, 64)
+			if err != nil {
+				conn.WriteMessage(websocket.TextMessage, []byte("Неверный формат modelID"))
+				continue
+			}
+
+			// Удаление модели по modelID
+			err = h.autoService.DeleteModelAuto(uint(modelID))
+			if err != nil {
+				logrus.Println("Ошибка удаления модели авто:", err)
+				conn.WriteJSON(map[string]interface{}{
+					"type":  "deleteModelError",
+					"error": err.Error(),
+				})
+				continue
+			}
+
+			conn.WriteJSON(map[string]interface{}{
+				"type":    "modelDeleted",
+				"modelID": modelID,
 			})
 		case "subscribeEvents":
 			go func(ch chan model.ModelAuto, conn *websocket.Conn, doneCh chan struct{}) {
@@ -269,25 +305,33 @@ func (h *adminHandler) GetAllModelAutoWS(c *gin.Context) {
 					select {
 					case event, ok := <-ch:
 						if !ok {
-							logrus.Println("Event channel closed")
+							logrus.Println("Канал событий закрыт")
 							return
 						}
-						// Отправка нового авто в формате newModelAdded
-						conn.WriteJSON(map[string]interface{}{
-							"type":  "newModelAdded",
-							"model": event,
-						})
+						if event.Deleted {
+							// Отправка сообщения об удалении модели
+							conn.WriteJSON(map[string]interface{}{
+								"type":    "modelDeleted",
+								"modelID": event.ID,
+							})
+						} else {
+							// Отправка нового авто в формате newModelAdded
+							conn.WriteJSON(map[string]interface{}{
+								"type":  "newModelAdded",
+								"model": event,
+							})
+						}
 					case <-doneCh:
-						logrus.Println("Done channel received, stopping subscription")
+						logrus.Println("Получен сигнал done, остановка подписки")
 						return
 					}
 				}
 			}(eventCh, conn, doneCh)
 		default:
-			conn.WriteMessage(websocket.TextMessage, []byte("Unknown command"))
+			conn.WriteMessage(websocket.TextMessage, []byte("Неизвестная команда"))
 		}
 	}
 
 	close(doneCh)
-	logrus.Println("WebSocket connection closed")
+	logrus.Println("WebSocket соединение закрыто")
 }

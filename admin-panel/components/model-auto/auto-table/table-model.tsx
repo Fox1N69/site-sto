@@ -70,6 +70,11 @@ export const TableWrapperModels: React.FC = () => {
           };
           setModels((prevModels) => [...prevModels, updateModel]);
         }
+        if (data.type === "modelDeleted" && data.modelID) {
+          setModels((prevModels) =>
+            prevModels.filter((model) => model.id !== data.modelID)
+          );
+        }
       } catch (error) {
         console.error("Failed to parse message: ", event.data, error);
       }
@@ -171,6 +176,7 @@ export const TableWrapperModels: React.FC = () => {
                     model: item,
                     columnKey: columnKey,
                     onEdit: handleEditUser,
+                    websocketRef: websocketRef,
                   })}
                 </TableCell>
               )}

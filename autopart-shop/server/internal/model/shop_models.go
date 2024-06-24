@@ -48,6 +48,7 @@ type ModelAuto struct {
 	BrandID     uint            `json:"brand_id"`
 	Brand       Brand           `gorm:"foreignKey:BrandID"`
 	ReleaseYear json.RawMessage `json:"release_year" gorm:"type:jsonb"`
+	Deleted     bool            `json:"deleted,omitempty"`
 }
 
 type ModelAutoAutoPart struct {

@@ -9,6 +9,7 @@ import (
 type AutoService interface {
 	CreateModelAuto(auto *model.ModelAuto) error
 	AddModelAutoToChannel() <-chan model.ModelAuto
+	DeleteModelFromChannel() <-chan uint
 	GetAllModelAuto() ([]model.ModelAuto, error)
 	GetModelAutoByBrandID(brandID uint) ([]model.ModelAuto, error)
 	DeleteModelAuto(id uint) error
@@ -16,12 +17,13 @@ type AutoService interface {
 }
 
 type autoService struct {
-	repo         repo.AutoRepo
-	AddToChannel chan model.ModelAuto
+	repo              repo.AutoRepo
+	AddToChannel      chan model.ModelAuto
+	DeleteFromCnannel chan uint
 }
 
 func NewAutoService(repo repo.AutoRepo) AutoService {
-	return &autoService{repo: repo, AddToChannel: make(chan model.ModelAuto)}
+	return &autoService{repo: repo, AddToChannel: make(chan model.ModelAuto), DeleteFromCnannel: make(chan uint)}
 }
 
 func (s *autoService) CreateModelAuto(auto *model.ModelAuto) error {
@@ -45,7 +47,15 @@ func (s *autoService) GetModelAutoByBrandID(brandID uint) ([]model.ModelAuto, er
 }
 
 func (s *autoService) DeleteModelAuto(id uint) error {
-	return s.repo.Delete(id)
+	err := s.repo.Delete(id)
+	if err == nil {
+		s.DeleteFromCnannel <- id
+	}
+	return nil
+}
+
+func (s *autoService) DeleteModelFromChannel() <-chan uint {
+	return s.DeleteFromCnannel
 }
 
 func (s *autoService) UpdateModelAuto(id uint, name string, imgUrl string, brandID uint, releaseYear json.RawMessage) error {
