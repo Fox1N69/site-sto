@@ -93,6 +93,19 @@ export const AddModel: React.FC = () => {
     onClose();
   };
 
+  useEffect(() => {
+    if (!isOpen) {
+      setName("");
+      setImgUrl("");
+      setBrandId(0);
+      setReleaseYear(0);
+      setTags([]);
+      setYearValue("");
+      setYearError("");
+      setShowEnter(false);
+    }
+  }, [isOpen]);
+
   return (
     <div>
       <Button onPress={onOpen} color="primary">
