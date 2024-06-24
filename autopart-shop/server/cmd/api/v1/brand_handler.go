@@ -50,7 +50,7 @@ func (h *brandHandler) GetAllBrands(c *gin.Context) {
 func (h *brandHandler) UpdateBrand(c *gin.Context) {
 	brandID, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
-		c.JSON(500, gin.H{"message": "falat part id"})
+		c.JSON(400, gin.H{"message": "fatal pars id"})
 		return
 	}
 
@@ -76,7 +76,7 @@ func (h *brandHandler) UpdateBrand(c *gin.Context) {
 func (h *brandHandler) DeleteBrand(c *gin.Context) {
 	brandID, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
-		response.New(c).Error(400, err)
+		c.JSON(400, gin.H{"message": "fatal pars id"})
 		return
 	}
 

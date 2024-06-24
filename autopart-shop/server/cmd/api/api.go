@@ -85,7 +85,7 @@ func (c *server) v1() {
 		{
 			brand.POST("/create", brandHandler.CreateBrand)
 			brand.PUT("/update/:id", brandHandler.UpdateBrand)
-			brand.DELETE("/delete/:is", brandHandler.DeleteBrand)
+			brand.DELETE("/delete/:id", brandHandler.DeleteBrand)
 		}
 
 		category := admin.Group("/category")
