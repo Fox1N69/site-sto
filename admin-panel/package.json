@@ -10,7 +10,7 @@
     "dev": "npm run frontend",
     "frontend": "next dev",
     "build": "next build",
-    "start": "electron electron.js",
+    "start": "next start",
     "lint": "next lint",
     "tauri": "tauri",
     "server": "cd server && go run main.go"
@@ -35,6 +35,7 @@
     "next": "^14.0.4",
     "next-auth": "^4.24.7",
     "next-themes": "0.2.1",
+    "next-ws": "^1.0.1",
     "papaparse": "^5.4.1",
     "react": "18.2.0",
     "react-apexcharts": "^1.4.1",
@@ -43,6 +44,7 @@
     "socket.io-client": "^4.7.5",
     "webpack": "^5.92.0",
     "websocket": "^1.0.35",
+    "ws": "^8.17.1",
     "zustand": "^4.5.2"
   },
   "devDependencies": {
@@ -52,6 +54,7 @@
     "@types/papaparse": "^5.3.14",
     "@types/react": "18.0.20",
     "@types/react-dom": "18.0.6",
+    "@types/socket.io-client": "^3.0.0",
     "autoprefixer": "^10.4.15",
     "electron": "^30.0.6",
     "eslint": "8.23.1",

@@ -1,5 +1,4 @@
 "use client";
-import React, { Key, useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -8,17 +7,29 @@ import {
   TableHeader,
   TableRow,
   useDisclosure,
+  SortDescriptor,
 } from "@nextui-org/react";
+import React, {
+  Key,
+  useEffect,
+  useState,
+  useRef,
+  useMemo,
+  useCallback,
+} from "react";
 import { columns } from "./columns";
 import { RenderCell } from "./render-cell";
-import { useAsyncList } from "@react-stately/data";
 import { ModelAuto } from "@/types";
 
-export const TableWrapperModels = () => {
+export const TableWrapperModels: React.FC = () => {
   const [editedUser, setEditedUser] = useState<ModelAuto | null>(null);
   const { isOpen, onOpen } = useDisclosure();
   const [isLoading, setIsLoading] = useState(true);
-  const [socket, setSocket] = useState<WebSocket | null>(null);
+  const [models, setModels] = useState<ModelAuto[]>([]);
+  const [sortDescriptor, setSortDescriptor] = useState<
+    SortDescriptor | undefined
+  >(undefined);
+  const websocketRef = useRef<WebSocket | null>(null);
 
   const handleEditUser = (model: ModelAuto) => {
     setEditedUser(model);
@@ -26,81 +37,96 @@ export const TableWrapperModels = () => {
   };
 
   const flattenModels = (models: ModelAuto[]): ModelAuto[] => {
-    return models.map((m) => ({
-      ...m,
-      brand_name: m.Brand?.name,
+    return models.map((model) => ({
+      ...model,
+      brand_name: model.Brand?.name,
     }));
   };
-
-  const list = useAsyncList<ModelAuto>({
-    async load({ signal }) {
-      let res = await fetch("http://localhost:4000/shop/modelautos", {
-        signal,
-      });
-      let json = await res.json();
-
-      const flatModel = flattenModels(json);
-      setIsLoading(false);
-
-      return { items: flatModel };
-    },
-    async sort({ items, sortDescriptor }) {
-      return {
-        items: items.sort((a, b) => {
-          let first = a[sortDescriptor.column as keyof ModelAuto];
-          let second = b[sortDescriptor.column as keyof ModelAuto];
-          if (first == null || second == null) {
-            return 0;
-          }
-          if (
-            typeof first === "string" &&
-            typeof second === "string" &&
-            /^\d/.test(first) &&
-            /^\d/.test(second)
-          ) {
-            first = parseInt(first.replace(/\D/g, ""), 10);
-            second = parseInt(second.replace(/\D/g, ""), 10);
-          }
-          if (first < second) {
-            return sortDescriptor.direction === "ascending" ? -1 : 1;
-          } else if (first > second) {
-            return sortDescriptor.direction === "ascending" ? 1 : -1;
-          } else {
-            return 0;
-          }
-        }),
-      };
-    },
-  });
 
   useEffect(() => {
     const ws = new WebSocket("ws://localhost:4000/shop/model-auto/ws/all");
 
     ws.onopen = () => {
-      console.log("WebSocket connection established");
-      ws.send("subscribeEvents");
+      console.log("WebSocket connection opened");
+      ws.send(JSON.stringify({ type: "getAllModel" }));
+      ws.send(JSON.stringify({ type: "subscribeEvents" }));
     };
 
     ws.onmessage = (event) => {
-      console.log("WebSocket message received:", event.data);
-      const newAuto: ModelAuto = JSON.parse(event.data);
-      list.insert(0, ...flattenModels([newAuto]));
+      try {
+        const data = JSON.parse(event.data);
+        console.log("Received data: ", data);
+
+        if (data.type === "allModels") {
+          const flatModels = flattenModels(data.models);
+          setModels(flatModels);
+          setIsLoading(false);
+        }
+      } catch (error) {
+        console.error("Failed to parse message: ", event.data, error);
+      }
     };
 
     ws.onerror = (error) => {
-      console.error("WebSocket error:", error);
+      console.error("WebSocket error: ", error);
+      setIsLoading(false);
     };
 
     ws.onclose = (event) => {
-      console.log("WebSocket connection closed:", event);
+      console.warn("WebSocket connection closed: ", event);
+      setIsLoading(false);
     };
 
-    setSocket(ws);
+    websocketRef.current = ws;
 
     return () => {
-      if (ws) ws.close();
+      if (ws) {
+        ws.close();
+      }
     };
-  }, [list]);
+  }, []);
+
+  console.log(models);
+
+  const sortData = useCallback(
+    (items: ModelAuto[], sortDescriptor: SortDescriptor | null) => {
+      if (!sortDescriptor) return items;
+
+      return items.sort((a, b) => {
+        let first = a[sortDescriptor.column as keyof ModelAuto];
+        let second = b[sortDescriptor.column as keyof ModelAuto];
+
+        if (first == null || second == null) {
+          return 0;
+        }
+        if (
+          typeof first === "string" &&
+          typeof second === "string" &&
+          /^\d/.test(first) &&
+          /^\d/.test(second)
+        ) {
+          first = parseInt(first.replace(/\D/g, ""), 10);
+          second = parseInt(second.replace(/\D/g, ""), 10);
+        }
+        if (first < second) {
+          return sortDescriptor.direction === "ascending" ? -1 : 1;
+        } else if (first > second) {
+          return sortDescriptor.direction === "ascending" ? 1 : -1;
+        } else {
+          return 0;
+        }
+      });
+    },
+    []
+  );
+
+  const sortedModels = useMemo(
+    () => sortData(models, sortDescriptor!),
+    [models, sortDescriptor, sortData]
+  );
+  const handleSortChange = useCallback((descriptor: SortDescriptor) => {
+    setSortDescriptor(descriptor);
+  }, []);
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -110,8 +136,8 @@ export const TableWrapperModels = () => {
     <div className="w-full flex flex-col gap-4">
       <Table
         aria-label="Example table with custom cells"
-        sortDescriptor={list.sortDescriptor}
-        onSortChange={list.sort}
+        sortDescriptor={sortDescriptor}
+        onSortChange={handleSortChange}
       >
         <TableHeader columns={columns}>
           {(column) => (
@@ -128,14 +154,14 @@ export const TableWrapperModels = () => {
             </TableColumn>
           )}
         </TableHeader>
-        <TableBody items={list.items}>
+        <TableBody items={sortedModels}>
           {(item) => (
-            <TableRow>
+            <TableRow key={item.id}>
               {(columnKey: Key) => (
                 <TableCell>
                   {RenderCell({
                     model: item,
-                    columnKey,
+                    columnKey: columnKey,
                     onEdit: handleEditUser,
                   })}
                 </TableCell>

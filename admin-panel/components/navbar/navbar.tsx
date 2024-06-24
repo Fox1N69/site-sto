@@ -46,14 +46,10 @@ export const NavbarWrapper = ({ children }: Props) => {
         >
           <NotificationsDropdown />
           <NavbarContent>
-            {status === "loading" ? (
-              <div>Loading...</div>
-            ) : (
-              session && (
-                <div className="flex gap-3">
-                  <UserDropdown user={session?.user.id} />
-                </div>
-              )
+            {session && (
+              <div className="flex gap-3">
+                <UserDropdown user={session?.user.id} />
+              </div>
             )}
           </NavbarContent>
         </NavbarContent>

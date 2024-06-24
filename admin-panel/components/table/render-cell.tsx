@@ -97,23 +97,6 @@ export const RenderCell: React.FC<Props> = ({
           <span className="capitalize text-xs">{cellValue}</span>
         </Chip>
       );
-    case "status":
-      const deliveryDate = new Date(order.deliveryDate);
-      const currentDate = new Date();
-      const isSameDayDelivery = isSameDay(deliveryDate, currentDate);
-      const statusText = isSameDayDelivery ? "Ожидает Получения" : cellValue;
-      const statusColor = isSameDayDelivery
-        ? "danger"
-        : cellValue === "На Хранении"
-        ? "success"
-        : cellValue === "Ожидает Получения"
-        ? "warning"
-        : "danger";
-      return (
-        <Chip size="sm" variant="flat" color={statusColor}>
-          <span className="capitalize text-xs">{statusText}</span>
-        </Chip>
-      );
 
     case "actions":
       return (

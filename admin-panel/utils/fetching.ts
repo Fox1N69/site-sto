@@ -56,7 +56,7 @@ export const deleteProduct = async (
   }
 };
 
-export const useDeleteModel = async (
+export const deleteModel = async (
   token: string | undefined,
   modelID: number
 ) => {
@@ -208,7 +208,7 @@ export const updateModelReleaseYear = async (
   }
 };
 
-export const useDeleteBrand = async (
+export const deleteBrand = async (
   token: string | undefined,
   brandID: number
 ) => {
@@ -259,7 +259,7 @@ export const useAddBrand = () => {
   return { addBrand, success, error, loading };
 };
 
-export const useUpdateBrand = async (
+export const updateBrand = async (
   token: string | undefined,
   selectBrandID: number,
   data: { name: string; image_url: string }

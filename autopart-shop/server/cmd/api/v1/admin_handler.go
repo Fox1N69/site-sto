@@ -173,6 +173,33 @@ func (h *adminHandler) DeleteModelAuto(c *gin.Context) {
 	c.JSON(200, gin.H{"message": "ModelAuto delete success"})
 }
 
+func (h *adminHandler) UpdateModelAuto(c *gin.Context) {
+	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	if err != nil {
+		response.New(c).Write(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	var request struct {
+		Name        string          `json:"name"`
+		ImgUrl      string          `json:"img_url"`
+		BrandID     uint            `json:"brand_id"`
+		ReleaseYear json.RawMessage `json:"release_year"`
+	}
+
+	if err := c.ShouldBindJSON(&request); err != nil {
+		response.New(c).Write(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	if err := h.autoService.UpdateModelAuto(uint(id), request.Name, request.ImgUrl, request.BrandID, request.ReleaseYear); err != nil {
+		response.New(c).Write(http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	response.New(c).Write(http.StatusOK, "ModelAuto updated successfully")
+}
+
 func (h *adminHandler) GetAllModelAutoWS(c *gin.Context) {
 	conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
 	if err != nil {
@@ -214,7 +241,13 @@ func (h *adminHandler) GetAllModelAutoWS(c *gin.Context) {
 
 		logrus.Println("WebSocket message received:", string(message))
 
-		switch string(message) {
+		var msg map[string]interface{}
+		if err := json.Unmarshal(message, &msg); err != nil {
+			conn.WriteMessage(websocket.TextMessage, []byte("Invalid message format"))
+			continue
+		}
+
+		switch msg["type"] {
 		case "getAllModel":
 			data, err := h.autoService.GetAllModelAuto()
 			if err != nil {
@@ -222,16 +255,28 @@ func (h *adminHandler) GetAllModelAutoWS(c *gin.Context) {
 				response.New(c).Write(http.StatusInternalServerError, err.Error())
 				return
 			}
-			conn.WriteJSON(data)
+			conn.WriteJSON(map[string]interface{}{
+				"type":   "allModels",
+				"models": data,
+			})
 		case "subscribeEvents":
 			go func(ch chan model.ModelAuto, conn *websocket.Conn, doneCh chan struct{}) {
-				for event := range ch {
-					if err := conn.WriteJSON(event); err != nil {
-						logrus.Println("WebSocket write error:", err)
+				for {
+					select {
+					case event, ok := <-ch:
+						if !ok {
+							logrus.Println("Event channel closed")
+							return
+						}
+						if err := conn.WriteJSON(event); err != nil {
+							logrus.Println("WebSocket write error:", err)
+							return
+						}
+					case <-doneCh:
+						logrus.Println("Done channel received, stopping subscription")
 						return
 					}
 				}
-				close(doneCh)
 			}(eventCh, conn, doneCh)
 		default:
 			conn.WriteMessage(websocket.TextMessage, []byte("Unknown command"))
@@ -240,30 +285,4 @@ func (h *adminHandler) GetAllModelAutoWS(c *gin.Context) {
 
 	close(doneCh)
 	logrus.Println("WebSocket connection closed")
-}
-func (h *adminHandler) UpdateModelAuto(c *gin.Context) {
-	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
-	if err != nil {
-		response.New(c).Write(http.StatusBadRequest, err.Error())
-		return
-	}
-
-	var request struct {
-		Name        string          `json:"name"`
-		ImgUrl      string          `json:"img_url"`
-		BrandID     uint            `json:"brand_id"`
-		ReleaseYear json.RawMessage `json:"release_year"`
-	}
-
-	if err := c.ShouldBindJSON(&request); err != nil {
-		response.New(c).Write(http.StatusBadRequest, err.Error())
-		return
-	}
-
-	if err := h.autoService.UpdateModelAuto(uint(id), request.Name, request.ImgUrl, request.BrandID, request.ReleaseYear); err != nil {
-		response.New(c).Write(http.StatusInternalServerError, err.Error())
-		return
-	}
-
-	response.New(c).Write(http.StatusOK, "ModelAuto updated successfully")
 }

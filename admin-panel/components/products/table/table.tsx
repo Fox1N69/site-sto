@@ -94,10 +94,6 @@ export const TableWrapperProducts = () => {
     },
   });
 
-  if (status === "loading") {
-    return <div>Loading...</div>;
-  }
-
   return (
     <div className=" w-full flex flex-col gap-4">
       <Table

@@ -1,7 +1,7 @@
 import React from "react";
 import { Tooltip } from "@nextui-org/react";
 import { DeleteIcon } from "../../icons/table/delete-icon";
-import { deleteProduct, useDeleteBrand, useDeleteModel } from "@/utils/fetching";
+import { deleteProduct, deleteBrand, deleteModel } from "@/utils/fetching";
 import { useSession } from "next-auth/react";
 
 interface DeleteButtonProps {
@@ -12,7 +12,7 @@ const DeleteModelButton: React.FC<DeleteButtonProps> = ({ brandID }) => {
   const { data: session } = useSession();
   const token = session?.user.token;
   const handleDelete = async () => {
-    await useDeleteBrand(token, brandID)
+    await deleteBrand(token, brandID);
   };
 
   return (

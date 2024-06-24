@@ -16,7 +16,7 @@ import { EditIcon } from "@/components/icons/table/edit-icon";
 import { Brand, ModelAuto } from "@/types";
 import { useSession } from "next-auth/react";
 import { Icon } from "@iconify/react";
-import { useUpdateBrand } from "@/utils/fetching";
+import { updateBrand } from "@/utils/fetching";
 
 interface EditBrandsProps {
   selectedBrandlID: number;
@@ -38,7 +38,7 @@ export const EditBrand: React.FC<EditBrandsProps> = ({
       name,
       image_url: imgUrl,
     };
-    await useUpdateBrand(token, selectedBrandlID, data);
+    await updateBrand(token, selectedBrandlID, data);
     onClose();
   };
 
