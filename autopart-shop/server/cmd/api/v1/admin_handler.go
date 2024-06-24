@@ -11,6 +11,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
+	"github.com/sirupsen/logrus"
 )
 
 type AdminHandler interface {
@@ -175,10 +176,12 @@ func (h *adminHandler) DeleteModelAuto(c *gin.Context) {
 func (h *adminHandler) GetAllModelAutoWS(c *gin.Context) {
 	conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
 	if err != nil {
+		logrus.Println("Failed to set websocket upgrade:", err)
 		http.Error(c.Writer, "Failed to set websocket upgrade", http.StatusInternalServerError)
 		return
 	}
 	defer conn.Close()
+	logrus.Println("WebSocket connection established")
 
 	eventCh := make(chan model.ModelAuto)
 	doneCh := make(chan struct{})
@@ -188,8 +191,10 @@ func (h *adminHandler) GetAllModelAutoWS(c *gin.Context) {
 		for {
 			select {
 			case newAuto := <-h.autoService.AddModelAutoToChannel():
+				logrus.Println("Received new model auto:", newAuto)
 				eventCh <- newAuto
 			case <-doneCh:
+				logrus.Println("Done channel closed")
 				return
 			}
 		}
@@ -199,16 +204,21 @@ func (h *adminHandler) GetAllModelAutoWS(c *gin.Context) {
 		_, message, err := conn.ReadMessage()
 		if err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
+				logrus.Println("WebSocket unexpected close error:", err)
 				c.Writer.WriteHeader(http.StatusInternalServerError)
 				return
 			}
+			logrus.Println("WebSocket read error:", err)
 			break
 		}
+
+		logrus.Println("WebSocket message received:", string(message))
 
 		switch string(message) {
 		case "getAllModel":
 			data, err := h.autoService.GetAllModelAuto()
 			if err != nil {
+				logrus.Println("Error getting all model auto:", err)
 				response.New(c).Write(http.StatusInternalServerError, err.Error())
 				return
 			}
@@ -217,6 +227,7 @@ func (h *adminHandler) GetAllModelAutoWS(c *gin.Context) {
 			go func(ch chan model.ModelAuto, conn *websocket.Conn, doneCh chan struct{}) {
 				for event := range ch {
 					if err := conn.WriteJSON(event); err != nil {
+						logrus.Println("WebSocket write error:", err)
 						return
 					}
 				}
@@ -228,8 +239,8 @@ func (h *adminHandler) GetAllModelAutoWS(c *gin.Context) {
 	}
 
 	close(doneCh)
+	logrus.Println("WebSocket connection closed")
 }
-
 func (h *adminHandler) UpdateModelAuto(c *gin.Context) {
 	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
