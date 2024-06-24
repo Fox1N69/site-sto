@@ -18,6 +18,7 @@ import { ChangeLogIcon } from "../icons/sidebar/changelog-icon";
 import { usePathname } from "next/navigation";
 import { TableWrapper } from "../table/table";
 import { ProductsIcon } from "../icons/sidebar/products-icon";
+import { Icon } from "@iconify/react";
 
 export const SidebarWrapper = () => {
   const pathname = usePathname();
@@ -66,6 +67,12 @@ export const SidebarWrapper = () => {
                   isActive={pathname === "/model-auto"}
                   title="Модели авто"
                   href="model-auto"
+                  icon={<BalanceIcon />}
+                />
+                <SidebarItem
+                  isActive={pathname === "/brand"}
+                  title="Марки авто"
+                  href="brand"
                   icon={<BalanceIcon />}
                 />
               </CollapseItems>
