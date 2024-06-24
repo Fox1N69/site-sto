@@ -76,6 +76,7 @@ func (c *server) v1() {
 	ws := c.gin.Group("/ws")
 	{
 		ws.GET("/model-auto", adminHandler.ModelAutoWS)
+		ws.GET("/auto-part", adminHandler.AutoPartWS)
 	}
 
 	admin := c.gin.Group("/admin")

@@ -8,10 +8,12 @@ import (
 
 type AutoPartService interface {
 	CreateAutoPart(autoPart *model.AutoPart) error
+	AddAutoPartToChannel() <-chan model.AutoPart
 	GetAllAutoParts() ([]model.AutoPart, error)
 	GetAutoPartByID(id uint) (*model.AutoPart, error)
 	UpdateAutoPart(product model.AutoPart, fieldsToUpdate map[string]interface{}) error
 	DeleteAutoPart(id uint) error
+	DeleteAtuoPartFromChannel() <-chan uint
 	CheckStock(id uint) (int, error)
 	ReduceStock(id uint, quantity int) error
 	Search(query string) ([]model.AutoPart, error)
@@ -19,15 +21,32 @@ type AutoPartService interface {
 }
 
 type autoPartService struct {
-	autoPartRepo repo.AutoPartRepo
+	autoPartRepo  repo.AutoPartRepo
+	addChannel    chan model.AutoPart
+	deleteChannel chan uint
 }
 
 func NewAutoPartService(autoPartRepo repo.AutoPartRepo) AutoPartService {
-	return &autoPartService{autoPartRepo: autoPartRepo}
+	return &autoPartService{
+		autoPartRepo:  autoPartRepo,
+		addChannel:    make(chan model.AutoPart),
+		deleteChannel: make(chan uint),
+	}
 }
 
 func (s *autoPartService) CreateAutoPart(autoPart *model.AutoPart) error {
-	return s.autoPartRepo.Create(autoPart)
+	if err := s.autoPartRepo.Create(autoPart); err != nil {
+		return err
+	}
+
+	s.addChannel <- *autoPart
+
+	return nil
+
+}
+
+func (s *autoPartService) AddAutoPartToChannel() <-chan model.AutoPart {
+	return s.addChannel
 }
 
 func (s *autoPartService) GetAllAutoParts() ([]model.AutoPart, error) {
@@ -43,7 +62,15 @@ func (s *autoPartService) UpdateAutoPart(product model.AutoPart, fieldsToUpdate 
 }
 
 func (s *autoPartService) DeleteAutoPart(id uint) error {
-	return s.autoPartRepo.Delete(id)
+	if err := s.autoPartRepo.Delete(id); err != nil {
+		return err
+	}
+	s.deleteChannel <- id
+	return nil
+}
+
+func (s *autoPartService) DeleteAtuoPartFromChannel() <-chan uint {
+	return s.deleteChannel
 }
 
 func (s *autoPartService) CheckStock(id uint) (int, error) {

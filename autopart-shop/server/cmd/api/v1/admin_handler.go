@@ -22,6 +22,7 @@ type AdminHandler interface {
 	CreateModelAuto(c *gin.Context)
 	DeleteModelAuto(c *gin.Context)
 	ModelAutoWS(c *gin.Context)
+	AutoPartWS(c *gin.Context)
 	UpdateModelAuto(c *gin.Context)
 }
 
@@ -225,7 +226,7 @@ func (h *adminHandler) ModelAutoWS(c *gin.Context) {
 				logrus.Println("Удалена модель авто с ID:", deletedModelID)
 				eventCh <- model.ModelAuto{
 					ShopCustom: model.ShopCustom{ID: deletedModelID},
-					Deleted:    true, // Флаг, указывающий, что модель удалена
+					Deleted:    true,
 				}
 			case <-doneCh:
 				logrus.Println("Канал done закрыт")
@@ -319,6 +320,142 @@ func (h *adminHandler) ModelAutoWS(c *gin.Context) {
 							conn.WriteJSON(map[string]interface{}{
 								"type":  "newModelAdded",
 								"model": event,
+							})
+						}
+					case <-doneCh:
+						logrus.Println("Получен сигнал done, остановка подписки")
+						return
+					}
+				}
+			}(eventCh, conn, doneCh)
+		default:
+			conn.WriteMessage(websocket.TextMessage, []byte("Неизвестная команда"))
+		}
+	}
+
+	close(doneCh)
+	logrus.Println("WebSocket соединение закрыто")
+}
+
+func (h *adminHandler) AutoPartWS(c *gin.Context) {
+	conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
+	if err != nil {
+		logrus.Println("Не удалось установить веб-сокет соединение:", err)
+		http.Error(c.Writer, "Не удалось установить веб-сокет соединение", http.StatusInternalServerError)
+		return
+	}
+	defer conn.Close()
+	logrus.Println("WebSocket соединение установлено")
+
+	eventCh := make(chan model.AutoPart)
+	doneCh := make(chan struct{})
+
+	// Горутина для прослушивания новых автозапчастей
+	go func() {
+		defer close(eventCh)
+		for {
+			select {
+			case newAutoPart := <-h.service.AddAutoPartToChannel():
+				logrus.Println("Получена новая автозапчасть:", newAutoPart)
+				eventCh <- newAutoPart
+			case deletedAutoPartID := <-h.service.DeleteAtuoPartFromChannel():
+				logrus.Println("Удалена автозапчасть с ID:", deletedAutoPartID)
+				eventCh <- model.AutoPart{
+					ShopCustom: model.ShopCustom{ID: deletedAutoPartID},
+					Deleted:    true,
+				}
+			case <-doneCh:
+				logrus.Println("Канал done закрыт")
+				return
+			}
+		}
+	}()
+
+	for {
+		_, message, err := conn.ReadMessage()
+		if err != nil {
+			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
+				logrus.Println("Неожиданная ошибка закрытия WebSocket:", err)
+				c.Writer.WriteHeader(http.StatusInternalServerError)
+				return
+			}
+			logrus.Println("Ошибка чтения WebSocket:", err)
+			break
+		}
+
+		logrus.Println("Сообщение WebSocket получено:", string(message))
+
+		var msg map[string]interface{}
+		if err := json.Unmarshal(message, &msg); err != nil {
+			conn.WriteMessage(websocket.TextMessage, []byte("Неверный формат сообщения"))
+			continue
+		}
+
+		switch msg["type"] {
+		case "getAllAutoParts":
+			// Получение всех автозапчастей
+			data, err := h.service.GetAllAutoParts()
+			if err != nil {
+				logrus.Println("Ошибка получения всех автозапчастей:", err)
+				response.New(c).Write(http.StatusInternalServerError, err.Error())
+				return
+			}
+
+			conn.WriteJSON(map[string]interface{}{
+				"type":      "allAutoParts",
+				"autoParts": data,
+			})
+		case "deleteAutoPart":
+			var autoPartIDStr string
+			if val, ok := msg["autoPartID"].(string); ok {
+				autoPartIDStr = val
+			} else {
+				conn.WriteMessage(websocket.TextMessage, []byte("Неверный формат autoPartID"))
+				continue
+			}
+
+			// Преобразование autoPartID из строки в тип uint
+			autoPartID, err := strconv.ParseUint(autoPartIDStr, 10, 64)
+			if err != nil {
+				conn.WriteMessage(websocket.TextMessage, []byte("Неверный формат autoPartID"))
+				continue
+			}
+
+			// Удаление автозапчасти по autoPartID
+			err = h.service.DeleteAutoPart(uint(autoPartID))
+			if err != nil {
+				logrus.Println("Ошибка удаления автозапчасти:", err)
+				conn.WriteJSON(map[string]interface{}{
+					"type":  "deleteAutoPartError",
+					"error": err.Error(),
+				})
+				continue
+			}
+
+			conn.WriteJSON(map[string]interface{}{
+				"type":       "autoPartDeleted",
+				"autoPartID": autoPartID,
+			})
+		case "subscribeEvents":
+			go func(ch chan model.AutoPart, conn *websocket.Conn, doneCh chan struct{}) {
+				for {
+					select {
+					case event, ok := <-ch:
+						if !ok {
+							logrus.Println("Канал событий закрыт")
+							return
+						}
+						if event.Deleted {
+							// Отправка сообщения об удалении автозапчасти
+							conn.WriteJSON(map[string]interface{}{
+								"type":       "autoPartDeleted",
+								"autoPartID": event.ID,
+							})
+						} else {
+							// Отправка новой автозапчасти в формате newAutoPartAdded
+							conn.WriteJSON(map[string]interface{}{
+								"type":     "newAutoPartAdded",
+								"autoPart": event,
 							})
 						}
 					case <-doneCh:

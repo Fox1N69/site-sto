@@ -38,6 +38,7 @@ type AutoPart struct {
 	Stock        uint            `json:"stock"`
 	ModelAutos   []ModelAuto     `gorm:"many2many:model_auto_auto_parts;" json:"model_autos"`
 	ForYears     json.RawMessage `json:"for_years" gorm:"type:jsonb"`
+	Deleted      bool            `json:"deleted,omitempty"`
 }
 
 type ModelAuto struct {
