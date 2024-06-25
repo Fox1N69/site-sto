@@ -392,16 +392,20 @@ func (h *adminHandler) AutoPartWS(c *gin.Context) {
 
 		switch msg["type"] {
 		case "getAllAutoParts":
-			data, err := h.service.GetAllAutoParts()
+			data, source, err := h.service.GetAllAutoParts(c)
 			if err != nil {
 				logrus.Println("Ошибка получения всех автозапчастей:", err)
-				response.New(c).Write(http.StatusInternalServerError, err.Error())
+				conn.WriteJSON(map[string]interface{}{
+					"type":  "getAllAutoPartsError",
+					"error": err.Error(),
+				})
 				return
 			}
 
 			conn.WriteJSON(map[string]interface{}{
 				"type":      "allAutoParts",
 				"autoParts": data,
+				"source":    source,
 			})
 		case "deleteAutoPart":
 			var autoPartIDStr string
@@ -412,14 +416,12 @@ func (h *adminHandler) AutoPartWS(c *gin.Context) {
 				continue
 			}
 
-			// Преобразование autoPartID из строки в тип uint
 			autoPartID, err := strconv.ParseUint(autoPartIDStr, 10, 64)
 			if err != nil {
 				conn.WriteMessage(websocket.TextMessage, []byte("Неверный формат autoPartID"))
 				continue
 			}
 
-			// Удаление автозапчасти по autoPartID
 			err = h.service.DeleteAutoPart(uint(autoPartID))
 			if err != nil {
 				logrus.Println("Ошибка удаления автозапчасти:", err)
@@ -444,7 +446,6 @@ func (h *adminHandler) AutoPartWS(c *gin.Context) {
 							return
 						}
 						if event.Deleted {
-							// Отправка сообщения об удалении автозапчасти
 							conn.WriteJSON(map[string]interface{}{
 								"type":       "autoPartDeleted",
 								"autoPartID": event.ID,

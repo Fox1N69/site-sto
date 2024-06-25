@@ -21,7 +21,7 @@ type Infra interface {
 	GormDB() *gorm.DB
 	Migrate(values ...interface{})
 	Port() string
-	RedisInit()
+	RedisClient() *redis.Client
 }
 
 type infra struct {
@@ -143,18 +143,30 @@ func (i *infra) Port() string {
 	return ":" + port
 }
 
-var RDB *redis.Client
+var (
+	rdbOnce sync.Once
+	rdb     *redis.Client
+)
 
-func (i *infra) RedisInit() {
-	RDB = redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379",
-		Password: "",
-		DB:       0,
+func (i *infra) RedisClient() *redis.Client {
+	rdbOnce.Do(func() {
+		config := i.Config().Sub("redis")
+		addr := config.GetString("addr")
+		password := config.GetString("password")
+		db := config.GetInt("db")
+
+		rdb = redis.NewClient(&redis.Options{
+			Addr:     addr,
+			Password: password,
+			DB:       db,
+		})
+
+		if _, err := rdb.Ping(context.Background()).Result(); err != nil {
+			logrus.Fatalf("[infra][RedisClient][rdb.Ping] %v", err)
+		}
+
+		logrus.Println("Connected to Redis")
 	})
 
-	_, err := RDB.Ping(context.Background()).Result()
-	if err != nil {
-		logrus.Fatalf("[infra][InitRedis] %v", err)
-	}
-	logrus.Println("Connected to Redis")
+	return rdb
 }

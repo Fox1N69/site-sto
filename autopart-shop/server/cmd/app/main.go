@@ -23,7 +23,8 @@ func main() {
 		&model.Order{},
 	)
 	i.Migrate(&model.AutoPartCategory{})
-	i.RedisInit()
 
-	api.NewServer(i).Run()
+	redisClient := i.RedisClient()
+
+	api.NewServer(i, redisClient).Run()
 }

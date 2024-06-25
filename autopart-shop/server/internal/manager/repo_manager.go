@@ -50,7 +50,7 @@ var (
 
 func (rm *repoManager) AutoPartRepo() repo.AutoPartRepo {
 	autoPartRepoOnce.Do(func() {
-		autoPartRepo = repo.NewAutoPartRepo(rm.infra.GormDB())
+		autoPartRepo = repo.NewAutoPartRepo(rm.infra.GormDB(), rm.infra.RedisClient())
 	})
 
 	return autoPartRepo

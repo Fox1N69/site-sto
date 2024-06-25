@@ -9,6 +9,7 @@ import (
 
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
+	"github.com/go-redis/redis/v8"
 )
 
 type Server interface {
@@ -16,22 +17,24 @@ type Server interface {
 }
 
 type server struct {
-	infra      infra.Infra
-	gin        *gin.Engine
-	service    manager.ServiceManager
-	middleware middleware.Middleware
-	store      sessions.Store
+	infra       infra.Infra
+	gin         *gin.Engine
+	service     manager.ServiceManager
+	middleware  middleware.Middleware
+	store       sessions.Store
+	redisClient *redis.Client
 }
 
-func NewServer(infra infra.Infra) Server {
+func NewServer(infra infra.Infra, redisClient *redis.Client) Server {
 	store := sessions.NewCookieStore([]byte(infra.Config().GetString("secret.key")))
 
 	return &server{
-		infra:      infra,
-		gin:        gin.Default(),
-		service:    manager.NewServiceManager(infra),
-		middleware: middleware.NewMiddleware(infra.Config().GetString("secret.key")),
-		store:      store,
+		infra:       infra,
+		gin:         gin.Default(),
+		service:     manager.NewServiceManager(infra),
+		middleware:  middleware.NewMiddleware(infra.Config().GetString("secret.key")),
+		store:       store,
+		redisClient: redisClient,
 	}
 }
 

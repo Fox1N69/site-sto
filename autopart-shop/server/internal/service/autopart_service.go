@@ -1,6 +1,7 @@
 package service
 
 import (
+	"context"
 	"errors"
 	"shop-server/internal/model"
 	"shop-server/internal/repo"
@@ -9,7 +10,7 @@ import (
 type AutoPartService interface {
 	CreateAutoPart(autoPart *model.AutoPart) error
 	AddAutoPartToChannel() <-chan model.AutoPart
-	GetAllAutoParts() ([]model.AutoPart, error)
+	GetAllAutoParts(ctx context.Context) ([]model.AutoPart, string, error)
 	GetAutoPartByID(id uint) (*model.AutoPart, error)
 	UpdateAutoPart(product model.AutoPart, fieldsToUpdate map[string]interface{}) error
 	DeleteAutoPart(id uint) error
@@ -46,8 +47,8 @@ func (s *autoPartService) AddAutoPartToChannel() <-chan model.AutoPart {
 	return s.addChannel
 }
 
-func (s *autoPartService) GetAllAutoParts() ([]model.AutoPart, error) {
-	return s.autoPartRepo.GetAll()
+func (s *autoPartService) GetAllAutoParts(ctx context.Context) ([]model.AutoPart, string, error) {
+	return s.autoPartRepo.GetAll(ctx)
 }
 
 func (s *autoPartService) GetAutoPartByID(id uint) (*model.AutoPart, error) {

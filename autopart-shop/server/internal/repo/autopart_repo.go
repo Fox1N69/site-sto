@@ -1,18 +1,21 @@
 package repo
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"log"
 	"shop-server/internal/model"
 	"strings"
+	"time"
 
+	"github.com/go-redis/redis/v8"
 	"gorm.io/gorm"
 )
 
 type AutoPartRepo interface {
 	Create(product *model.AutoPart) error
-	GetAll() ([]model.AutoPart, error)
+	GetAll(ctx context.Context) ([]model.AutoPart, string, error)
 	GetByID(id uint) (*model.AutoPart, error)
 	Update(product model.AutoPart, fieldsToUpdate map[string]interface{}) error
 	Delete(id uint) error
@@ -24,11 +27,12 @@ type AutoPartRepo interface {
 }
 
 type autoPartRepo struct {
-	db *gorm.DB
+	db          *gorm.DB
+	redisClient *redis.Client
 }
 
-func NewAutoPartRepo(db *gorm.DB) AutoPartRepo {
-	return &autoPartRepo{db: db}
+func NewAutoPartRepo(db *gorm.DB, redisClient *redis.Client) AutoPartRepo {
+	return &autoPartRepo{db: db, redisClient: redisClient}
 }
 
 func (ar *autoPartRepo) Create(autoPart *model.AutoPart) error {
@@ -37,29 +41,60 @@ func (ar *autoPartRepo) Create(autoPart *model.AutoPart) error {
 			return err
 		}
 
-		if len(autoPart.Categories) > 0 {
-			if err := tx.Model(autoPart).Association("Categories").Replace(autoPart.Categories); err != nil {
-				return err
-			}
+		// Cache the result
+		cacheKey := "all_auto_parts"
+		var autoParts []model.AutoPart
+		if err := tx.Preload("Categories").Preload("Brand").Preload("AutoPartInfo").Find(&autoParts).Error; err != nil {
+			return err
 		}
 
-		if len(autoPart.ModelAutos) > 0 {
-			if err := tx.Model(autoPart).Association("ModelAutos").Replace(autoPart.ModelAutos); err != nil {
-				return err
-			}
+		autoPartsJSON, err := json.Marshal(&autoParts)
+		if err != nil {
+			return err
+		}
+
+		err = ar.redisClient.Set(context.Background(), cacheKey, autoPartsJSON, time.Hour).Err()
+		if err != nil {
+			return err
 		}
 
 		return nil
 	})
 }
 
-func (r *autoPartRepo) GetAll() ([]model.AutoPart, error) {
-	var autoParts []model.AutoPart
-	if err := r.db.Preload("Categories").Preload("Brand").Preload("AutoPartInfo").Find(&autoParts).Error; err != nil {
-		return nil, err
+func (r *autoPartRepo) GetAll(ctx context.Context) ([]model.AutoPart, string, error) {
+	cacheKey := "all_auto_parts"
+
+	cachedAutoParts, err := r.redisClient.Get(ctx, cacheKey).Result()
+	if err == redis.Nil {
+		var autoParts []model.AutoPart
+		if err := r.db.Preload("Categories").Preload("Brand").Preload("AutoPartInfo").Find(&autoParts).Error; err != nil {
+			return nil, "", err
+		}
+
+		autoPartsJSON, err := json.Marshal(&autoParts)
+		if err != nil {
+			return nil, "", err
+		}
+		err = r.redisClient.Set(ctx, cacheKey, autoPartsJSON, time.Hour).Err()
+		if err != nil {
+			return nil, "", err
+		}
+
+		log.Println("Data fetched from DB and cached")
+		return autoParts, "DB", nil
+	} else if err != nil {
+		return nil, "", err
 	}
 
-	return autoParts, nil
+	var autoParts []model.AutoPart
+	err = json.Unmarshal([]byte(cachedAutoParts), &autoParts)
+	if err != nil {
+		return nil, "", err
+	}
+
+	log.Println("Data fetched from cache")
+	return autoParts, "Cache", nil
 }
 
 func (r *autoPartRepo) GetByID(id uint) (*model.AutoPart, error) {

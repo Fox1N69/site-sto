@@ -35,16 +35,16 @@ func NewShopHandler(autoService service.AutoService, basketService service.Baske
 	}
 }
 
+
 func (h *shopHandler) GetAllAutoPart(c *gin.Context) {
-	autoparts, err := h.autopartService.GetAllAutoParts()
+	autoparts, source, err := h.autopartService.GetAllAutoParts(c)
 	if err != nil {
-		response.New(c).Write(http.StatusInternalServerError, err.Error())
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	for i := range autoparts {
-		h.infra.GormDB().Preload("Category").Preload("Brand").Find(&autoparts[i])
-	}
+	// Добавление заголовка для указания источника данных
+	c.Header("X-Data-Source", source)
 
 	c.JSON(http.StatusOK, autoparts)
 }
