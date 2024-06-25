@@ -1,13 +1,9 @@
 "use client";
 import { User, Tooltip, Chip } from "@nextui-org/react";
 import React from "react";
-import { DeleteIcon } from "../../icons/table/delete-icon";
 import { EyeIcon } from "../../icons/table/eye-icon";
 import { EditProduct } from "../edit-product";
 import { Category, Product } from "@/types";
-import { Span } from "next/dist/trace";
-import { useSession } from "next-auth/react";
-import { deleteProduct } from "@/utils/fetching";
 import DeleteButton from "./delete-button";
 
 interface Props {
@@ -48,7 +44,7 @@ export const RenderCell: React.FC<Props> = ({
     case "brand_name":
       return <span>{product.brand_name}</span>;
     case "stock":
-      return <span>{product.stock}</span>
+      return <span>{product.stock}</span>;
     case "for_years":
       return (
         <div className="flex gap-2">

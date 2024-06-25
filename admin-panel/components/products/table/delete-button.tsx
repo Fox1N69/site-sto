@@ -1,7 +1,6 @@
 import React from "react";
 import { Tooltip } from "@nextui-org/react";
 import { DeleteIcon } from "../../icons/table/delete-icon";
-import { useSession } from "next-auth/react";
 
 interface DeleteButtonProps {
   productId: number;
@@ -12,9 +11,6 @@ const DeleteButton: React.FC<DeleteButtonProps> = ({
   productId,
   websocketRef,
 }) => {
-  const { data: session } = useSession();
-  const token = session?.user.token;
-
   const handleDelete = () => {
     if (websocketRef?.current) {
       const message = {
