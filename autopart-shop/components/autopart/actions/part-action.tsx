@@ -17,7 +17,8 @@ interface PartActionProps {
 
 export const PartAction: React.FC<PartActionProps> = ({ part }) => {
 	const { data: session } = useSession();
-	const { itemsInCart, addItemToCart, removeItemFromCart } = useCartStore();
+	const { itemsInCart, addItemToCart, removeItemFromCart, resetItemCount } =
+		useCartStore();
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 	const [inCart, setInCart] = useState(false); // Добавлено состояние для отслеживания наличия товара в корзине
@@ -46,7 +47,14 @@ export const PartAction: React.FC<PartActionProps> = ({ part }) => {
 			try {
 				setIsLoading(true);
 				if (inCart) {
-					console.log('Открыть коризну');
+					await handleRemoveFromCart({
+						token: session.user.token,
+						cartItemID: part.id,
+						userID: session.user.id
+					});
+					removeItemFromCart(part.id);
+					setInCart(false); // Обновление состояния в компоненте
+					resetItemCount(); // Сброс счетчика
 				} else {
 					await handleAddToCart({
 						userId: session.user.id,
@@ -60,7 +68,7 @@ export const PartAction: React.FC<PartActionProps> = ({ part }) => {
 					setInCart(true); // Обновление состояния в компоненте
 				}
 			} catch (error) {
-				setError('Failed to add item to cart');
+				setError('Failed to add/remove item to/from cart');
 			} finally {
 				setIsLoading(false);
 			}
@@ -97,7 +105,7 @@ export const PartAction: React.FC<PartActionProps> = ({ part }) => {
 					<CartCounter
 						autoPartID={part.id}
 						initialQuantity={1}
-						onQuantityChange={() => 'hello counter'}
+						onQuantityChange={resetItemCount}
 					/>
 				</div>
 			)}
