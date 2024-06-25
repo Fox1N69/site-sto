@@ -350,7 +350,6 @@ func (h *adminHandler) AutoPartWS(c *gin.Context) {
 	eventCh := make(chan model.AutoPart)
 	doneCh := make(chan struct{})
 
-	// Горутина для прослушивания новых автозапчастей
 	go func() {
 		defer close(eventCh)
 		for {
@@ -366,6 +365,30 @@ func (h *adminHandler) AutoPartWS(c *gin.Context) {
 				}
 			case <-doneCh:
 				logrus.Println("Канал done закрыт")
+				return
+			}
+		}
+	}()
+
+	go func() {
+		for {
+			select {
+			case event := <-eventCh:
+				if event.Deleted {
+					// Отправка сообщения об удалении автозапчасти
+					conn.WriteJSON(map[string]interface{}{
+						"type":       "autoPartDeleted",
+						"autoPartID": event.ID,
+					})
+				} else {
+					// Отправка новой автозапчасти в формате newAutoPartAdded
+					conn.WriteJSON(map[string]interface{}{
+						"type":     "newAutoPartAdded",
+						"autoPart": event,
+					})
+				}
+			case <-doneCh:
+				logrus.Println("Получен сигнал done, остановка подписки")
 				return
 			}
 		}
@@ -436,33 +459,7 @@ func (h *adminHandler) AutoPartWS(c *gin.Context) {
 				"autoPartID": autoPartID,
 			})
 		case "subscribeEvents":
-			go func(ch chan model.AutoPart, conn *websocket.Conn, doneCh chan struct{}) {
-				for {
-					select {
-					case event, ok := <-ch:
-						if !ok {
-							logrus.Println("Канал событий закрыт")
-							return
-						}
-						if event.Deleted {
-							// Отправка сообщения об удалении автозапчасти
-							conn.WriteJSON(map[string]interface{}{
-								"type":       "autoPartDeleted",
-								"autoPartID": event.ID,
-							})
-						} else {
-							// Отправка новой автозапчасти в формате newAutoPartAdded
-							conn.WriteJSON(map[string]interface{}{
-								"type":     "newAutoPartAdded",
-								"autoPart": event,
-							})
-						}
-					case <-doneCh:
-						logrus.Println("Получен сигнал done, остановка подписки")
-						return
-					}
-				}
-			}(eventCh, conn, doneCh)
+			logrus.Println("Подписка на события")
 		default:
 			conn.WriteMessage(websocket.TextMessage, []byte("Неизвестная команда"))
 		}
