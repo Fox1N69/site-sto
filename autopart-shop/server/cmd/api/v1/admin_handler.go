@@ -370,30 +370,6 @@ func (h *adminHandler) AutoPartWS(c *gin.Context) {
 		}
 	}()
 
-	go func() {
-		for {
-			select {
-			case event := <-eventCh:
-				if event.Deleted {
-					// Отправка сообщения об удалении автозапчасти
-					conn.WriteJSON(map[string]interface{}{
-						"type":       "autoPartDeleted",
-						"autoPartID": event.ID,
-					})
-				} else {
-					// Отправка новой автозапчасти в формате newAutoPartAdded
-					conn.WriteJSON(map[string]interface{}{
-						"type":     "newAutoPartAdded",
-						"autoPart": event,
-					})
-				}
-			case <-doneCh:
-				logrus.Println("Получен сигнал done, остановка подписки")
-				return
-			}
-		}
-	}()
-
 	for {
 		_, message, err := conn.ReadMessage()
 		if err != nil {
@@ -459,7 +435,32 @@ func (h *adminHandler) AutoPartWS(c *gin.Context) {
 				"autoPartID": autoPartID,
 			})
 		case "subscribeEvents":
-			logrus.Println("Подписка на события")
+			go func(ch chan model.AutoPart, conn *websocket.Conn, doneCh chan struct{}) {
+				for {
+					select {
+					case event, ok := <-ch:
+						if !ok {
+							logrus.Println("Канал событий закрыт")
+							return
+						}
+						if event.Deleted {
+							// Отправка сообщения об удалении автозапчасти
+							conn.WriteJSON(map[string]interface{}{
+								"type":       "autoPartDeleted",
+								"autoPartID": event.ID,
+							})
+						} else {
+							conn.WriteJSON(map[string]interface{}{
+								"type":     "newAutoPartAdded",
+								"autoPart": event,
+							})
+						}
+					case <-doneCh:
+						logrus.Println("Получен сигнал done, остановка подписки")
+						return
+					}
+				}
+			}(eventCh, conn, doneCh)
 		default:
 			conn.WriteMessage(websocket.TextMessage, []byte("Неизвестная команда"))
 		}

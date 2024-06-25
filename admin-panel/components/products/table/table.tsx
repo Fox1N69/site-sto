@@ -68,19 +68,21 @@ export const TableWrapperProducts: React.FC = () => {
           const flatProducts = flattenProducts(data.autoParts);
           setProducts(flatProducts);
           setIsLoading(false);
-        }
-        if (data.type === "newAutoPartAdded" && data.autoPart) {
+        } else if (data.type === "newAutoPartAdded" && data.autoPart) {
           const newAutoPart = data.autoPart;
+          console.log("New AutoPart Received: ", newAutoPart);
+
           const updatedPart = {
             ...newAutoPart,
-            brand_name: newAutoPart.Brand?.name,
-            category_name: newAutoPart.categories
-              ?.map((category: { name: string }) => category.name)
-              .join(", "),
+            brand_name: newAutoPart.Brand?.name || "",
+            category_name:
+              newAutoPart.categories
+                ?.map((category: { name: string }) => category.name)
+                .join(", ") || "",
           };
+
           setProducts((prevProducts) => [...prevProducts, updatedPart]);
-        }
-        if (data.type === "autoPartDeleted" && data.autoPartID) {
+        } else if (data.type === "autoPartDeleted" && data.autoPartID) {
           setProducts((prevProducts) =>
             prevProducts.filter((part) => part.id !== data.autoPartID)
           );

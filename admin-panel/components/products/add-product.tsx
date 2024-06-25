@@ -107,7 +107,6 @@ export const AddProduct: React.FC = () => {
         throw new Error("Network response was not ok");
       }
 
-      console.log("Data submitted:", data);
       onClose();
     } catch (error) {
       console.error("Failed to submit data:", error);

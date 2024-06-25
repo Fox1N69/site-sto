@@ -35,14 +35,11 @@ func NewAutoPartService(autoPartRepo repo.AutoPartRepo) AutoPartService {
 }
 
 func (s *autoPartService) CreateAutoPart(autoPart *model.AutoPart) error {
-	if err := s.autoPartRepo.Create(autoPart); err != nil {
-		return err
+	err := s.autoPartRepo.Create(autoPart)
+	if err == nil {
+		s.addChannel <- *autoPart
 	}
-
-	s.addChannel <- *autoPart
-
 	return nil
-
 }
 
 func (s *autoPartService) AddAutoPartToChannel() <-chan model.AutoPart {
