@@ -13,6 +13,8 @@ type AuthService interface {
 	Delete(id int) error
 	GetUserByID(id uint) (*model.User, error)
 	GetUserByUsername(username string) (*model.User, error)
+	GetUserByEmail(email string) (*model.User, error)
+	SaveRecoveryTokenToDB(user *model.User, token string) error
 }
 
 type authService struct {
@@ -62,4 +64,12 @@ func (s *authService) Delete(id int) error {
 	}
 
 	return nil
+}
+
+func (s *authService) GetUserByEmail(email string) (*model.User, error) {
+	return s.authRepo.GetUserByEmail(email)
+}
+
+func (s *authService) SaveRecoveryTokenToDB(user *model.User, token string) error {
+	return s.authRepo.SaveRecoverToken(user, token)
 }

@@ -214,6 +214,19 @@ func (h *authUserHandler) Logout(c *gin.Context) {
 	response.New(c).Write(http.StatusOK, "success: user logged out")
 }
 
+func (h *authUserHandler) RecoverPassword(c *gin.Context) {
+	email := c.PostForm("email")
+
+	user, err := h.authService.GetUserByEmail(email)
+	if err != nil {
+		response.New(c).Error(400, err)
+		return
+	}
+
+	_, token := token.NewToken(h.infra.Config().GetString("secret.key")).GenerateRecoverToken(email)
+	
+}
+
 func extractTokenFromHeader(c *gin.Context) string {
 	authHeader := c.GetHeader("Authorization")
 	if authHeader == "" {

@@ -15,6 +15,7 @@ type AuthRepo interface {
 	GetUserByID(id uint) (*model.User, error)
 	GetUserByUsername(username string) (*model.User, error)
 	GetUserByEmail(email string) (*model.User, error)
+	SaveRecoverToken(user *model.User, token string) error
 }
 
 type authRepo struct {
@@ -100,4 +101,12 @@ func (r *authRepo) GetUserByEmail(email string) (*model.User, error) {
 	}
 
 	return &user, nil
+}
+
+func (r *authRepo) SaveRecoverToken(user *model.User, token string) error {
+	user.PasswordResetToken = token
+	if err := r.db.Save(user).Error; err != nil {
+		return nil
+	}
+	return nil
 }

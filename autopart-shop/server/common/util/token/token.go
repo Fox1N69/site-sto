@@ -10,6 +10,7 @@ import (
 
 type Token interface {
 	GenerateToken(username string, role string) (string, string)
+	GenerateRecoverToken(email string) (string, string)
 	ValidateToken(token string) (*jwt.Token, error)
 }
 
