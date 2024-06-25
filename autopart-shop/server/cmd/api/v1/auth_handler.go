@@ -29,6 +29,7 @@ type AuthUserHandler interface {
 	Delete(c *gin.Context)
 	Logout(c *gin.Context)
 	GetUsernameByID(c *gin.Context)
+	RecoverPassword(c *gin.Context)
 }
 
 type authUserHandler struct {
@@ -223,8 +224,26 @@ func (h *authUserHandler) RecoverPassword(c *gin.Context) {
 		return
 	}
 
-	_, token := token.NewToken(h.infra.Config().GetString("secret.key")).GenerateRecoverToken(email)
-	
+	tokenString, _ := token.NewToken(h.infra.Config().GetString("secret.key")).GenerateRecoverToken(email)
+
+	if err := h.authService.SaveRecoveryTokenToDB(user, tokenString); err != nil {
+		response.New(c).Error(500, err)
+		return
+	}
+
+	recoveUrl := generateRecoverLink("http://test/", tokenString)
+
+	if err := h.infra.SMTPClient().SendMailRecoveryPassword(email, recoveUrl); err != nil {
+		response.New(c).Error(500, err)
+		return
+	}
+
+	c.JSON(200, gin.H{"message": "Recovery email sent successfully"})
+
+}
+
+func generateRecoverLink(baseURL, token string) string {
+	return fmt.Sprintf("%/reset-password?token=%s", baseURL, token)
 }
 
 func extractTokenFromHeader(c *gin.Context) string {

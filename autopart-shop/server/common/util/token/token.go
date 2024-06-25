@@ -34,17 +34,26 @@ type recoveryClaims struct {
 }
 
 func (t *token) GenerateRecoverToken(email string) (string, string) {
+	if t.secretKey == "" {
+		logrus.Panic("secret key is required")
+		return "", ""
+	}
+
+	logrus.Infof("Using secret key: %s", t.secretKey) // Отладочное сообщение
 	claims := &recoveryClaims{
 		email,
 		jwt.StandardClaims{},
 	}
 
-	ctx := jwt.NewWithClaims(jwt.SigningMethodES256, claims)
-	token, err := ctx.SignedString([]byte(t.secretKey))
+	ctx := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+
+	tokenString, err := ctx.SignedString([]byte(t.secretKey))
 	if err != nil {
 		logrus.Panic(err)
+		return "", ""
 	}
-	return time.Now().Add(time.Minute * 10).Format(time.RFC3339), token
+
+	return tokenString, ""
 }
 
 func (t *token) GenerateToken(username string, role string) (string, string) {

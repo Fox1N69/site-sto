@@ -121,6 +121,7 @@ func (c *server) v1() {
 			auth.POST("/register", authHandler.Register)
 			auth.POST("/login", authHandler.Login)
 			auth.POST("/logout", authHandler.Logout)
+			auth.POST("/recovery-password", authHandler.RecoverPassword)
 		}
 
 		user := v1.Group("/user")

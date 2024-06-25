@@ -67,7 +67,8 @@ func (sm *serviceManager) AutoPartService() service.AutoPartService {
 
 func (sm *serviceManager) AuthService() service.AuthService {
 	authServiceOnce.Do(func() {
-		authService = sm.repo.AuthRepo()
+		authRepo = sm.repo.AuthRepo()
+		authService = service.NewAuthService(authRepo)
 	})
 
 	return authService

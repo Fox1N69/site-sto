@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"shop-server/common/util/smtp"
 	"sync"
 	"time"
 
@@ -22,10 +23,12 @@ type Infra interface {
 	Migrate(values ...interface{})
 	Port() string
 	RedisClient() *redis.Client
+	SMTPClient() smtp.SmtpClient
 }
 
 type infra struct {
 	configFile string
+	smtpClient smtp.SmtpClient
 }
 
 func New(configFile string) Infra {
@@ -169,4 +172,8 @@ func (i *infra) RedisClient() *redis.Client {
 	})
 
 	return rdb
+}
+
+func (i *infra) SMTPClient() smtp.SmtpClient {
+	return i.smtpClient
 }
