@@ -27,6 +27,25 @@ type authClaims struct {
 	jwt.StandardClaims
 }
 
+type recoveryClaims struct {
+	Email string `json:"email"`
+	jwt.StandardClaims
+}
+
+func (t *token) GenerateRecoverToken(email string) (string, string) {
+	claims := &recoveryClaims{
+		email,
+		jwt.StandardClaims{},
+	}
+
+	ctx := jwt.NewWithClaims(jwt.SigningMethodES256, claims)
+	token, err := ctx.SignedString([]byte(t.secretKey))
+	if err != nil {
+		logrus.Panic(err)
+	}
+	return time.Now().Add(time.Minute * 10).Format(time.RFC3339), token
+}
+
 func (t *token) GenerateToken(username string, role string) (string, string) {
 	claims := &authClaims{
 		username,
@@ -51,4 +70,3 @@ func (t *token) ValidateToken(encodedToken string) (*jwt.Token, error) {
 		return []byte(t.secretKey), nil
 	})
 }
-
