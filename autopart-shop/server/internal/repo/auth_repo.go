@@ -14,6 +14,7 @@ type AuthRepo interface {
 	Delete(id int) error
 	GetUserByID(id uint) (*model.User, error)
 	GetUserByUsername(username string) (*model.User, error)
+	GetUserByEmail(email string) (*model.User, error)
 }
 
 type authRepo struct {
@@ -90,4 +91,13 @@ func (r *authRepo) Delete(id int) error {
 	}
 
 	return nil
+}
+
+func (r *authRepo) GetUserByEmail(email string) (*model.User, error) {
+	var user model.User
+	if err := r.db.Table("users").Where("email = ?", email).First(&user).Error; err != nil {
+		return nil, err
+	}
+
+	return &user, nil
 }
