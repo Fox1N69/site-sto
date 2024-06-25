@@ -16,37 +16,36 @@ interface PartActionProps {
 }
 
 export const PartAction: React.FC<PartActionProps> = ({ part }) => {
-	useCartStore();
-
 	const { data: session } = useSession();
 	const { itemsInCart, addItemToCart, removeItemFromCart } = useCartStore();
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
+	const [inCart, setInCart] = useState(false); // Добавлено состояние для отслеживания наличия товара в корзине
 
 	useEffect(() => {
 		const fetchCartStatus = async () => {
 			if (session?.user) {
-				const inCart = await checkIfInCart(
-					session.user.id,
-					session.user.token,
-					part.id
-				);
-				if (inCart) {
-					addItemToCart(part.id, part.price, part.name, part.img);
-				} else {
-					removeItemFromCart(part.id);
+				try {
+					const inCartResponse = await checkIfInCart(
+						session.user.id,
+						session.user.token,
+						[part.id]
+					);
+					setInCart(inCartResponse[part.id]); // Установка состояния в зависимости от ответа сервера
+				} catch (error) {
+					console.error('Failed to fetch cart status:', error);
 				}
 			}
 		};
 
 		fetchCartStatus();
-	}, [part.id, session?.user, addItemToCart, removeItemFromCart]);
+	}, [part.id, session?.user]);
 
 	const onToggleCart = async () => {
 		if (session?.user) {
 			try {
 				setIsLoading(true);
-				if (itemsInCart[part.id]) {
+				if (inCart) {
 					console.log('Открыть коризну');
 				} else {
 					await handleAddToCart({
@@ -58,6 +57,7 @@ export const PartAction: React.FC<PartActionProps> = ({ part }) => {
 						setError
 					});
 					addItemToCart(part.id, part.price, part.name, part.img);
+					setInCart(true); // Обновление состояния в компоненте
 				}
 			} catch (error) {
 				setError('Failed to add item to cart');
@@ -69,11 +69,11 @@ export const PartAction: React.FC<PartActionProps> = ({ part }) => {
 		}
 	};
 
-	const buttonText = itemsInCart[part.id] ? 'В корзине' : 'В корзину';
+	const buttonText = inCart ? 'В корзине' : 'В корзину';
 
 	return (
 		<>
-			{!itemsInCart[part.id] ? (
+			{!inCart ? (
 				<Button
 					className='w-full'
 					variant={'shadow'}

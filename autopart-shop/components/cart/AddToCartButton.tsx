@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { Button } from '@nextui-org/button';
 import {
@@ -18,37 +18,39 @@ const ButtonCart: React.FC<ButtonCartProps> = ({ part }) => {
 	const { itemsInCart, addItemToCart, removeItemFromCart } = useCartStore();
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
+	const [inCart, setInCart] = useState(false); // Добавлено состояние для отслеживания наличия товара в корзине
 
 	useEffect(() => {
 		const fetchCartStatus = async () => {
 			if (session?.user) {
-				const inCart = await checkIfInCart(
-					session.user.id,
-					session.user.token,
-					part.id
-				);
-				if (inCart) {
-					addItemToCart(part.id, part.price, part.name, part.img);
-				} else {
-					removeItemFromCart(part.id);
+				try {
+					const inCartResponse = await checkIfInCart(
+						session.user.id,
+						session.user.token,
+						[part.id]
+					);
+					setInCart(inCartResponse[part.id]); // Установка состояния в зависимости от ответа сервера
+				} catch (error) {
+					console.error('Failed to fetch cart status:', error);
 				}
 			}
 		};
 
 		fetchCartStatus();
-	}, [part.id, session?.user, addItemToCart, removeItemFromCart]);
+	}, [part.id, session?.user]);
 
 	const onToggleCart = async () => {
 		if (session?.user) {
 			try {
 				setIsLoading(true);
-				if (itemsInCart[part.id]) {
+				if (inCart) {
 					await handleRemoveFromCart({
 						token: session.user.token,
 						cartItemID: part.id,
 						userID: session.user.id
 					});
 					removeItemFromCart(part.id);
+					setInCart(false); // Обновление состояния в компоненте
 				} else {
 					await handleAddToCart({
 						userId: session.user.id,
@@ -59,6 +61,7 @@ const ButtonCart: React.FC<ButtonCartProps> = ({ part }) => {
 						setError
 					});
 					addItemToCart(part.id, part.price, part.name, part.img);
+					setInCart(true); // Обновление состояния в компоненте
 				}
 			} catch (error) {
 				setError('Failed to add item to cart');
@@ -70,19 +73,17 @@ const ButtonCart: React.FC<ButtonCartProps> = ({ part }) => {
 		}
 	};
 
-	const buttonText = itemsInCart[part.id] ? 'В корзине' : 'В корзину';
+	const buttonText = inCart ? 'В корзине' : 'В корзину';
 
 	return (
 		<Button
 			className={
-				itemsInCart[part.id]
-					? 'bg-transparent text-foreground border-default-200'
-					: ''
+				inCart ? 'bg-transparent text-foreground border-default-200' : ''
 			}
 			color='primary'
 			radius='full'
 			size='sm'
-			variant={itemsInCart[part.id] ? 'bordered' : 'solid'}
+			variant={inCart ? 'bordered' : 'solid'}
 			onPress={onToggleCart}
 			isLoading={isLoading}
 			disabled={isLoading}
