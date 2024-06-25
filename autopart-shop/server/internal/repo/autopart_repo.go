@@ -41,7 +41,6 @@ func (ar *autoPartRepo) Create(autoPart *model.AutoPart) error {
 			return err
 		}
 
-		// Cache the result
 		cacheKey := "all_auto_parts"
 		var autoParts []model.AutoPart
 		if err := tx.Preload("Categories").Preload("Brand").Preload("AutoPartInfo").Find(&autoParts).Error; err != nil {
@@ -143,6 +142,11 @@ func (ar *autoPartRepo) Update(product model.AutoPart, fieldsToUpdate map[string
 		if err := ar.db.Model(&existingProduct).Updates(fieldsToUpdate).Error; err != nil {
 			return err
 		}
+	}
+
+	cacheKey := "all_auto_parts"
+	if err := ar.redisClient.Del(context.Background(), cacheKey).Err(); err != nil {
+		return err
 	}
 
 	return nil
