@@ -74,19 +74,20 @@ export const AddProduct: React.FC = () => {
 
   const handleSubmit = async () => {
     if (!brand || selectedCategories.length === 0) {
-      alert("Please select a brand and at least one category.");
+      alert("Пожалуйста, выберите бренд и хотя бы одну категорию.");
       return;
     }
 
     const data = {
       name,
-      model_name: modelName,
       price: parseFloat(price),
+      img_url: "https://example.com/images/brake_pad.jpg",
+      model_name: modelName,
       category_id: selectedCategories.map((category) => category.id),
       brand_id: brand.id,
-      stock: parseInt(stock, 10),
       auto_part_info: autoPartInfo,
-      img: "https://example.com/images/brake_pad.jpg", // Замените на реальную ссылку на изображение
+      stock: parseInt(stock, 10),
+      model_auto_id: modelAuto ? [modelAuto.id] : [],
       for_years: tags,
     };
 
