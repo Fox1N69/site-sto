@@ -34,7 +34,7 @@ export const CollapseItems = ({ icon, children, title }: Props) => {
             </div>
           }
         >
-          <div className=" pl-7">{children}</div>
+          <div className=" pl-7 flex flex-col gap-2">{children}</div>
         </AccordionItem>
       </Accordion>
     </div>

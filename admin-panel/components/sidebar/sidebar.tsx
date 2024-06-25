@@ -71,7 +71,7 @@ export const SidebarWrapper = () => {
                 />
                 <SidebarItem
                   isActive={pathname === "/brand"}
-                  title="Марки авто"
+                  title="Бренды авто"
                   href="brand"
                   icon={<BalanceIcon />}
                 />
