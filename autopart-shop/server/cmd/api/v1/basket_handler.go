@@ -5,6 +5,7 @@ import (
 	"shop-server/internal/model"
 	"shop-server/internal/service"
 	"strconv"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -117,8 +118,25 @@ func (h *basketHandler) UpdateBasketItemQuantity(c *gin.Context) {
 }
 
 func (h *basketHandler) CheckBasket(c *gin.Context) {
-	autoPartID, _ := strconv.ParseUint(c.Param("autopart_id"), 10, 32)
-	userID, _ := strconv.ParseUint(c.Param("id"), 10, 32)
+	autoPartIDs := []uint{}
+	partIDStr := c.Param("autopart_ids")
+
+	parts := strings.Split(partIDStr, ",")
+	for _, str := range parts {
+		trimmedStr := strings.TrimSpace(str)
+		autoPartID, err := strconv.ParseUint(trimmedStr, 10, 32)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid auto part ID: " + trimmedStr})
+			return
+		}
+		autoPartIDs = append(autoPartIDs, uint(autoPartID))
+	}
+
+	userID, err := strconv.ParseUint(c.Param("id"), 10, 32)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
+		return
+	}
 
 	basket, err := h.service.GetBasketByUserID(uint(userID))
 	if err != nil {
@@ -126,11 +144,11 @@ func (h *basketHandler) CheckBasket(c *gin.Context) {
 		return
 	}
 
-	exist, err := h.service.CheckBasket(basket.ID, uint(autoPartID))
+	results, err := h.service.CheckBasket(basket.ID, autoPartIDs)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"inCart": exist})
+	c.JSON(http.StatusOK, results)
 }

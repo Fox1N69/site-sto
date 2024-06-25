@@ -15,7 +15,7 @@ type BasketRepo interface {
 	ClearBasket(basketID uint) error
 	UpdateBasketItemQuantity(userID, autoPartID uint, quantity uint) error
 	RemoveAllItems(basketID uint) error
-	CheckBasket(basketID, autoPartID uint) (bool, error)
+	CheckBasket(basketID uint, autoPartID []uint) (map[uint]bool, error)
 }
 
 type basketRepo struct {
@@ -102,12 +102,30 @@ func (r *basketRepo) RemoveAllItems(basketID uint) error {
 	return r.db.Where("basket_id = ?", basketID).Delete(&model.BasketItem{}).Error
 }
 
-func (r *basketRepo) CheckBasket(basketID, autoPartID uint) (bool, error) {
-	var count int64
-	err := r.db.Model(&model.BasketItem{}).Where("basket_id = ? AND auto_part_id = ?", basketID, autoPartID).Count(&count).Error
-	if err != nil {
-		return false, err
+func (r *basketRepo) CheckBasket(basketID uint, autoPartIDs []uint) (map[uint]bool, error) {
+	result := make(map[uint]bool)
+
+	var items []struct {
+		AutoPartID uint
 	}
 
-	return count > 0, nil
+	if err := r.db.Model(&model.BasketItem{}).
+		Select("auto_part_id").
+		Where("basket_id = ?", basketID).
+		Where("auto_part_id IN (?)", autoPartIDs).
+		Find(&items).Error; err != nil {
+		return nil, err
+	}
+
+	for _, item := range items {
+		result[item.AutoPartID] = true
+	}
+
+	for _, id := range autoPartIDs {
+		if _, ok := result[id]; !ok {
+			result[id] = false
+		}
+	}
+
+	return result, nil
 }
