@@ -1,12 +1,14 @@
 package infra
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"sync"
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-redis/redis/v8"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 	"gorm.io/driver/postgres"
@@ -19,6 +21,7 @@ type Infra interface {
 	GormDB() *gorm.DB
 	Migrate(values ...interface{})
 	Port() string
+	RedisInit()
 }
 
 type infra struct {
@@ -106,7 +109,6 @@ func (i *infra) GormDB() *gorm.DB {
 		grm = db
 	})
 
-
 	return grm
 }
 
@@ -139,4 +141,20 @@ func (i *infra) Port() string {
 	})
 
 	return ":" + port
+}
+
+var RDB *redis.Client
+
+func (i *infra) RedisInit() {
+	RDB = redis.NewClient(&redis.Options{
+		Addr:     "localhost:6379",
+		Password: "",
+		DB:       0,
+	})
+
+	_, err := RDB.Ping(context.Background()).Result()
+	if err != nil {
+		logrus.Fatalf("[infra][InitRedis] %v", err)
+	}
+	logrus.Println("Connected to Redis")
 }
