@@ -47,14 +47,17 @@ export const RenderCell: React.FC<Props> = ({
       );
     case "brand_name":
       return <span>{product.brand_name}</span>;
+    case "stock":
+      return <span>{product.stock}</span>
     case "for_years":
       return (
         <div className="flex gap-2">
-          {product.for_years.map((year, index) => (
-            <Chip key={index} size="sm" variant="bordered" color="primary">
-              {year}
-            </Chip>
-          ))}
+          {Array.isArray(product.for_years) &&
+            product.for_years.map((year: number, index) => (
+              <Chip key={index} size="sm" variant="bordered" color="primary">
+                {year}
+              </Chip>
+            ))}
         </div>
       );
     case "actions":
@@ -72,7 +75,10 @@ export const RenderCell: React.FC<Props> = ({
           </div>
           <div>
             <Tooltip content="Удалить" color="danger" onClick={() => {}}>
-              <DeleteIcon size={20} fill="#FF0000" />
+              <DeleteButton
+                productId={product.id}
+                websocketRef={websocketRef}
+              />
             </Tooltip>
           </div>
         </div>

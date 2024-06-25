@@ -27,7 +27,7 @@ export const TableWrapperProducts: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor | null>(
     null
-  ); // Change undefined to null for initial state
+  );
   const websocketRef = useRef<WebSocket | null>(null);
 
   const handleEditUser = (product: Product) => {
@@ -65,24 +65,24 @@ export const TableWrapperProducts: React.FC = () => {
         console.log("Received data: ", data);
 
         if (data.type === "allAutoParts") {
-          const flatProducts = flattenProducts(data.parts);
+          const flatProducts = flattenProducts(data.autoParts);
           setProducts(flatProducts);
           setIsLoading(false);
         }
-        if (data.type === "newPartAdded" && data.part) {
-          const newPart = data.part;
+        if (data.type === "newAutoPartAdded" && data.autoPart) {
+          const newAutoPart = data.autoPart;
           const updatedPart = {
-            ...newPart,
-            brand_name: newPart.Brand?.name,
-            category_name: newPart.categories
+            ...newAutoPart,
+            brand_name: newAutoPart.Brand?.name,
+            category_name: newAutoPart.categories
               ?.map((category: { name: string }) => category.name)
               .join(", "),
           };
           setProducts((prevProducts) => [...prevProducts, updatedPart]);
         }
-        if (data.type === "partDeleted" && data.partID) {
+        if (data.type === "autoPartDeleted" && data.autoPartID) {
           setProducts((prevProducts) =>
-            prevProducts.filter((part) => part.id !== data.partID)
+            prevProducts.filter((part) => part.id !== data.autoPartID)
           );
         }
       } catch (error) {

@@ -393,7 +393,6 @@ func (h *adminHandler) AutoPartWS(c *gin.Context) {
 
 		switch msg["type"] {
 		case "getAllAutoParts":
-			// Получение всех автозапчастей
 			data, err := h.service.GetAllAutoParts()
 			if err != nil {
 				logrus.Println("Ошибка получения всех автозапчастей:", err)

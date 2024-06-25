@@ -18,8 +18,8 @@ const DeleteButton: React.FC<DeleteButtonProps> = ({
   const handleDelete = () => {
     if (websocketRef?.current) {
       const message = {
-        type: "deletePart",
-        partID: productId.toString(),
+        type: "deleteAutoPart",
+        autoPartID: productId.toString(),
       };
       websocketRef.current.send(JSON.stringify(message));
     } else {
