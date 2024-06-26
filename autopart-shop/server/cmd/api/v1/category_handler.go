@@ -5,6 +5,7 @@ import (
 	"shop-server/common/http/response"
 	"shop-server/internal/model"
 	"shop-server/internal/service"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -12,6 +13,7 @@ import (
 type CategoryHandler interface {
 	CreateCategory(c *gin.Context)
 	GetAllCategory(c *gin.Context)
+	CategoryUpdate(c *gin.Context)
 }
 
 type categoryHandler struct {
@@ -45,4 +47,25 @@ func (h *categoryHandler) GetAllCategory(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, data)
+}
+
+func (h *categoryHandler) CategoryUpdate(c *gin.Context) {
+	categoryID, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	if err != nil {
+		response.New(c).Error(400, err)
+		return
+	}
+
+	category, err := h.service.GetCategoryByID(uint(categoryID))
+	if err != nil {
+		response.New(c).Error(501, err)
+		return
+	}
+
+	if err := h.service.UpdateCategory(category); err != nil {
+		response.New(c).Error(500, err)
+		return
+	}
+
+	c.JSON(200, gin.H{"message": "Category update success"})
 }

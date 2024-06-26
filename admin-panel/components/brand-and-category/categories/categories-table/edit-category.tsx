@@ -13,19 +13,19 @@ import {
 } from "@nextui-org/react";
 import React, { ChangeEvent, useEffect, useState } from "react";
 import { EditIcon } from "@/components/icons/table/edit-icon";
-import { Brand, ModelAuto } from "@/types";
+import { Brand, Category, ModelAuto } from "@/types";
 import { useSession } from "next-auth/react";
 import { Icon } from "@iconify/react";
 import { updateBrand } from "@/utils/fetching";
 
 interface EditBrandsProps {
   selectedBrandlID: number;
-  brand: Brand;
+  category: Category;
 }
 
 export const EditBrand: React.FC<EditBrandsProps> = ({
   selectedBrandlID,
-  brand,
+  category,
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { data: session } = useSession();
@@ -53,12 +53,12 @@ export const EditBrand: React.FC<EditBrandsProps> = ({
       <Modal isOpen={isOpen} onOpenChange={onClose} placement="top-center">
         <ModalContent>
           <ModalHeader className="flex flex-col gap-1">
-            Редактировать модель
+            Редактировать категорию
           </ModalHeader>
           <ModalBody>
             <Input
               label="Название бренда"
-              name="brand"
+              name="name"
               type="text"
               defaultValue={name}
               onChange={(e) => setName(e.target.value)}

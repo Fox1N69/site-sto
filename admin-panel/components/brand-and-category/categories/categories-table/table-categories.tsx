@@ -8,13 +8,11 @@ import {
   TableRow,
   useDisclosure,
 } from "@nextui-org/react";
-import React, { Key, useEffect, useMemo, useState } from "react";
+import React, { Key, useState } from "react";
 import { columns } from "./columns";
 import { RenderCellBrand } from "./render-cell";
-import axios from "axios";
 import { useAsyncList } from "@react-stately/data";
 import { Brand } from "@/types";
-import { SessionContext, SessionProvider, useSession } from "next-auth/react";
 
 export const TableWrapperCategories = () => {
   const [editedUser, setEditedUser] = useState(null);

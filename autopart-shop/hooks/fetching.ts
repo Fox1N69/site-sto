@@ -222,7 +222,7 @@ export const useFetchModelAuto = ({ brandId }: { brandId: number }) => {
 		const fetchData = async () => {
 			try {
 				const response = await axios.get<ModelAuto[]>(
-					`http://localhost:4000/shop/modelauto/${brandId}`
+					`http://83.166.238.8:4000/shop/modelauto/${brandId}`
 				);
 				setModelAuto(response.data);
 			} catch (error) {

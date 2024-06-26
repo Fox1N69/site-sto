@@ -99,6 +99,7 @@ func (c *server) v1() {
 		category := admin.Group("/category")
 		{
 			category.POST("/create", categoryHandler.CreateCategory)
+			category.PUT("/update/:id", categoryHandler.CategoryUpdate)
 		}
 
 		modelauto := admin.Group("/model-auto")
