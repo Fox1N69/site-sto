@@ -92,8 +92,11 @@ type Brand struct {
 }
 
 type BrandCategory struct {
-	BrandID    uint
-	CategoryID uint
+	BrandID    uint `gorm:"primaryKey;constraint:OnDelete:CASCADE"`
+	CategoryID uint `gorm:"primaryKey;constraint:OnDelete:CASCADE"`
+
+	Brand    Brand    `gorm:"foreignKey:BrandID;constraint:OnDelete:CASCADE"`
+	Category Category `gorm:"foreignKey:CategoryID;constraint:OnDelete:CASCADE"`
 }
 
 type Order struct {

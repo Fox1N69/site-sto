@@ -10,7 +10,7 @@ type CategoryRepo interface {
 	CreateCategory(newCategory *model.Category) error
 	GetAll() ([]model.Category, error)
 	GetCategoryByID(id uint) (*model.Category, error)
-	UpdateCategory(category *model.Category) error
+	UpdateCategory(categoryID uint, updateFields map[string]interface{}) error
 	DeleteCategory(id uint) error
 	AssociateCategoryToBrand(categoryID, BrandID uint) error
 	RemoveBrandFromCategory(categoryID, brandID uint) error
@@ -44,8 +44,13 @@ func (repo *categoryRepo) GetCategoryByID(id uint) (*model.Category, error) {
 	return &category, err
 }
 
-func (cr *categoryRepo) UpdateCategory(category *model.Category) error {
-	return cr.db.Save(category).Error
+func (cr *categoryRepo) UpdateCategory(categoryID uint, updateFields map[string]interface{}) error {
+	for key, value := range updateFields {
+		if err := cr.db.Model(&model.Category{}).Where("id = ?", categoryID).Update(key, value).Error; err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func (cr *categoryRepo) DeleteCategory(id uint) error {
