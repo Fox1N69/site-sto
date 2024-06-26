@@ -16,6 +16,8 @@ import { useBranch } from "../context/BranchContext";
 import { BalanceIcon } from "../icons/sidebar/balance-icon";
 import { TableWrapperBrands } from "./brand-table/table-brand";
 import { AddBrands } from "./add-brand";
+import { TableWrapperCategories } from "./categories/categories-table/table-categories";
+import { AddCategories } from "./categories/add-category";
 
 interface Item {
   id: number;
@@ -48,7 +50,7 @@ export const Brands = () => {
   }, [searchValue, items]);
 
   return (
-    <div className="my-14 lg:px-6 max-w-[95rem] mx-auto w-full flex flex-col gap-4">
+    <div className="my-14 lg:px-6 max-w-[95rem] mx-auto w-full flex flex-col gap-12">
       <ul className="flex">
         <li className="flex gap-2">
           <HouseIcon />
@@ -68,7 +70,7 @@ export const Brands = () => {
         </li>
       </ul>
 
-      <h3 className="text-xl font-semibold">Все заявки</h3>
+      <h3 className="text-xl font-semibold">Бренды</h3>
       <div className="flex justify-between flex-wrap gap-4 items-center">
         <div className="flex items-center gap-3 flex-wrap md:flex-nowrap">
           <Input
@@ -89,9 +91,34 @@ export const Brands = () => {
             Экспорт CSV
           </Button>
         </div>
+        <div className="max-w-[95rem] mx-auto w-full">
+          <TableWrapperBrands />
+        </div>
       </div>
-      <div className="max-w-[95rem] mx-auto w-full">
-        <TableWrapperBrands />
+      <h3 className="text-xl font-semibold">Категории</h3>
+      <div className="flex justify-between flex-wrap gap-4 items-center">
+        <div className="flex items-center gap-3 flex-wrap md:flex-nowrap">
+          <Input
+            classNames={{
+              input: "w-full",
+              mainWrapper: "w-full",
+            }}
+            placeholder="Search users"
+          />
+          <SettingsIcon />
+          <TrashIcon />
+          <InfoIcon />
+          <DotsIcon />
+        </div>
+        <div className="flex flex-row gap-3.5 flex-wrap">
+          <AddCategories />
+          <Button color="primary" startContent={<ExportIcon />}>
+            Экспорт CSV
+          </Button>
+        </div>
+        <div className="max-w-[95rem] mx-auto w-full">
+          <TableWrapperCategories />
+        </div>
       </div>
     </div>
   );
