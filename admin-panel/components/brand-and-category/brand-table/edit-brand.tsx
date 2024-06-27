@@ -60,14 +60,14 @@ export const EditBrand: React.FC<EditBrandsProps> = ({
               label="Название бренда"
               name="brand"
               type="text"
-              defaultValue={name}
+              value={name}
               onChange={(e) => setName(e.target.value)}
             />
             <Input
               label="Изображение"
               name="image_url"
               type="text"
-              defaultValue={imgUrl}
+              value={imgUrl}
               onChange={(e) => setImgUrl(e.target.value)}
             />
           </ModalBody>

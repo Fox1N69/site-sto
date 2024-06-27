@@ -8,25 +8,25 @@ import { Span } from "next/dist/trace";
 import { useSession } from "next-auth/react";
 import { deleteProduct, updateModelReleaseYear } from "@/utils/fetching";
 import DeleteButton from "./delete-button";
-import { EditBrand } from "./edit-category";
+import { EditCategory } from "./edit-category";
 import DeleteModelButton from "./delete-button";
 import { appendFile } from "fs";
 import { release } from "os";
 import Cookies from "js-cookie";
 
 interface Props {
-  brand: Brand;
+  category: Category;
   columnKey: string | React.Key;
   onEdit: (brand: any) => void;
 }
 
 export const RenderCellBrand: React.FC<Props> = ({
-  brand,
+  category,
   columnKey,
   onEdit,
 }: Props) => {
   // @ts-ignore
-  const cellValue = brand[columnKey];
+  const cellValue = category[columnKey];
   switch (columnKey) {
     case "id":
       return <span>{cellValue}</span>;
@@ -44,21 +44,24 @@ export const RenderCellBrand: React.FC<Props> = ({
         <div className="flex items-center gap-4 ">
           <div>
             <Tooltip content="Подробнее">
-              <button onClick={() => console.log("View user", brand.id)}>
+              <button onClick={() => console.log("View user", category.id)}>
                 <EyeIcon size={20} fill="#979797" />
               </button>
             </Tooltip>
           </div>
           <div>
-            <EditBrand brand={brand} selectedBrandlID={brand.id} />
+            <EditCategory
+              category={category}
+              selectedCategoryID={category.id}
+            />
           </div>
           <div>
             <Tooltip
               content="Удалить"
               color="danger"
-              onClick={() => console.log("Delete user", brand.id)}
+              onClick={() => console.log("Delete user", category.id)}
             >
-              <DeleteModelButton brandID={brand.id} />
+              <DeleteModelButton brandID={category.id} />
             </Tooltip>
           </div>
         </div>

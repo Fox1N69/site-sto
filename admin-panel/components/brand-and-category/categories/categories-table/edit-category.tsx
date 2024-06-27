@@ -16,15 +16,15 @@ import { EditIcon } from "@/components/icons/table/edit-icon";
 import { Brand, Category, ModelAuto } from "@/types";
 import { useSession } from "next-auth/react";
 import { Icon } from "@iconify/react";
-import { updateBrand } from "@/utils/fetching";
+import { updateBrand, updateCategory } from "@/utils/fetching";
 
-interface EditBrandsProps {
-  selectedBrandlID: number;
+interface EditCategoryProps {
+  selectedCategoryID: number;
   category: Category;
 }
 
-export const EditBrand: React.FC<EditBrandsProps> = ({
-  selectedBrandlID,
+export const EditCategory: React.FC<EditCategoryProps> = ({
+  selectedCategoryID,
   category,
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -38,7 +38,7 @@ export const EditBrand: React.FC<EditBrandsProps> = ({
       name,
       image_url: imgUrl,
     };
-    await updateBrand(token, selectedBrandlID, data);
+    await updateCategory(token, selectedCategoryID, data);
     onClose();
   };
 

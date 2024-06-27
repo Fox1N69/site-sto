@@ -12,19 +12,19 @@ import React, { Key, useState } from "react";
 import { columns } from "./columns";
 import { RenderCellBrand } from "./render-cell";
 import { useAsyncList } from "@react-stately/data";
-import { Brand } from "@/types";
+import { Brand, Category } from "@/types";
 
 export const TableWrapperCategories = () => {
   const [editedUser, setEditedUser] = useState(null);
   const { isOpen, onOpen } = useDisclosure();
   const [isLoading, setIsLoading] = React.useState(true);
 
-  const handleEditUser = (brand: any) => {
-    setEditedUser(brand);
+  const handleEditUser = (category: any) => {
+    setEditedUser(category);
     onOpen();
   };
 
-  const list = useAsyncList<Brand>({
+  const list = useAsyncList<Category>({
     async load({ signal }) {
       let res = await fetch("http://localhost:4000/shop/categorys", {
         signal,
@@ -41,8 +41,8 @@ export const TableWrapperCategories = () => {
     async sort({ items, sortDescriptor }) {
       return {
         items: items.sort((a, b) => {
-          let first = a[sortDescriptor.column as keyof Brand];
-          let second = b[sortDescriptor.column as keyof Brand];
+          let first = a[sortDescriptor.column as keyof Category];
+          let second = b[sortDescriptor.column as keyof Category];
           if (first == null || second == null) {
             return 0;
           }
@@ -95,7 +95,7 @@ export const TableWrapperCategories = () => {
               {(columnKey: Key) => (
                 <TableCell>
                   {RenderCellBrand({
-                    brand: item,
+                    category: item,
                     columnKey: columnKey,
                     onEdit: handleEditUser,
                   })}

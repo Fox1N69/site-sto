@@ -15,6 +15,7 @@ import {
 } from "@nextui-org/react";
 import { useBranch } from "../../context/BranchContext";
 import { useSession } from "next-auth/react";
+import { updateCategory } from "@/utils/fetching";
 
 export const AddCategories = () => {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();

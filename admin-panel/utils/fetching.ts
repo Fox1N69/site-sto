@@ -278,3 +278,23 @@ export const updateBrand = async (
     console.log(error, "fatal update brand");
   }
 };
+
+export const updateCategory = async (
+  token: string | undefined,
+  selectCategoryID: number,
+  data: { name: string; image_url: string }
+) => {
+  try {
+    const response = await axios.put(
+      `http://localhost:4000/admin/category/update/${selectCategoryID}`,
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+  } catch (error) {
+    console.log(error, "fatal update category");
+  }
+};
