@@ -337,6 +337,7 @@ func (h *adminHandler) ModelAutoWS(c *gin.Context) {
 	logrus.Println("WebSocket соединение закрыто")
 }
 
+// WebSocket для таблицы с запчастями
 func (h *adminHandler) AutoPartWS(c *gin.Context) {
 	conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
 	if err != nil {
@@ -357,6 +358,9 @@ func (h *adminHandler) AutoPartWS(c *gin.Context) {
 			case newAutoPart := <-h.service.AddAutoPartToChannel():
 				logrus.Println("Получена новая автозапчасть:", newAutoPart)
 				eventCh <- newAutoPart
+			case updatedAutoPart := <-h.service.UpdateToChannel():
+				logrus.Println("Обновлена автозапчасть:", updatedAutoPart)
+				eventCh <- updatedAutoPart
 			case deletedAutoPartID := <-h.service.DeleteAtuoPartFromChannel():
 				logrus.Println("Удалена автозапчасть с ID:", deletedAutoPartID)
 				eventCh <- model.AutoPart{
@@ -436,6 +440,44 @@ func (h *adminHandler) AutoPartWS(c *gin.Context) {
 				"type":       "autoPartDeleted",
 				"autoPartID": autoPartID,
 			})
+		case "updateAutoPart":
+			var autoPartIDStr string
+			var fieldsToUpdate map[string]interface{}
+			if val, ok := msg["autoPartID"].(string); ok {
+				autoPartIDStr = val
+			} else {
+				conn.WriteMessage(websocket.TextMessage, []byte("Неверный формат autoPartID"))
+				continue
+			}
+
+			if val, ok := msg["fieldsToUpdate"].(map[string]interface{}); ok {
+				fieldsToUpdate = val
+			} else {
+				conn.WriteMessage(websocket.TextMessage, []byte("Неверный формат fieldsToUpdate"))
+				continue
+			}
+
+			autoPartID, err := strconv.ParseUint(autoPartIDStr, 10, 64)
+			if err != nil {
+				conn.WriteMessage(websocket.TextMessage, []byte("Неверный формат autoPartID"))
+				continue
+			}
+
+			product := model.AutoPart{ShopCustom: model.ShopCustom{ID: uint(autoPartID)}}
+			err = h.service.UpdateAutoPart(product, fieldsToUpdate)
+			if err != nil {
+				logrus.Println("Ошибка обновления автозапчасти:", err)
+				conn.WriteJSON(map[string]interface{}{
+					"type":  "updateAutoPartError",
+					"error": err.Error(),
+				})
+				continue
+			}
+
+			conn.WriteJSON(map[string]interface{}{
+				"type":       "autoPartUpdated",
+				"autoPartID": autoPartID,
+			})
 		case "subscribeEvents":
 			go func(ch chan model.AutoPart, conn *websocket.Conn, doneCh chan struct{}) {
 				for {
@@ -449,6 +491,11 @@ func (h *adminHandler) AutoPartWS(c *gin.Context) {
 							conn.WriteJSON(map[string]interface{}{
 								"type":       "autoPartDeleted",
 								"autoPartID": event.ID,
+							})
+						} else if event.ID != 0 && event.Name != "" { // Проверка на наличие обновленных полей
+							conn.WriteJSON(map[string]interface{}{
+								"type":     "autoPartUpdated",
+								"autoPart": event,
 							})
 						} else {
 							conn.WriteJSON(map[string]interface{}{

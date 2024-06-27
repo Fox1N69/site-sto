@@ -111,11 +111,10 @@ export const EditProduct: React.FC<EditProductsProps> = ({
   }, []);
 
   useEffect(() => {
-    // Обновляем только id категорий для editedProduct
     setEditedProduct((prevProduct) => ({
       ...prevProduct,
       for_years: tags,
-      category_id: selectedCategories.map((category) => category.id), // Теперь правильно обрабатываем id
+      category_id: selectedCategories.map((category) => category.id),
     }));
   }, [tags, selectedCategories]);
 

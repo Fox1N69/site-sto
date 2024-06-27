@@ -24,6 +24,7 @@ type AutoPartRepo interface {
 	Exists(id uint) (bool, error)
 	Search(query string) ([]model.AutoPart, error)
 	FindByModelAndYear(modelName string, year int) ([]model.AutoPart, error)
+	InvalidateCache() error
 }
 
 type autoPartRepo struct {
@@ -254,4 +255,13 @@ func (ar *autoPartRepo) FindByModelAndYear(modelName string, year int) ([]model.
 	}
 
 	return autoParts, nil
+}
+
+func (ar *autoPartRepo) InvalidateCache() error {
+	cacheKey := "all_auto_parts"
+	if err := ar.redisClient.Del(context.Background(), cacheKey).Err(); err != nil {
+		return err
+	}
+
+	return nil
 }

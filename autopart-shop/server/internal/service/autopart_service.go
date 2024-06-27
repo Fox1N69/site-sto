@@ -13,6 +13,7 @@ type AutoPartService interface {
 	GetAllAutoParts(ctx context.Context) ([]model.AutoPart, string, error)
 	GetAutoPartByID(id uint) (*model.AutoPart, error)
 	UpdateAutoPart(product model.AutoPart, fieldsToUpdate map[string]interface{}) error
+	UpdateToChannel() <-chan model.AutoPart
 	DeleteAutoPart(id uint) error
 	DeleteAtuoPartFromChannel() <-chan uint
 	CheckStock(id uint) (int, error)
@@ -25,6 +26,7 @@ type autoPartService struct {
 	autoPartRepo  repo.AutoPartRepo
 	addChannel    chan model.AutoPart
 	deleteChannel chan uint
+	updateChannel chan model.AutoPart
 }
 
 func NewAutoPartService(autoPartRepo repo.AutoPartRepo) AutoPartService {
@@ -32,6 +34,7 @@ func NewAutoPartService(autoPartRepo repo.AutoPartRepo) AutoPartService {
 		autoPartRepo:  autoPartRepo,
 		addChannel:    make(chan model.AutoPart),
 		deleteChannel: make(chan uint),
+		updateChannel: make(chan model.AutoPart),
 	}
 }
 
@@ -39,6 +42,7 @@ func (s *autoPartService) CreateAutoPart(autoPart *model.AutoPart) error {
 	err := s.autoPartRepo.Create(autoPart)
 	if err == nil {
 		s.addChannel <- *autoPart
+		s.autoPartRepo.InvalidateCache()
 	}
 	return nil
 }
@@ -56,7 +60,19 @@ func (s *autoPartService) GetAutoPartByID(id uint) (*model.AutoPart, error) {
 }
 
 func (s *autoPartService) UpdateAutoPart(product model.AutoPart, fieldsToUpdate map[string]interface{}) error {
-	return s.autoPartRepo.Update(product, fieldsToUpdate)
+	err := s.autoPartRepo.Update(product, fieldsToUpdate)
+	if err == nil {
+		updatedProduct, err := s.autoPartRepo.GetByID(product.ID)
+		if err == nil {
+			s.updateChannel <- *updatedProduct
+			s.autoPartRepo.InvalidateCache()
+		}
+	}
+	return err
+}
+
+func (s *autoPartService) UpdateToChannel() <-chan model.AutoPart {
+	return s.updateChannel
 }
 
 func (s *autoPartService) DeleteAutoPart(id uint) error {
@@ -64,6 +80,7 @@ func (s *autoPartService) DeleteAutoPart(id uint) error {
 		return err
 	}
 	s.deleteChannel <- id
+	s.autoPartRepo.InvalidateCache()
 	return nil
 }
 
@@ -88,11 +105,11 @@ func (s *autoPartService) ReduceStock(id uint, quantity int) error {
 	if err != nil {
 		return err
 	}
-	stockUint := uint(stock) // Преобразование типа int в uint
+	stockUint := uint(stock)
 	if stockUint < uint(quantity) {
 		return errors.New("not enough stock")
 	}
-	newStock := int(stockUint - uint(quantity)) // Преобразование обратно в int
+	newStock := int(stockUint - uint(quantity))
 	return s.autoPartRepo.UpdateStock(id, newStock)
 }
 
