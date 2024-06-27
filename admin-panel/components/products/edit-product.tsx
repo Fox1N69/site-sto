@@ -37,13 +37,12 @@ export const EditProduct: React.FC<EditProductsProps> = ({
   const { data: session } = useSession();
   const [brands, setBrands] = useState<Brand[]>([]);
   const {
-    selectedCategory,
+    selectedCategories,
     selectedBrand,
-    setSelectedCategory,
+    toggleSelectedCategory,
     setSelectedBrand,
   } = useEditStore();
 
-  //Edit for_years on the product
   const [inputYear, setYearValue] = useState<string>("");
   const [tags, setTags] = useState<number[]>([]);
   const [showEnter, setShowEnter] = useState<boolean>(false);
@@ -112,11 +111,13 @@ export const EditProduct: React.FC<EditProductsProps> = ({
   }, []);
 
   useEffect(() => {
+    // Обновляем только id категорий для editedProduct
     setEditedProduct((prevProduct) => ({
       ...prevProduct,
       for_years: tags,
+      category_id: selectedCategories.map((category) => category.id), // Теперь правильно обрабатываем id
     }));
-  }, [tags]);
+  }, [tags, selectedCategories]);
 
   const handleChange = (e: any) => {
     const { name, value } = e.target;
@@ -149,13 +150,44 @@ export const EditProduct: React.FC<EditProductsProps> = ({
     onClose();
   };
 
-  const handleCategoryChange = (category: Category) => {
-    setEditedProduct((prevProduct) => ({
-      ...prevProduct,
-      category_id: category.id,
-    }));
-    setSelectedCategory(category);
-  };
+  useEffect(() => {
+    const fetchInitialData = async () => {
+      const categoriesData = await fetchCategories();
+      setCategories(categoriesData);
+
+      const brandsData = await fetchBrands();
+      setBrands(brandsData);
+    };
+
+    fetchInitialData();
+  }, []);
+
+  const renderCategoryDropdown = () => (
+    <Dropdown>
+      <DropdownTrigger>
+        <Button variant="bordered">
+          {selectedCategories.length > 0
+            ? `Категории: ${selectedCategories.map((c) => c.name).join(", ")}`
+            : "Выберите категории"}
+        </Button>
+      </DropdownTrigger>
+      <DropdownMenu>
+        {categories.map((category) => (
+          <DropdownItem
+            key={category.id}
+            color={
+              selectedCategories.find((c) => c.id === category.id)
+                ? "danger"
+                : "success"
+            }
+            onClick={() => toggleSelectedCategory(category)}
+          >
+            {category.name}
+          </DropdownItem>
+        ))}
+      </DropdownMenu>
+    </Dropdown>
+  );
 
   const handleBrandChange = (brand: Brand) => {
     setEditedProduct((prevProduct) => ({
@@ -218,25 +250,8 @@ export const EditProduct: React.FC<EditProductsProps> = ({
               </DropdownMenu>
             </Dropdown>
 
-            <Dropdown>
-              <DropdownTrigger>
-                <Button variant="bordered">
-                  {selectedCategory
-                    ? selectedCategory.name
-                    : "Выберите категорию"}
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu>
-                {categories.map((category) => (
-                  <DropdownItem
-                    key={category.id}
-                    onClick={() => handleCategoryChange(category)}
-                  >
-                    {category.name}
-                  </DropdownItem>
-                ))}
-              </DropdownMenu>
-            </Dropdown>
+            {renderCategoryDropdown()}
+
             <Input
               label="Наличие"
               variant="bordered"

@@ -1,5 +1,5 @@
 import { Brand } from "./../types.d";
-import create from "zustand";
+import { create } from "zustand";
 
 interface Category {
   id: number;
@@ -7,15 +7,29 @@ interface Category {
 }
 
 interface CategoryState {
-  selectedCategory: Category | null;
-  setSelectedCategory: (category: Category | null) => void;
+  selectedCategories: Category[];
+  toggleSelectedCategory: (category: Category) => void;
   selectedBrand: Brand | null;
   setSelectedBrand: (brand: Brand) => void;
 }
 
 export const useEditStore = create<CategoryState>((set) => ({
-  selectedCategory: null,
-  setSelectedCategory: (category) => set({ selectedCategory: category }),
+  selectedCategories: [],
+  toggleSelectedCategory: (category) =>
+    set((state) => {
+      const isCategorySelected = state.selectedCategories.some(
+        (c) => c.id === category.id
+      );
+      if (isCategorySelected) {
+        return {
+          selectedCategories: state.selectedCategories.filter(
+            (c) => c.id !== category.id
+          ),
+        };
+      } else {
+        return { selectedCategories: [...state.selectedCategories, category] };
+      }
+    }),
   selectedBrand: null,
   setSelectedBrand: (brand: Brand) => set({ selectedBrand: brand }),
 }));
