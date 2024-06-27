@@ -114,19 +114,30 @@ func (ar *autoPartRepo) Update(product model.AutoPart, fieldsToUpdate map[string
 		return err
 	}
 
-	if categories, ok := fieldsToUpdate["categories"].([]uint); ok {
-		var newCategories []model.Category
-		if err := ar.db.Where("id IN ?", categories).Find(&newCategories).Error; err != nil {
+	if categoryIDs, ok := fieldsToUpdate["category_id"].([]interface{}); ok {
+		if err := ar.db.Model(&existingProduct).Association("Categories").Clear(); err != nil {
 			return err
 		}
-		if err := ar.db.Model(&existingProduct).Association("Categories").Replace(newCategories); err != nil {
-			return err
+
+		for _, id := range categoryIDs {
+			catID, ok := id.(float64)
+			if !ok {
+				return errors.New("invalid category ID format")
+			}
+
+			var category model.Category
+			if err := ar.db.First(&category, uint(catID)).Error; err != nil {
+				return err
+			}
+			if err := ar.db.Model(&existingProduct).Association("Categories").Append(&category); err != nil {
+				return err
+			}
 		}
-		delete(fieldsToUpdate, "categories")
+		delete(fieldsToUpdate, "category_id")
 	}
 
-	if brandID, ok := fieldsToUpdate["brand_id"].(uint); ok {
-		existingProduct.BrandID = brandID
+	if brandID, ok := fieldsToUpdate["brand_id"].(float64); ok {
+		existingProduct.BrandID = uint(brandID)
 		delete(fieldsToUpdate, "brand_id")
 	}
 
