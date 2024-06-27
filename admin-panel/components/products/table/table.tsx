@@ -44,8 +44,8 @@ export const TableWrapperProducts: React.FC = () => {
 
       return {
         ...product,
-        category_name: categories || "", // Предоставляйте значение по умолчанию, если категории не определены
-        brand_name: brandName || "", // Предоставляйте значение по умолчанию, если brandName не определено
+        category_name: categories || "",
+        brand_name: brandName || "",
       };
     });
   };
@@ -167,7 +167,7 @@ export const TableWrapperProducts: React.FC = () => {
           {(column) => (
             <TableColumn
               key={column.uid}
-              hideHeader={column.uid === "actions"} // Adjust this condition if necessary
+              hideHeader={column.uid === "actions"}
               align={column.uid === "actions" ? "center" : "start"}
               style={{
                 width: column.uid === "actions" ? "8rem" : "fit-content",
@@ -185,7 +185,7 @@ export const TableWrapperProducts: React.FC = () => {
                 <TableCell>
                   {RenderCell({
                     product: item,
-                    columnKey: columnKey as keyof Product | "actions", // Ensure columnKey matches your column definition
+                    columnKey: columnKey as keyof Product | "actions",
                     onEdit: handleEditUser,
                     websocketRef: websocketRef,
                   })}

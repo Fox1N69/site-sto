@@ -34,7 +34,7 @@ export interface Product {
   brand_name?: string; // Добавляем это поле
   auto_part_info: any;
   stock: number;
-  categories: any;
+  categories: Category[];
   for_years: number[];
   model_auto_id: number;
   ModelAuto: ModelAuto;
