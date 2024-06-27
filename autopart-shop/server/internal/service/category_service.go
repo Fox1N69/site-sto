@@ -9,7 +9,7 @@ type CategoryService interface {
 	GetCategoryByID(id uint) (*model.Category, error)
 	GetAllCategory() ([]model.Category, error)
 	CreateCategory(newCategory *model.Category) error
-	UpdateCategory(category *model.Category) error
+	UpdateCategory(categoryID uint, updateFiles map[string]interface{}) error
 	DeleteCategory(id uint) error
 	AssociateCategoryToBrand(categoryID, brandID uint) error
 	RemoveBrandFromCategory(categoryID, brandID uint) error
@@ -37,8 +37,8 @@ func (cs *categoryService) CreateCategory(newCategory *model.Category) error {
 	return cs.categoryRepo.CreateCategory(newCategory)
 }
 
-func (cs *categoryService) UpdateCategory(category *model.Category) error {
-	return cs.categoryRepo.UpdateCategory(category)
+func (cs *categoryService) UpdateCategory(categoryID uint, updateFiles map[string]interface{}) error {
+	return cs.categoryRepo.UpdateCategory(categoryID, updateFiles)
 }
 
 func (cs *categoryService) DeleteCategory(id uint) error {

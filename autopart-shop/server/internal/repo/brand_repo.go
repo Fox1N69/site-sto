@@ -10,7 +10,7 @@ type BrandRepo interface {
 	CreateBrand(brand *model.Brand) error
 	GetAllBrand() ([]model.Brand, error)
 	GetBrandByID(id uint) (*model.Brand, error)
-	UpdateBrand(brand *model.Brand) error
+	UpdateBrand(brandID uint, updateParams map[string]interface{}) error
 	DeleteBrand(brandID uint) error
 	AssociateCategoryFromBrand(brandID uint, categoryID uint) error
 	RemoveCategoryFromBrand(brandID uint, categoryID uint) error
@@ -40,8 +40,19 @@ func (br *brandRepo) GetBrandByID(id uint) (*model.Brand, error) {
 	return &brand, err
 }
 
-func (br *brandRepo) UpdateBrand(brand *model.Brand) error {
-	return br.db.Save(brand).Error
+func (br *brandRepo) UpdateBrand(brandID uint, updateParams map[string]interface{}) error {
+	updateValues := make(map[string]interface{})
+
+	for key, value := range updateParams {
+		updateValues[key] = value
+	}
+
+	if err := br.db.Model(&model.Brand{}).Where("id = ?", brandID).Updates(updateValues).Error; err != nil {
+		return err
+	}
+
+	return nil
+
 }
 
 func (repo *brandRepo) DeleteBrand(brandID uint) error {

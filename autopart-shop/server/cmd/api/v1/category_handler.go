@@ -56,13 +56,13 @@ func (h *categoryHandler) CategoryUpdate(c *gin.Context) {
 		return
 	}
 
-	category, err := h.service.GetCategoryByID(uint(categoryID))
-	if err != nil {
-		response.New(c).Error(501, err)
+	var updateParams map[string]interface{}
+	if err := c.ShouldBind(&updateParams); err != nil {
+		response.New(c).Error(400, err)
 		return
 	}
 
-	if err := h.service.UpdateCategory(category); err != nil {
+	if err := h.service.UpdateCategory(uint(categoryID), updateParams); err != nil {
 		response.New(c).Error(500, err)
 		return
 	}

@@ -54,23 +54,18 @@ func (h *brandHandler) UpdateBrand(c *gin.Context) {
 		return
 	}
 
-	brand, err := h.service.GetBrandByID(uint(brandID))
-	if err != nil {
-		response.New(c).Error(500, err)
-		return
-	}
-
-	if err := c.ShouldBind(&brand); err != nil {
+	var updateParams map[string]interface{}
+	if err := c.ShouldBind(&updateParams); err != nil {
 		response.New(c).Error(400, err)
 		return
 	}
 
-	if err := h.service.UpdateBrand(brand); err != nil {
+	if err := h.service.UpdateBrand(uint(brandID), updateParams); err != nil {
 		response.New(c).Error(500, err)
 		return
 	}
 
-	c.JSON(200, brand)
+	c.JSON(200, gin.H{"message": "Update brand success"})
 }
 
 func (h *brandHandler) DeleteBrand(c *gin.Context) {

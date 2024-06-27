@@ -9,7 +9,7 @@ type BrandService interface {
 	CreateBrand(brand *model.Brand) error
 	GetAllBrand() ([]model.Brand, error)
 	GetBrandByID(id uint) (*model.Brand, error)
-	UpdateBrand(brand *model.Brand) error
+	UpdateBrand(brandID uint, updateParams map[string]interface{}) error
 	DeleteBrand(brandID uint) error
 	AssociateCategoryFromBrand(brandID uint, categoryID uint) error
 	RemoveCategoryFromBrand(brandID uint, categoryID uint) error
@@ -35,8 +35,8 @@ func (s *brandService) GetBrandByID(id uint) (*model.Brand, error) {
 	return s.brandRepo.GetBrandByID(id)
 }
 
-func (s *brandService) UpdateBrand(brand *model.Brand) error {
-	return s.brandRepo.UpdateBrand(brand)
+func (s *brandService) UpdateBrand(brandID uint, updateParams map[string]interface{}) error {
+	return s.brandRepo.UpdateBrand(brandID, updateParams)
 }
 
 func (s *brandService) DeleteBrand(brandID uint) error {
