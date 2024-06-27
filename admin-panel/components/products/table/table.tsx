@@ -21,7 +21,7 @@ import { RenderCell } from "./render-cell";
 import { Product } from "@/types";
 
 export const TableWrapperProducts: React.FC = () => {
-  const [editedUser, setEditedUser] = useState<Product | null>(null);
+  const [editedProduct, setEditedProduct] = useState<Product | null>(null);
   const { isOpen, onOpen } = useDisclosure();
   const [isLoading, setIsLoading] = useState(true);
   const [products, setProducts] = useState<Product[]>([]);
@@ -31,7 +31,7 @@ export const TableWrapperProducts: React.FC = () => {
   const websocketRef = useRef<WebSocket | null>(null);
 
   const handleEditUser = (product: Product) => {
-    setEditedUser(product);
+    setEditedProduct(product);
     onOpen();
   };
 
