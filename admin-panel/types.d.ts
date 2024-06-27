@@ -27,6 +27,7 @@ export interface Product {
   img: string;
   model_name: string;
   category_id: number[];
+  categories: Category[];
   Category: Category;
   category_name?: string; // Добавляем это поле
   brand_id: number;
