@@ -1,6 +1,7 @@
 package main
 
 import (
+	_ "net/http/pprof"
 	"shop-server/cmd/api"
 	"shop-server/infra"
 	"shop-server/internal/model"
