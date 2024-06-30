@@ -100,6 +100,7 @@ func (c *server) v1() {
 		{
 			category.POST("/create", categoryHandler.CreateCategory)
 			category.PUT("/update/:id", categoryHandler.CategoryUpdate)
+			category.DELETE("/delete/:id", categoryHandler.CategoryDelete)
 		}
 
 		modelauto := admin.Group("/model-auto")

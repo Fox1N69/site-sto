@@ -14,6 +14,7 @@ type CategoryHandler interface {
 	CreateCategory(c *gin.Context)
 	GetAllCategory(c *gin.Context)
 	CategoryUpdate(c *gin.Context)
+	CategoryDelete(c *gin.Context)
 }
 
 type categoryHandler struct {
@@ -68,4 +69,19 @@ func (h *categoryHandler) CategoryUpdate(c *gin.Context) {
 	}
 
 	c.JSON(200, gin.H{"message": "Category update success"})
+}
+
+func (h *categoryHandler) CategoryDelete(c *gin.Context) {
+	categoryID, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	if err != nil {
+		response.New(c).Error(400, err)
+		return
+	}
+
+	if err := h.service.DeleteCategory(uint(categoryID)); err != nil {
+		response.New(c).Error(500, err)
+		return
+	}
+
+	c.JSON(200, gin.H{"message": "Category deleted success"})
 }
