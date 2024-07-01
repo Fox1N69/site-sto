@@ -48,6 +48,8 @@ export const AddModel: React.FC = () => {
   const [tags, setTags] = useState<number[]>([]);
   const [showEnter, setShowEnter] = useState<boolean>(false);
   const [yearError, setYearError] = useState<string>("");
+  const [brands, setBrands] = useState<Brand[]>([]);
+  const [brand, setBrand] = useState<Brand | null>(null);
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setYearValue(event.target.value);
@@ -83,10 +85,15 @@ export const AddModel: React.FC = () => {
   };
 
   const handleAddModel = async () => {
+    if (!brand) {
+      alert("Выберити бренд машины");
+      return;
+    }
+
     const data = {
       name,
       img_url: img_url,
-      brand_id: brand_id,
+      brand_id: brand.id,
       release_year: tags,
     };
     await addModel(token, data);
@@ -105,6 +112,20 @@ export const AddModel: React.FC = () => {
       setShowEnter(false);
     }
   }, [isOpen]);
+
+  useEffect(() => {
+    const fetchBrandData = async () => {
+      const brandData = await fetchBrands();
+      setBrands(brandData);
+    };
+
+    fetchBrandData();
+  }, []);
+
+  const handleBrandChange = (brand: Brand) => {
+    setBrandId(brand.id);
+    setBrand(brand);
+  };
 
   return (
     <div>
@@ -131,13 +152,21 @@ export const AddModel: React.FC = () => {
               value={img_url}
               onChange={(e) => setImgUrl(e.target.value)}
             />
-            <Input
-              label="бренд"
-              type="text"
-              variant="bordered"
-              value={brand_id.toString()}
-              onChange={(e) => setBrandId(Number(e.target.value))}
-            />
+            <Dropdown>
+              <DropdownTrigger>
+                <Button>{brand ? brand.name : "Выберите бренд"}</Button>
+              </DropdownTrigger>
+              <DropdownMenu>
+                {brands.map((brand) => (
+                  <DropdownItem
+                    key={brand.id}
+                    onClick={() => handleBrandChange(brand)}
+                  >
+                    {brand.name}
+                  </DropdownItem>
+                ))}
+              </DropdownMenu>
+            </Dropdown>
             <Input
               label="Года выпуска"
               variant="bordered"
