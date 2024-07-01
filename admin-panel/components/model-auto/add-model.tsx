@@ -23,7 +23,7 @@ import {
   useFetchModel,
 } from "@/utils/fetching";
 import { Category, Brand } from "@/types";
-import { ModelAuto } from ".";
+import { ModelAutos } from ".";
 import { useModelStore } from "@/store/modelStroe";
 import { event } from "@tauri-apps/api";
 import { appendFile } from "fs";

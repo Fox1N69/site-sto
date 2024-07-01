@@ -22,6 +22,8 @@ import { Icon } from "@iconify/react";
 interface ModelAutoProps {}
 
 export const ModelAuto: React.FC<ModelAutoProps> = () => {
+  const [searchQuery, setSearchQuery] = useState<string>("");
+
   return (
     <SessionProvider>
       <div className="my-14 lg:px-6 max-w-[95rem] mx-auto w-full flex flex-col gap-4">
@@ -44,7 +46,7 @@ export const ModelAuto: React.FC<ModelAutoProps> = () => {
           </li>
         </ul>
 
-        <h3 className="text-xl font-semibold">Все клиенты</h3>
+        <h3 className="text-xl font-semibold">Все модели машин</h3>
         <div className="flex justify-between flex-wrap gap-4 items-center">
           <div className="flex items-center gap-3 flex-wrap md:flex-nowrap">
             <Input

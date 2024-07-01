@@ -1,3 +1,4 @@
+'use client';
 import React from "react";
 import { Tooltip } from "@nextui-org/react";
 import { DeleteIcon } from "../../icons/table/delete-icon";
