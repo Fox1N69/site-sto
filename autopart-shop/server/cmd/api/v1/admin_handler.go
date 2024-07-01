@@ -517,3 +517,4 @@ func (h *adminHandler) AutoPartWS(c *gin.Context) {
 	close(doneCh)
 	logrus.Println("WebSocket соединение закрыто")
 }
+

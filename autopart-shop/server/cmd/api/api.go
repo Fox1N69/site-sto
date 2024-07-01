@@ -74,6 +74,7 @@ func (c *server) v1() {
 		shop.GET("/modelauto/:brand_id", shopHandler.GetModelAutoByBrandID)
 		shop.GET("/auto-parts", shopHandler.GetAutoPartByBrandAndYear)
 		shop.GET("/auto-part/:id", shopHandler.GetAutoPartByID)
+		shop.GET("/model-autos/search", shopHandler.SearchModelAuto)
 	}
 
 	ws := c.gin.Group("/ws")

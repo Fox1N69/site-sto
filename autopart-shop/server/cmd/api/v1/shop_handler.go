@@ -17,6 +17,7 @@ type ShopHandler interface {
 	SearchAutoPart(c *gin.Context)
 	GetModelAutoByBrandID(c *gin.Context)
 	GetAutoPartByBrandAndYear(c *gin.Context)
+	SearchModelAuto(c *gin.Context)
 }
 
 type shopHandler struct {
@@ -34,7 +35,6 @@ func NewShopHandler(autoService service.AutoService, basketService service.Baske
 		infra:           infra,
 	}
 }
-
 
 func (h *shopHandler) GetAllAutoPart(c *gin.Context) {
 	autoparts, source, err := h.autopartService.GetAllAutoParts(c)
@@ -120,4 +120,16 @@ func (h *shopHandler) GetAutoPartByID(c *gin.Context) {
 	}
 
 	c.JSON(200, data)
+}
+
+func (h *shopHandler) SearchModelAuto(c *gin.Context) {
+	searchParam := c.Query("query")
+
+	models, err := h.autoService.SearchModelAutoByAllParams(searchParam)
+	if err != nil {
+		response.New(c).Error(500, err)
+		return
+	}
+
+	c.JSON(200, models)
 }
