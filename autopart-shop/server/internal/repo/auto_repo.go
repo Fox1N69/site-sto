@@ -3,6 +3,7 @@ package repo
 import (
 	"log"
 	"shop-server/internal/model"
+	"strconv"
 	"strings"
 
 	"gorm.io/gorm"
@@ -80,22 +81,28 @@ func (r *autoRepo) SearchModelAuto(query string) ([]model.ModelAuto, error) {
 
 	terms := strings.Fields(query)
 	likeClauses := make([]string, len(terms))
-	likeValues := make([]interface{}, len(terms)*3)
+	likeValues := make([]interface{}, len(terms)*2) // Note the change here
 
 	for i, term := range terms {
-		likeClauses[i] = `(model_autos.name ILIKE ? OR model_autos.release_year @> ?::jsonb OR brands.name ILIKE ?)`
+		likeClauses[i] = `(model_autos.name ILIKE ? OR brands.name ILIKE ?)`
 		for j := 0; j < 2; j++ {
-			likeValues[i*3+j] = "%" + term + "%"
+			likeValues[i*2+j] = "%" + term + "%"
 		}
-		likeValues[i*3+2] = term
 	}
 
 	whereClause := strings.Join(likeClauses, " AND ")
 
-	if err := r.db.Model(&model.ModelAuto{}).
+	queryString := r.db.Model(&model.ModelAuto{}).
 		Preload("AutoPart").
-		Where(whereClause, likeValues...).
-		Find(&models).Error; err != nil {
+		Joins("LEFT JOIN brands ON model_autos.brand_id = brands.id").
+		Where(whereClause, likeValues...)
+
+	// Check if the query can be converted to an integer for release_year JSONB search
+	if _, err := strconv.Atoi(query); err == nil {
+		queryString = queryString.Or("model_autos.release_year @> ?", `[`+query+`]`)
+	}
+
+	if err := queryString.Find(&models).Error; err != nil {
 		log.Printf("Error searching model autos: %v", err)
 		return nil, err
 	}
