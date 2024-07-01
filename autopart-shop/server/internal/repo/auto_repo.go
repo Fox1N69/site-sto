@@ -1,7 +1,9 @@
 package repo
 
 import (
+	"log"
 	"shop-server/internal/model"
+	"strings"
 
 	"gorm.io/gorm"
 )
@@ -13,6 +15,7 @@ type AutoRepo interface {
 	GetByBrandID(brandID uint) ([]model.ModelAuto, error)
 	Update(auto *model.ModelAuto) error
 	Delete(id uint) error
+	SearchModelAuto(query string) ([]model.ModelAuto, error)
 }
 
 type autoRepo struct {
@@ -70,4 +73,32 @@ func (r *autoRepo) Update(auto *model.ModelAuto) error {
 
 func (r *autoRepo) Delete(id uint) error {
 	return r.db.Where("id = ?", id).Delete(&model.ModelAuto{}).Error
+}
+
+func (r *autoRepo) SearchModelAuto(query string) ([]model.ModelAuto, error) {
+	var models []model.ModelAuto
+
+	terms := strings.Fields(query)
+	likeClauses := make([]string, len(terms))
+	likeValues := make([]interface{}, len(terms)*3)
+
+	for i, term := range terms {
+		likeClauses[i] = `(model_autos.name ILIKE ? OR model_autos.release_year @> ?::jsonb OR brands.name ILIKE ?)`
+		for j := 0; j < 2; j++ {
+			likeValues[i*3+j] = "%" + term + "%"
+		}
+		likeValues[i*3+2] = term
+	}
+
+	whereClause := strings.Join(likeClauses, " AND ")
+
+	if err := r.db.Model(&model.ModelAuto{}).
+		Preload("AutoPart").
+		Where(whereClause, likeValues...).
+		Find(&models).Error; err != nil {
+		log.Printf("Error searching model autos: %v", err)
+		return nil, err
+	}
+
+	return models, nil
 }

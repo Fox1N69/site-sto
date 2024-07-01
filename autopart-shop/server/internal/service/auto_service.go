@@ -14,6 +14,7 @@ type AutoService interface {
 	GetModelAutoByBrandID(brandID uint) ([]model.ModelAuto, error)
 	DeleteModelAuto(id uint) error
 	UpdateModelAuto(id uint, name string, imgUrl string, brandID uint, releaseYear json.RawMessage) error
+	SearchModelAutoByAllParams(query string) ([]model.ModelAuto, error)
 }
 
 type autoService struct {
@@ -70,4 +71,8 @@ func (s *autoService) UpdateModelAuto(id uint, name string, imgUrl string, brand
 	auto.ReleaseYear = releaseYear
 
 	return s.repo.Update(auto)
+}
+
+func (s *autoService) SearchModelAutoByAllParams(query string) ([]model.ModelAuto, error) {
+	return s.repo.SearchModelAuto(query)
 }
