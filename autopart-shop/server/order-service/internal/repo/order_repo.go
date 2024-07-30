@@ -9,7 +9,7 @@ import (
 )
 
 type OrderRepo interface {
-	Create() (*models.VinOrder, error)
+	Create(order models.VinOrder) (uint, error)
 	Orders() ([]models.VinOrder, error)
 	Delete(id uint) error
 }
@@ -22,14 +22,13 @@ func NewOrderRepo(db *gorm.DB) OrderRepo {
 	return &orderRepo{db: db}
 }
 
-func (r *orderRepo) Create() (*models.VinOrder, error) {
-	var order models.VinOrder
+func (r *orderRepo) Create(order models.VinOrder) (uint, error) {
 	if err := r.db.Create(&order).Error; err != nil {
 		logrus.Errorf("Failed to create order: %v", err)
-		return nil, fmt.Errorf("failed to create order: %v", err)
+		return 0, fmt.Errorf("failed to create order: %v", err)
 	}
 
-	return nil, nil
+	return order.ID, nil
 }
 
 func (r *orderRepo) Orders() ([]models.VinOrder, error) {

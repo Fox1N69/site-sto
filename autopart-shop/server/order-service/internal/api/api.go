@@ -4,6 +4,7 @@ import (
 	"shop-server-order/common/http/middleware"
 	"shop-server-order/common/http/request"
 	"shop-server-order/infra"
+	v1 "shop-server-order/internal/api/v1"
 	"shop-server-order/internal/manager"
 
 	"github.com/gin-gonic/gin"
@@ -49,5 +50,10 @@ func (c *server) handlers() {
 }
 
 func (c *server) v1() {
+	orderHandler := v1.NewOrderHandler(c.service.OrderService())
 
+	api := c.gin.Group("/api")
+	{
+		api.POST("/order", orderHandler.CreateOrder)
+	}
 }
