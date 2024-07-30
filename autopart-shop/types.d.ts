@@ -64,3 +64,26 @@ export interface IconSvgProps {
 	height?: string;
 	className?: string;
 }
+
+export interface Order {
+	id: number;
+	totla?: number;
+	email: string;
+	phone_number?: string;
+	delivery_city?: number;
+	delivery_address?: number;
+	delivery_cost?: number;
+	is_paid?: boolean;
+	payment_method?: string;
+	comment?: string;
+	tracking_number: string;
+	use_id: number;
+	vin_orders: VinOrder[];
+}
+
+export interface VinOrder {
+	vin_number: string;
+	part_name: string;
+	auto: string;
+	model_auto: string;
+}
