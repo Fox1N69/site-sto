@@ -10,6 +10,7 @@ import (
 
 type OrderHandler interface {
 	CreateOrder(c *gin.Context)
+	CreateVinOrder(c *gin.Context)
 }
 
 type orderHandler struct {
@@ -25,13 +26,34 @@ func NewOrderHandler(orderService service.OrderService) OrderHandler {
 func (h *orderHandler) CreateOrder(c *gin.Context) {
 	response := response.New(c)
 
-	var order models.VinOrder
+	var order models.Order
 	if err := c.ShouldBindJSON(&order); err != nil {
 		response.Error(404, err)
 		return
 	}
 
 	id, err := h.service.CreateOrder(order)
+	if err != nil {
+		response.Error(501, err)
+		return
+	}
+
+	c.JSON(201, gin.H{
+		"message": "create message success",
+		"id":      id,
+	})
+}
+
+func (h *orderHandler) CreateVinOrder(c *gin.Context) {
+	response := response.New(c)
+
+	var order models.VinOrder
+	if err := c.ShouldBindJSON(&order); err != nil {
+		response.Error(404, err)
+		return
+	}
+
+	id, err := h.service.CreateVinOrder(order)
 	if err != nil {
 		response.Error(501, err)
 		return

@@ -55,5 +55,6 @@ func (c *server) v1() {
 	api := c.gin.Group("/api")
 	{
 		api.POST("/order", orderHandler.CreateOrder)
+		api.POST("/vin-order", orderHandler.CreateVinOrder)
 	}
 }
