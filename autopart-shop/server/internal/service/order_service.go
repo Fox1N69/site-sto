@@ -12,6 +12,7 @@ import (
 
 type OrderService interface {
 	CreateOrder(ctx context.Context, order *model.Order) error
+	CreateVinOrder(vin *model.VinOrder) error
 	GetAllOrders(ctx context.Context) ([]model.Order, error)
 	UpdateOrder(ctx context.Context, id uint, orderData map[string]interface{}) error
 }
@@ -30,6 +31,10 @@ func (s *orderService) CreateOrder(ctx context.Context, order *model.Order) erro
 	}
 
 	return nil
+}
+
+func (s *orderService) CreateVinOrder(order *model.VinOrder) error {
+	return s.repo.CreateVinOrder(order)
 }
 
 func (s *orderService) GetAllOrders(ctx context.Context) ([]model.Order, error) {

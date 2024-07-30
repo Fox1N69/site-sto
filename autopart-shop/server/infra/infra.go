@@ -115,9 +115,7 @@ func (i *infra) GormDB() *gorm.DB {
 	return grm
 }
 
-var (
-	migrateOnce sync.Once
-)
+var migrateOnce sync.Once
 
 func (i *infra) Migrate(values ...interface{}) {
 	migrateOnce.Do(func() {

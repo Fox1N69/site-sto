@@ -10,6 +10,7 @@ import (
 
 type OrderHandler interface {
 	CreateOrder(c *gin.Context)
+	CreateVinOrder(c *gin.Context)
 	GetAllOrders(c *gin.Context)
 }
 
@@ -34,6 +35,21 @@ func (h *orderHandler) CreateOrder(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "Order created successfully"})
+}
+
+func (h *orderHandler) CreateVinOrder(c *gin.Context) {
+	var vin model.VinOrder
+	if err := c.ShouldBind(&vin); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	if err := h.orderService.CreateVinOrder(&vin); err != nil {
+		c.JSON(501, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(201, "create vin order success")
 }
 
 func (h *orderHandler) GetAllOrders(c *gin.Context) {

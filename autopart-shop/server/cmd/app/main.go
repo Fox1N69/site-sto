@@ -22,6 +22,7 @@ func main() {
 		&model.AutoPartInfo{},
 		&model.BrandCategory{},
 		&model.Order{},
+		&model.VinOrder{},
 	)
 	i.Migrate(&model.AutoPartCategory{})
 
