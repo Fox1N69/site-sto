@@ -4,9 +4,11 @@ import (
 	"sync"
 
 	"shop-server-order/infra"
+	"shop-server-order/internal/service"
 )
 
 type ServiceManager interface {
+	OrderService() service.OrderService
 }
 
 type serviceManager struct {
