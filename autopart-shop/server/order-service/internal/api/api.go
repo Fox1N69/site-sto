@@ -6,10 +6,12 @@ import (
 	"shop-server-order/infra"
 	v1 "shop-server-order/internal/api/v1"
 	"shop-server-order/internal/manager"
+	"shop-server-order/notification-bot/bot"
 
 	"github.com/go-redis/redis/v8"
 	"github.com/goccy/go-json"
 	"github.com/gofiber/fiber/v2"
+	"github.com/sirupsen/logrus"
 )
 
 type Server interface {
@@ -44,6 +46,15 @@ func (s *server) Run() {
 	s.v1()
 
 	s.app.Listen(s.infra.Port())
+
+	bot, err := bot.New("")
+	if err != nil {
+		logrus.Fatal(err)
+	}
+
+	if err := bot.Start(); err != nil {
+		logrus.Fatal(err)
+	}
 }
 
 func (s *server) handlers() {
