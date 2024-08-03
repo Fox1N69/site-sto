@@ -1,0 +1,3 @@
+[31mERRO[0m[2024-08-03T17:41:27+05:00]bot_handler.go:88 shop-server-order/notification-bot/handler.(*Handler).CallBackHandle() Received nil message in CallBackHandle       
+[31mERRO[0m[2024-08-03T17:51:49+05:00]bot_handler.go:50 shop-server-order/notification-bot/handler.(*Handler).getInlineButton() Failed to edit message reply markup: Bad Request: message can't be edited 
+[31mERRO[0m[2024-08-03T17:52:02+05:00]bot_handler.go:50 shop-server-order/notification-bot/handler.(*Handler).getInlineButton() Failed to edit message reply markup: Bad Request: message can't be edited 

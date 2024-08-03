@@ -53,11 +53,13 @@ func (b *bot) Start() error {
 				switch update.Message.Command() {
 				case "start":
 					b.handle.StartHandle(update.Message)
+				case "all_orders":
+					b.handle.GetAllOrdersHandle(update.Message)
 				default:
 				}
 			}
 		} else if update.CallbackQuery != nil { // Incoming callback
-			b.handle.CallBackHandle(update.Message)
+			b.handle.CallBackHandle(update)
 		}
 	}
 
