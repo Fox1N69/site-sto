@@ -42,13 +42,13 @@ func (r *orderRepo) CreateVinOrder(vinOrder models.VinOrder) (uint, error) {
 }
 
 func (r *orderRepo) Orders() ([]models.VinOrder, error) {
-	var order models.VinOrder
+	var order []models.VinOrder
 	if err := r.db.Find(&order).Error; err != nil {
 		logrus.Error("faile to get vin orders")
 		return nil, fmt.Errorf("failed to get vin orders: %v", err)
 	}
 
-	return nil, nil
+	return order, nil
 }
 
 func (r *orderRepo) Delete(id uint) error {

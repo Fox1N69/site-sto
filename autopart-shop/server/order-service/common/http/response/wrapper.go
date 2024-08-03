@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"shop-server-order/internal/models"
 
-	"github.com/gin-gonic/gin"
+	"github.com/gofiber/fiber/v2"
 )
 
 type Wrapper interface {
@@ -14,21 +14,21 @@ type Wrapper interface {
 }
 
 type wrapper struct {
-	c *gin.Context
+	c *fiber.Ctx
 }
 
-func New(c *gin.Context) Wrapper {
+func New(c *fiber.Ctx) Wrapper {
 	return &wrapper{c: c}
 }
 
 func (w *wrapper) Write(code int, message string) {
-	w.c.JSON(code, models.Response{Code: code, Message: message})
+	w.c.Status(code).JSON(models.Response{Code: code, Message: message})
 }
 
 func (w *wrapper) Error(code int, err error) {
-	w.c.JSON(code, models.Response{Code: code, Message: err.Error()})
+	w.c.Status(code).JSON(models.Response{Code: code, Message: err.Error()})
 }
 
 func (w *wrapper) Token(expired string, token string) {
-	w.c.JSON(http.StatusOK, models.Token{Expired: expired, Token: token})
+	w.c.Status(http.StatusOK).JSON(models.Token{Expired: expired, Token: token})
 }

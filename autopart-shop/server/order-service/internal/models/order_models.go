@@ -24,7 +24,7 @@ type Order struct {
 }
 
 type VinOrder struct {
-	ID        uint   `json:"primaryKey"`
+	ID        uint   `json:"id"`
 	VinNumber string `json:"vin_number"`
 	PartName  string `json:"part_name"`
 	Auto      string `json:"auto"`

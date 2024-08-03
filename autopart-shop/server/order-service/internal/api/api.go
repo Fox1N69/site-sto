@@ -7,8 +7,9 @@ import (
 	v1 "shop-server-order/internal/api/v1"
 	"shop-server-order/internal/manager"
 
-	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis/v8"
+	"github.com/goccy/go-json"
+	"github.com/gofiber/fiber/v2"
 )
 
 type Server interface {
@@ -17,7 +18,7 @@ type Server interface {
 
 type server struct {
 	infra       infra.Infra
-	gin         *gin.Engine
+	app         *fiber.App
 	service     manager.ServiceManager
 	middleware  middleware.Middleware
 	redisClient *redis.Client
@@ -26,35 +27,39 @@ type server struct {
 func NewServer(infra infra.Infra, redisClient *redis.Client) Server {
 
 	return &server{
-		infra:       infra,
-		gin:         gin.Default(),
+		infra: infra,
+		app: fiber.New(fiber.Config{
+			JSONEncoder: json.Marshal,
+			JSONDecoder: json.Unmarshal,
+		}),
 		service:     manager.NewServiceManager(infra),
 		middleware:  middleware.NewMiddleware(infra.Config().GetString("secret.key")),
 		redisClient: redisClient,
 	}
 }
 
-func (c *server) Run() {
-	c.gin.Use(c.middleware.CORS())
-	c.handlers()
-	c.v1()
+func (s *server) Run() {
+	s.app.Use(s.middleware.CORS())
+	s.handlers()
+	s.v1()
 
-	c.gin.Run(c.infra.Port())
+	s.app.Listen(s.infra.Port())
 }
 
-func (c *server) handlers() {
+func (s *server) handlers() {
 	h := request.DefaultHandler()
 
-	c.gin.NoRoute(h.NoRoute)
-	c.gin.GET("/", h.Index)
+	//s.app.NoRoute(h.NoRoute)
+	s.app.Get("/", h.Index)
 }
 
-func (c *server) v1() {
-	orderHandler := v1.NewOrderHandler(c.service.OrderService())
+func (s *server) v1() {
+	orderHandler := v1.NewOrderHandler(s.service.OrderService())
 
-	api := c.gin.Group("/api")
+	api := s.app.Group("/api")
 	{
-		api.POST("/order", orderHandler.CreateOrder)
-		api.POST("/vin-order", orderHandler.CreateVinOrder)
+		api.Get("/order", orderHandler.GetAllOrders)
+		api.Post("/order", orderHandler.CreateOrder)
+		api.Post("/vin-order", orderHandler.CreateVinOrder)
 	}
 }

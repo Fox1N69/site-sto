@@ -10,13 +10,13 @@ import (
 	"shop-server-order/common/util/token"
 
 	"github.com/dgrijalva/jwt-go"
-	"github.com/gin-gonic/gin"
+	"github.com/gofiber/fiber/v2"
 )
 
 type Middleware interface {
-	CORS() gin.HandlerFunc
-	AUTH() gin.HandlerFunc
-	Role(requiredRole string) gin.HandlerFunc
+	CORS() fiber.Handler
+	AUTH() fiber.Handler
+	Role(requiredRole string) fiber.Handler
 }
 
 type middleware struct {
@@ -27,80 +27,66 @@ func NewMiddleware(secretKey string) Middleware {
 	return &middleware{secretKey: secretKey}
 }
 
-func (m *middleware) CORS() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
-		c.Writer.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-		c.Writer.Header().Set("Access-Control-Allow-Headers", "Origin, Content-Type, Authorization")
-		c.Writer.Header().Set("Access-Control-Expose-Headers", "Content-Length")
-		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
-
-		if c.Request.Method == "OPTIONS" {
-			c.AbortWithStatus(http.StatusNoContent)
-			return
-		}
-
-		c.Next()
+func (m *middleware) CORS() fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		c.Set("Access-Control-Allow-Origin", "*")
+		c.Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+		c.Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE")
+		return c.Next()
 	}
 }
 
-func (m *middleware) AUTH() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		authHeader := c.GetHeader("Authorization")
+func (m *middleware) AUTH() fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		authHeader := c.Get("Authorization")
 		authBearer := strings.Split(authHeader, " ")
 
 		if len(authBearer) != 2 {
 			response.New(c).Error(http.StatusUnauthorized, errors.New("invalid authorization token"))
-			c.Abort()
-			return
+			return c.SendStatus(http.StatusUnauthorized)
 		}
 
 		tokenString := authBearer[1]
 		token, err := token.NewToken(m.secretKey).ValidateToken(tokenString)
 		if err != nil || !token.Valid {
 			response.New(c).Error(http.StatusUnauthorized, fmt.Errorf("invalid authorization token: %v", err))
-			c.Abort()
-			return
+			return c.SendStatus(http.StatusUnauthorized)
 		}
 
-		c.Next()
+		return c.Next()
 	}
 }
 
-func (m *middleware) Role(requiredRole string) gin.HandlerFunc {
-	return func(c *gin.Context) {
-		authHeader := c.GetHeader("Authorization")
+func (m *middleware) Role(requiredRole string) fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		authHeader := c.Get("Authorization")
 		authBearer := strings.Split(authHeader, " ")
 
 		if len(authBearer) != 2 {
 			response.New(c).Error(http.StatusUnauthorized, errors.New("invalid authorization token"))
-			c.Abort()
-			return
+			return c.SendStatus(http.StatusUnauthorized)
 		}
 
 		tokenString := authBearer[1]
 		token, err := token.NewToken(m.secretKey).ValidateToken(tokenString)
 		if err != nil || !token.Valid {
 			response.New(c).Error(http.StatusUnauthorized, fmt.Errorf("invalid authorization token: %v", err))
-			c.Abort()
-			return
+			return c.SendStatus(http.StatusUnauthorized)
 		}
 
 		// Получение роли пользователя из токена
 		userRole, ok := token.Claims.(jwt.MapClaims)["role"].(string)
 		if !ok {
 			response.New(c).Error(http.StatusUnauthorized, errors.New("unable to extract user role from token"))
-			c.Abort()
-			return
+			return c.SendStatus(http.StatusUnauthorized)
 		}
 
 		// Проверка наличия требуемой роли у пользователя
 		if userRole != requiredRole {
 			response.New(c).Error(http.StatusForbidden, errors.New("access denied: insufficient role"))
-			c.Abort()
-			return
+			return c.SendStatus(http.StatusForbidden)
 		}
 
-		c.Next()
+		return c.Next()
 	}
 }
