@@ -1,9 +1,9 @@
 package bot
 
 import (
-	"github.com/Fox1N69/bot-task/handler"
-	"github.com/Fox1N69/bot-task/storage"
-	"github.com/Fox1N69/bot-task/utils/logger"
+	"shop-server-order/notification-bot/handler"
+	"shop-server-order/utils/logger"
+
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 )
 
@@ -19,14 +19,14 @@ type bot struct {
 	chats  map[int64]bool
 }
 
-func New(token string, storage storage.Storage) (Bot, error) {
+func New(token string) (Bot, error) {
 	botAPI, err := tgbotapi.NewBotAPI(token)
 	if err != nil {
 		return nil, err
 	}
 	botAPI.Debug = true
 
-	handler := handler.NewHandler(botAPI, storage)
+	handler := handler.NewHandler(botAPI)
 
 	return &bot{
 		log:    logger.GetLogger(),
@@ -52,13 +52,10 @@ func (b *bot) Start() error {
 			if update.Message.IsCommand() {
 				switch update.Message.Command() {
 				case "start":
-					b.handle.HandleStart(update.Message)
 				default:
-					b.handle.HandleUnknownCommand(update.Message)
 				}
 			}
 		} else if update.CallbackQuery != nil { // Incoming callback
-			b.handle.HandleCallback(update.CallbackQuery)
 		}
 	}
 
