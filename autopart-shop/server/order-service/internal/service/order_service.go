@@ -7,7 +7,7 @@ import (
 
 type OrderService interface {
 	CreateOrder(order models.Order) (uint, error)
-	CreateVinOrder(vinOrder models.VinOrder) (uint, error)
+	CreateVinOrder(vinOrder models.VinOrder) (*models.VinOrder, error)
 	GetAllOrders() ([]models.VinOrder, error)
 	DeleteOrder(id uint) error
 }
@@ -26,9 +26,14 @@ func (s *orderService) CreateOrder(order models.Order) (uint, error) {
 	return s.repository.CreateOrder(order)
 }
 
-func (s *orderService) CreateVinOrder(vinOrder models.VinOrder) (uint, error) {
-	return s.repository.CreateVinOrder(vinOrder)
+func (s *orderService) CreateVinOrder(vinOrder models.VinOrder) (*models.VinOrder, error) {
+	order, err := s.repository.CreateVinOrder(vinOrder)
+	if err != nil {
+		return &models.VinOrder{}, err
+	}
+	return order, nil
 }
+
 
 func (s *orderService) GetAllOrders() ([]models.VinOrder, error) {
 	return s.repository.Orders()

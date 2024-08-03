@@ -10,7 +10,7 @@ import (
 
 type OrderRepo interface {
 	CreateOrder(order models.Order) (uint, error)
-	CreateVinOrder(vinOrder models.VinOrder) (uint, error)
+	CreateVinOrder(vinOrder models.VinOrder) (*models.VinOrder, error)
 	Orders() ([]models.VinOrder, error)
 	Delete(id uint) error
 }
@@ -32,13 +32,13 @@ func (r *orderRepo) CreateOrder(order models.Order) (uint, error) {
 	return order.ID, nil
 }
 
-func (r *orderRepo) CreateVinOrder(vinOrder models.VinOrder) (uint, error) {
+func (r *orderRepo) CreateVinOrder(vinOrder models.VinOrder) (*models.VinOrder, error) {
 	if err := r.db.Create(&vinOrder).Error; err != nil {
 		logrus.Errorf("Failed to create order: %v", err)
-		return 0, fmt.Errorf("failed to create order: %v", err)
+		return &models.VinOrder{}, fmt.Errorf("failed to create order: %v", err)
 	}
 
-	return vinOrder.ID, nil
+	return &vinOrder, nil
 }
 
 func (r *orderRepo) Orders() ([]models.VinOrder, error) {

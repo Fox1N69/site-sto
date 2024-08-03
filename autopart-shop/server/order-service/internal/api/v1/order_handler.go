@@ -49,13 +49,13 @@ func (h *orderHandler) CreateOrder(c fiber.Ctx) error {
 func (h *orderHandler) CreateVinOrder(c fiber.Ctx) error {
 	response := response.New(c)
 
-	var order models.VinOrder
-	if err := json.Unmarshal(c.Body(), &order); err != nil {
+	var vinOrder models.VinOrder
+	if err := json.Unmarshal(c.Body(), &vinOrder); err != nil {
 		response.Error(404, err)
 		return err
 	}
 
-	id, err := h.service.CreateVinOrder(order)
+	order, err := h.service.CreateVinOrder(vinOrder)
 	if err != nil {
 		response.Error(501, err)
 		return err
@@ -63,7 +63,7 @@ func (h *orderHandler) CreateVinOrder(c fiber.Ctx) error {
 
 	return c.Status(201).JSON(fiber.Map{
 		"message": "create order by vin success",
-		"id":      id,
+		"order":   order,
 	})
 }
 

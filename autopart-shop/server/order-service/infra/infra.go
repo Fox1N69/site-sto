@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"shop-server-order/common/util/smtp"
+	"shop-server-order/notification-bot/bot"
 	"sync"
 	"time"
 
@@ -23,6 +24,7 @@ type Infra interface {
 	Migrate(values ...interface{})
 	Port() string
 	RedisClient() *redis.Client
+	BotClient() bot.Bot
 	SMTPClient() smtp.SmtpClient
 }
 
@@ -172,6 +174,15 @@ func (i *infra) RedisClient() *redis.Client {
 	})
 
 	return rdb
+}
+
+func (i *infra) BotClient() bot.Bot {
+	bot, err := bot.New(i.Config().Sub("bot").GetString("token"))
+	if err != nil {
+		panic(err)
+	}
+
+	return bot
 }
 
 func (i *infra) SMTPClient() smtp.SmtpClient {

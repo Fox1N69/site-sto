@@ -9,6 +9,7 @@ require (
 	github.com/go-telegram-bot-api/telegram-bot-api v4.6.4+incompatible
 	github.com/goccy/go-json v0.10.3
 	github.com/gofiber/fiber/v3 v3.0.0-beta.3
+	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/viper v1.19.0
 	gorm.io/driver/postgres v1.5.7

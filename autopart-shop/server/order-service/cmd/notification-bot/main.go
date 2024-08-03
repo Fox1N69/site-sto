@@ -2,7 +2,6 @@ package main
 
 import (
 	"shop-server-order/infra"
-	"shop-server-order/notification-bot/bot"
 	"shop-server-order/utils/logger"
 )
 
@@ -14,10 +13,7 @@ func main() {
 	log := logger.GetLogger()
 
 	//Create new notification bot
-	bot, err := bot.New(i.Config().Sub("bot").GetString("token"))
-	if err != nil {
-		log.Fatal(err)
-	}
+	bot := i.BotClient()
 
 	// Start notification bot
 	if err := bot.Start(); err != nil {

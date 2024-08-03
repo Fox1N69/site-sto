@@ -9,8 +9,8 @@ import (
 	"shop-server-order/common/http/response"
 	"shop-server-order/common/util/token"
 
-	"github.com/dgrijalva/jwt-go"
 	"github.com/gofiber/fiber/v3"
+	"github.com/golang-jwt/jwt"
 )
 
 type Middleware interface {
