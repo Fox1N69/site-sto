@@ -6,7 +6,6 @@ import (
 	"shop-server-order/infra"
 	v1 "shop-server-order/internal/api/v1"
 	"shop-server-order/internal/manager"
-	"shop-server-order/notification-bot/bot"
 	"shop-server-order/utils/logger"
 
 	"github.com/go-redis/redis/v8"
@@ -49,14 +48,6 @@ func (s *server) Run() {
 
 	s.app.Listen(s.infra.Port())
 
-	bot, err := bot.New(s.infra.Config().Sub("bot").GetString("token"))
-	if err != nil {
-		s.log.Fatal(err)
-	}
-
-	if err := bot.Start(); err != nil {
-		s.log.Fatal(err)
-	}
 }
 
 func (s *server) handlers() {

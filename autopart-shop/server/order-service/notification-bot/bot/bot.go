@@ -52,10 +52,12 @@ func (b *bot) Start() error {
 			if update.Message.IsCommand() {
 				switch update.Message.Command() {
 				case "start":
+					b.handle.StartHandle(update.Message)
 				default:
 				}
 			}
 		} else if update.CallbackQuery != nil { // Incoming callback
+			b.handle.CallBackHandle(update.Message)
 		}
 	}
 
