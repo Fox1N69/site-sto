@@ -31,6 +31,7 @@ func (s *orderService) CreateVinOrder(vinOrder models.VinOrder) (*models.VinOrde
 	if err != nil {
 		return &models.VinOrder{}, err
 	}
+
 	return order, nil
 }
 
