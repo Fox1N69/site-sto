@@ -2,9 +2,11 @@ package bot
 
 import (
 	"shop-server-order/notification-bot/handler"
+	"shop-server-order/notification-bot/repository"
 	"shop-server-order/utils/logger"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
+	"gorm.io/gorm"
 )
 
 type Bot interface {
@@ -16,23 +18,22 @@ type bot struct {
 	log    logger.Logger
 	token  string
 	api    *tgbotapi.BotAPI
-	chats  map[int64]bool
 }
 
-func New(token string) (Bot, error) {
+func New(token string, db *gorm.DB) (Bot, error) {
 	botAPI, err := tgbotapi.NewBotAPI(token)
 	if err != nil {
 		return nil, err
 	}
 	botAPI.Debug = true
 
-	handler := handler.NewHandler(botAPI)
+	repotitory := repository.NewUserRepo(db)
+	handler := handler.NewHandler(botAPI, &repotitory)
 
 	return &bot{
 		log:    logger.GetLogger(),
 		token:  token,
 		api:    botAPI,
-		chats:  make(map[int64]bool),
 		handle: handler,
 	}, nil
 }

@@ -58,7 +58,7 @@ func (s *server) handlers() {
 }
 
 func (s *server) v1() {
-	orderHandler := v1.NewOrderHandler(s.service.OrderService())
+	orderHandler := v1.NewOrderHandler(s.service.OrderService(), s.infra.TelegramClient())
 
 	api := s.app.Group("/api")
 	{

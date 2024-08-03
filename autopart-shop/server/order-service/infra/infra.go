@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"shop-server-order/common/util/smtp"
+	"shop-server-order/internal/client"
 	"shop-server-order/notification-bot/bot"
 	"sync"
 	"time"
@@ -25,6 +26,7 @@ type Infra interface {
 	Port() string
 	RedisClient() *redis.Client
 	BotClient() bot.Bot
+	TelegramClient() *client.TelegramClient
 	SMTPClient() smtp.SmtpClient
 }
 
@@ -177,12 +179,16 @@ func (i *infra) RedisClient() *redis.Client {
 }
 
 func (i *infra) BotClient() bot.Bot {
-	bot, err := bot.New(i.Config().Sub("bot").GetString("token"))
+	bot, err := bot.New(i.Config().Sub("bot").GetString("token"), i.GormDB())
 	if err != nil {
 		panic(err)
 	}
 
 	return bot
+}
+
+func (i *infra) TelegramClient() *client.TelegramClient {
+	return client.NewTelegramClient(i.Config().Sub("bot").GetString("token"))
 }
 
 func (i *infra) SMTPClient() smtp.SmtpClient {

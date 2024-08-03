@@ -10,6 +10,7 @@ type OrderService interface {
 	CreateVinOrder(vinOrder models.VinOrder) (*models.VinOrder, error)
 	GetAllOrders() ([]models.VinOrder, error)
 	DeleteOrder(id uint) error
+	GetAllBotChatIDs() ([]int64, error)
 }
 
 type orderService struct {
@@ -35,11 +36,14 @@ func (s *orderService) CreateVinOrder(vinOrder models.VinOrder) (*models.VinOrde
 	return order, nil
 }
 
-
 func (s *orderService) GetAllOrders() ([]models.VinOrder, error) {
 	return s.repository.Orders()
 }
 
 func (s *orderService) DeleteOrder(id uint) error {
 	return s.repository.Delete(id)
+}
+
+func (s *orderService) GetAllBotChatIDs() ([]int64, error) {
+	return s.repository.GetAllBotChatIDs()
 }

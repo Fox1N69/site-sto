@@ -13,6 +13,7 @@ type OrderRepo interface {
 	CreateVinOrder(vinOrder models.VinOrder) (*models.VinOrder, error)
 	Orders() ([]models.VinOrder, error)
 	Delete(id uint) error
+	GetAllBotChatIDs() ([]int64, error)
 }
 
 type orderRepo struct {
@@ -54,4 +55,14 @@ func (r *orderRepo) Orders() ([]models.VinOrder, error) {
 func (r *orderRepo) Delete(id uint) error {
 	var order models.VinOrder
 	return r.db.Where("id = ?", id).Delete(&order).Error
+}
+
+func (r *orderRepo) GetAllBotChatIDs() ([]int64, error) {
+	var chatIDs []int64
+	// Выполняем запрос для получения всех ChatID
+	if err := r.db.Model(&models.NotificationUser{}).Pluck("chat_id", &chatIDs).Error; err != nil {
+		return nil, err
+	}
+
+	return chatIDs, nil
 }

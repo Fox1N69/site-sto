@@ -1,12 +1,15 @@
 package v1
 
 import (
+	"fmt"
 	"shop-server-order/common/http/response"
+	"shop-server-order/internal/client"
 	"shop-server-order/internal/models"
 	"shop-server-order/internal/service"
 
 	"github.com/goccy/go-json"
 	"github.com/gofiber/fiber/v3"
+	"github.com/sirupsen/logrus"
 )
 
 type OrderHandler interface {
@@ -16,12 +19,14 @@ type OrderHandler interface {
 }
 
 type orderHandler struct {
-	service service.OrderService
+	service        service.OrderService
+	telegramClient *client.TelegramClient
 }
 
-func NewOrderHandler(orderService service.OrderService) OrderHandler {
+func NewOrderHandler(orderService service.OrderService, telegramClient *client.TelegramClient) OrderHandler {
 	return &orderHandler{
-		service: orderService,
+		service:        orderService,
+		telegramClient: telegramClient,
 	}
 }
 
@@ -59,6 +64,19 @@ func (h *orderHandler) CreateVinOrder(c fiber.Ctx) error {
 	if err != nil {
 		response.Error(501, err)
 		return err
+	}
+
+	chatIDs, err := h.service.GetAllBotChatIDs()
+	if err != nil {
+		response.Error(501, err)
+		return err
+	}
+
+	for _, chatID := range chatIDs {
+		message := fmt.Sprintf("Новый заказ создан!\nID: %d\nPart: %s\nAuto: %s\nModel: %s", order.ID, order.PartName, order.Auto, order.ModelAuto)
+		if err := h.telegramClient.SendMessage(int64(chatID), message); err != nil {
+			logrus.Errorf("Failed to send Telegram message: %v", err)
+		}
 	}
 
 	return c.Status(201).JSON(fiber.Map{

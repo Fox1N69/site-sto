@@ -4,31 +4,57 @@ import (
 	"fmt"
 	"net/http"
 	"shop-server-order/internal/models"
+	"shop-server-order/notification-bot/repository"
 	"shop-server-order/utils/logger"
+	"time"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 	"github.com/goccy/go-json"
 )
 
 type Handler struct {
-	bot *tgbotapi.BotAPI
-	log logger.Logger
+	bot  *tgbotapi.BotAPI
+	log  logger.Logger
+	repo *repository.BotRepo
 }
 
-func NewHandler(bot *tgbotapi.BotAPI) *Handler {
+func NewHandler(bot *tgbotapi.BotAPI, repository *repository.BotRepo) *Handler {
 	return &Handler{
-		bot: bot,
-		log: logger.GetLogger(),
+		bot:  bot,
+		log:  logger.GetLogger(),
+		repo: repository,
 	}
 }
 
 func (h *Handler) StartHandle(msg *tgbotapi.Message) {
 	chatID := msg.Chat.ID
 
+	user := models.NotificationUser{
+		ID:        int64(msg.From.ID),
+		FirstName: msg.From.FirstName,
+		Username:  msg.From.UserName,
+		Type:      msg.Chat.Type,
+		CreatedAt: time.Now(),
+		ChatID:    chatID,
+	}
+
+	if err := h.repo.Save(&user); err != nil {
+		h.log.Errorf("Failed save the user to database: %v", err)
+	}
+
 	helloText := "Добро пожаловать в бота для получения уведомления от интернет магазина Remzona"
 	welcomMessage := tgbotapi.NewMessage(chatID, helloText)
 
 	h.sendMessageWithButton(welcomMessage)
+
+	// Сообщение с chat_id
+	chatIDMessage := fmt.Sprintf("Ваш chat ID: %d", chatID)
+	chatIDMsg := tgbotapi.NewMessage(chatID, chatIDMessage)
+
+	// Отправка сообщения с chat_id
+	if _, err := h.bot.Send(chatIDMsg); err != nil {
+		h.log.Errorf("Failed to send chat ID message: %v", err)
+	}
 }
 
 func (h *Handler) sendMessageWithButton(message tgbotapi.MessageConfig) {

@@ -14,7 +14,7 @@ func main() {
 	log := logger.GetLogger()
 
 	//migrate table to database
-	i.Migrate(&models.Order{}, &models.VinOrder{})
+	i.Migrate(&models.Order{}, &models.VinOrder{}, &models.NotificationUser{})
 	log.Info("Database migrate success")
 
 	//init redis client
