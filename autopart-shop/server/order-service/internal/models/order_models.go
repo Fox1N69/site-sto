@@ -20,7 +20,7 @@ type Order struct {
 	PaymentMethod   string   `json:"payment_method"`
 	Comment         string   `json:"comment"`
 	TrackingNumber  string   `json:"tracking_number"`
-	VinOrder        VinOrder `json:"vin_order" gorm:"foreignKey:OrderID"`
+	VinOrder        VinOrder `gorm:"foreignKey:OrderID"`
 }
 
 type VinOrder struct {
@@ -28,6 +28,6 @@ type VinOrder struct {
 	VinNumber string `json:"vin_number"`
 	PartName  string `json:"part_name"`
 	Auto      string `json:"auto"`
-	ModelAuto string `json:"model_auth"`
+	ModelAuto string `json:"model_auto"`
 	OrderID   uint   `json:"order_id"`
 }

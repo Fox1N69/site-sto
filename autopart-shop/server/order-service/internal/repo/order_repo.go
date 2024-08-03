@@ -9,6 +9,7 @@ import (
 )
 
 type OrderRepo interface {
+	CreateOrderWithVinOrder(order models.Order, vinOrder models.VinOrder) (*models.Order, error)
 	CreateOrder(order models.Order) (uint, error)
 	CreateVinOrder(vinOrder models.VinOrder) (*models.VinOrder, error)
 	Orders() ([]models.VinOrder, error)
@@ -22,6 +23,31 @@ type orderRepo struct {
 
 func NewOrderRepo(db *gorm.DB) OrderRepo {
 	return &orderRepo{db: db}
+}
+
+func (s *orderRepo) CreateOrderWithVinOrder(order models.Order, vinOrder models.VinOrder) (*models.Order, error) {
+	// Начинаем транзакцию
+	tx := s.db.Begin()
+
+	// Сохраняем Order
+	if err := tx.Create(&order).Error; err != nil {
+		tx.Rollback()
+		return nil, err
+	}
+
+	// Устанавливаем ID созданного Order в VinOrder
+	vinOrder.OrderID = order.ID
+
+	// Сохраняем VinOrder
+	if err := tx.Create(&vinOrder).Error; err != nil {
+		tx.Rollback()
+		return nil, err
+	}
+
+	// Завершаем транзакцию
+	tx.Commit()
+
+	return &order, nil
 }
 
 func (r *orderRepo) CreateOrder(order models.Order) (uint, error) {
