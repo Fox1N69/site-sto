@@ -1,6 +1,6 @@
 {
 	"environment": {
-		"mode": "dev"
+		"mode": "release"
 	},
 	"server": {
 		"port": 4000
@@ -19,5 +19,8 @@
 		"addr": "localhost:6379",
 		"password": "",
 		"db": 0
+	},
+	"bot": {
+		"token": "7114339749:AAHB3jCSfmTVXErvd2E3PkJtXAgKnXDMQes"
 	}
 }

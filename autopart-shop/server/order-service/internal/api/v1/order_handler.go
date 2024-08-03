@@ -5,13 +5,14 @@ import (
 	"shop-server-order/internal/models"
 	"shop-server-order/internal/service"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/goccy/go-json"
+	"github.com/gofiber/fiber/v3"
 )
 
 type OrderHandler interface {
-	CreateOrder(c *fiber.Ctx) error
-	CreateVinOrder(c *fiber.Ctx) error
-	GetAllOrders(c *fiber.Ctx) error
+	CreateOrder(c fiber.Ctx) error
+	CreateVinOrder(c fiber.Ctx) error
+	GetAllOrders(c fiber.Ctx) error
 }
 
 type orderHandler struct {
@@ -24,11 +25,11 @@ func NewOrderHandler(orderService service.OrderService) OrderHandler {
 	}
 }
 
-func (h *orderHandler) CreateOrder(c *fiber.Ctx) error {
+func (h *orderHandler) CreateOrder(c fiber.Ctx) error {
 	response := response.New(c)
 
 	var order models.Order
-	if err := c.BodyParser(&order); err != nil {
+	if err := json.Unmarshal(c.Body(), &order); err != nil {
 		response.Error(404, err)
 		return err
 	}
@@ -45,11 +46,11 @@ func (h *orderHandler) CreateOrder(c *fiber.Ctx) error {
 	})
 }
 
-func (h *orderHandler) CreateVinOrder(c *fiber.Ctx) error {
+func (h *orderHandler) CreateVinOrder(c fiber.Ctx) error {
 	response := response.New(c)
 
 	var order models.VinOrder
-	if err := c.BodyParser(&order); err != nil {
+	if err := json.Unmarshal(c.Body(), &order); err != nil {
 		response.Error(404, err)
 		return err
 	}
@@ -66,7 +67,7 @@ func (h *orderHandler) CreateVinOrder(c *fiber.Ctx) error {
 	})
 }
 
-func (h *orderHandler) GetAllOrders(c *fiber.Ctx) error {
+func (h *orderHandler) GetAllOrders(c fiber.Ctx) error {
 	response := response.New(c)
 
 	orders, err := h.service.GetAllOrders()

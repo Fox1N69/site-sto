@@ -10,7 +10,7 @@ import (
 	"shop-server-order/common/util/token"
 
 	"github.com/dgrijalva/jwt-go"
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 type Middleware interface {
@@ -28,7 +28,7 @@ func NewMiddleware(secretKey string) Middleware {
 }
 
 func (m *middleware) CORS() fiber.Handler {
-	return func(c *fiber.Ctx) error {
+	return func(c fiber.Ctx) error {
 		c.Set("Access-Control-Allow-Origin", "*")
 		c.Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 		c.Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE")
@@ -37,7 +37,7 @@ func (m *middleware) CORS() fiber.Handler {
 }
 
 func (m *middleware) AUTH() fiber.Handler {
-	return func(c *fiber.Ctx) error {
+	return func(c fiber.Ctx) error {
 		authHeader := c.Get("Authorization")
 		authBearer := strings.Split(authHeader, " ")
 
@@ -58,7 +58,7 @@ func (m *middleware) AUTH() fiber.Handler {
 }
 
 func (m *middleware) Role(requiredRole string) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+	return func(c fiber.Ctx) error {
 		authHeader := c.Get("Authorization")
 		authBearer := strings.Split(authHeader, " ")
 

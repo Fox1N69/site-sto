@@ -6,12 +6,12 @@ import (
 
 	"shop-server-order/common/http/response"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 type Handler interface {
-	NoRoute(c *fiber.Ctx) error
-	Index(c *fiber.Ctx) error
+	NoRoute(c fiber.Ctx) error
+	Index(c fiber.Ctx) error
 }
 
 type handler struct {
@@ -22,12 +22,12 @@ func DefaultHandler() Handler {
 	return &handler{}
 }
 
-func (h *handler) NoRoute(c *fiber.Ctx) error {
+func (h *handler) NoRoute(c fiber.Ctx) error {
 	response.New(c).Error(http.StatusNotFound, errors.New("route not found"))
 	return nil
 }
 
-func (h *handler) Index(c *fiber.Ctx) error {
+func (h *handler) Index(c fiber.Ctx) error {
 	response.New(c).Write(http.StatusOK, "application running")
 	return nil
 }

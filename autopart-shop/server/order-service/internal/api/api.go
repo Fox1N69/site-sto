@@ -7,11 +7,11 @@ import (
 	v1 "shop-server-order/internal/api/v1"
 	"shop-server-order/internal/manager"
 	"shop-server-order/notification-bot/bot"
+	"shop-server-order/utils/logger"
 
 	"github.com/go-redis/redis/v8"
 	"github.com/goccy/go-json"
-	"github.com/gofiber/fiber/v2"
-	"github.com/sirupsen/logrus"
+	"github.com/gofiber/fiber/v3"
 )
 
 type Server interface {
@@ -24,6 +24,7 @@ type server struct {
 	service     manager.ServiceManager
 	middleware  middleware.Middleware
 	redisClient *redis.Client
+	log         logger.Logger
 }
 
 func NewServer(infra infra.Infra, redisClient *redis.Client) Server {
@@ -37,6 +38,7 @@ func NewServer(infra infra.Infra, redisClient *redis.Client) Server {
 		service:     manager.NewServiceManager(infra),
 		middleware:  middleware.NewMiddleware(infra.Config().GetString("secret.key")),
 		redisClient: redisClient,
+		log:         logger.GetLogger(),
 	}
 }
 
@@ -47,13 +49,13 @@ func (s *server) Run() {
 
 	s.app.Listen(s.infra.Port())
 
-	bot, err := bot.New("")
+	bot, err := bot.New(s.infra.Config().Sub("bot").GetString("token"))
 	if err != nil {
-		logrus.Fatal(err)
+		s.log.Fatal(err)
 	}
 
 	if err := bot.Start(); err != nil {
-		logrus.Fatal(err)
+		s.log.Fatal(err)
 	}
 }
 
@@ -73,4 +75,5 @@ func (s *server) v1() {
 		api.Post("/order", orderHandler.CreateOrder)
 		api.Post("/vin-order", orderHandler.CreateVinOrder)
 	}
+
 }
