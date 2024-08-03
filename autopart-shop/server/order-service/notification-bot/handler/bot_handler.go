@@ -22,14 +22,33 @@ func (h *Handler) StartHandle(msg *tgbotapi.Message) {
 	chatID := msg.Chat.ID
 
 	helloText := "Добро пожаловать в бота для получения уведомления от интернет магазина Remzona"
-	helloMessage := tgbotapi.NewMessage(chatID, helloText)
+	welcomMessage := tgbotapi.NewMessage(chatID, helloText)
 
-	_, err := h.bot.Send(helloMessage)
+	h.getInlineButton(welcomMessage)
+}
+
+func (h *Handler) getInlineButton(message tgbotapi.MessageConfig) {
+	inlineKb := tgbotapi.NewInlineKeyboardMarkup(
+		tgbotapi.NewInlineKeyboardRow(
+			tgbotapi.NewInlineKeyboardButtonData("Все заказы", "all_orders"),
+			tgbotapi.NewInlineKeyboardButtonData("Последний заказ", "last_order"),
+		),
+	)
+
+	message.ReplyMarkup = inlineKb
+
+	_, err := h.bot.Send(message)
 	if err != nil {
 		h.log.Errorf("Failed to send hello message: %v", err)
 	}
 }
 
 func (h *Handler) CallBackHandle(msg *tgbotapi.Message) {
-
+	if msg.IsCommand() {
+		switch msg.Command() {
+		case "all_orders":
+		case "last_order":
+		default:
+		}
+	}
 }
