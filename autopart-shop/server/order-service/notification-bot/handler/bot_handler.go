@@ -115,11 +115,12 @@ func (h *Handler) CallBackHandle(update tgbotapi.Update) {
 
 	callbackData := update.CallbackQuery.Data
 
-	switch callbackData {
-	case "all_orders":
+	switch {
+	case callbackData == "all_orders":
 		h.GetAllOrdersHandle(update.CallbackQuery.Message)
-	case "last_order":
+	case callbackData == "last_order":
 		// Обработка нажатия на кнопку для последнего заказа
+
 	default:
 		// Дополнительная логика для других возможных значений callbackData
 	}

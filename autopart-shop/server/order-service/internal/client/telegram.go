@@ -6,24 +6,37 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+
+	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 )
 
 type TelegramClient struct {
-	token   string
+	token string
 }
 
 func NewTelegramClient(token string) *TelegramClient {
 	return &TelegramClient{
-		token:   token,
+		token: token,
 	}
 }
 
-func (c *TelegramClient) SendMessage(chatID int64, text string) error {
+func (c *TelegramClient) SendMessage(chatID int64, text string, orderURL string) error {
 	url := fmt.Sprintf("https://api.telegram.org/bot%s/sendMessage", c.token)
+
+	// Создание кнопки с ссылкой
+	inlineKeyboard := tgbotapi.NewInlineKeyboardMarkup(
+		tgbotapi.NewInlineKeyboardRow(
+			tgbotapi.NewInlineKeyboardButtonURL("Просмотреть заказ", orderURL),
+		),
+	)
+
+	// Сообщение с кнопкой
 	message := map[string]interface{}{
-		"chat_id": chatID,
-		"text":    text,
+		"chat_id":      chatID,
+		"text":         text,
+		"reply_markup": inlineKeyboard,
 	}
+
 	payload, err := json.Marshal(message)
 	if err != nil {
 		return fmt.Errorf("error marshalling message: %v", err)
@@ -46,4 +59,3 @@ func (c *TelegramClient) SendMessage(chatID int64, text string) error {
 
 	return nil
 }
-

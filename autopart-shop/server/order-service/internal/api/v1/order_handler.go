@@ -127,7 +127,8 @@ func (h *orderHandler) CreateVinOrder(c fiber.Ctx) error {
 
 	for _, chatID := range chatIDs {
 		message := fmt.Sprintf("Новый заказ создан!\nID: %d\nPart: %s\nAuto: %s\nModelAuto: %s", order.ID, order.PartName, order.Auto, order.ModelAuto)
-		if err := h.telegramClient.SendMessage(int64(chatID), message); err != nil {
+		orderUrl := fmt.Sprintf("https://google.com/%d", order.ID)
+		if err := h.telegramClient.SendMessage(int64(chatID), message, orderUrl); err != nil {
 			logrus.Errorf("Failed to send Telegram message: %v", err)
 		}
 	}
