@@ -34,22 +34,22 @@ func (h *orderHandler) CreateOrder(c fiber.Ctx) error {
 	response := response.New(c)
 
 	type CreateOrderRequest struct {
-		Order    models.Order    `json:"order"`
-		VinOrder models.VinOrder `json:"vin_order"`
+		Order    models.Order      `json:"order"`
+		VinOrder []models.VinOrder `json:"vin_orders"`
 	}
 
 	var request CreateOrderRequest
 	if err := json.Unmarshal(c.Body(), &request); err != nil {
-		response.Error(404, err)
+		response.Error(fiber.StatusBadRequest, fmt.Errorf("invalid request body: %v", err))
 		return err
 	}
 
+	// Вызов сервиса для создания заказа с запчастями
 	order, err := h.service.CreateOrderWithVinOrder(request.Order, request.VinOrder)
 	if err != nil {
-		response.Error(500, err) // 500 Internal Server Error
+		response.Error(fiber.StatusInternalServerError, fmt.Errorf("failed to create order: %v", err))
 		return err
 	}
-
 	/*
 		// Получаем все chatIDs
 		chatIDs, err := h.service.GetAllBotChatIDs()
@@ -128,7 +128,7 @@ func (h *orderHandler) CreateVinOrder(c fiber.Ctx) error {
 	for _, chatID := range chatIDs {
 		message := fmt.Sprintf("Новый заказ создан!\nID: %d\nPart: %s\nAuto: %s\nModelAuto: %s", order.ID, order.PartName, order.Auto, order.ModelAuto)
 		orderUrl := fmt.Sprintf("https://google.com/%d", order.ID)
-		if err := h.telegramClient.SendMessage(int64(chatID), message, orderUrl); err != nil {
+		if err := h.telegramClient.SendMessage(int64(chatID), message, orderUrl, order.ID); err != nil {
 			logrus.Errorf("Failed to send Telegram message: %v", err)
 		}
 	}

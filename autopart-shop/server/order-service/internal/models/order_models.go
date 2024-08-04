@@ -11,16 +11,16 @@ type ShopCustom struct {
 
 type Order struct {
 	ShopCustom
-	Status          string   `json:"status"`
-	Email           string   `json:"email"`
-	PhoneNumber     string   `json:"phone_number"`
-	DeliveryCity    string   `json:"delivery_city"`
-	DeliveryAddress string   `json:"delivery_address"`
-	DeliveryCost    float64  `json:"delivery_cost"`
-	PaymentMethod   string   `json:"payment_method"`
-	Comment         string   `json:"comment"`
-	TrackingNumber  string   `json:"tracking_number"`
-	VinOrder        VinOrder `gorm:"foreignKey:OrderID"`
+	Status          string     `json:"status"`
+	Email           string     `json:"email"`
+	PhoneNumber     string     `json:"phone_number"`
+	DeliveryCity    string     `json:"delivery_city"`
+	DeliveryAddress string     `json:"delivery_address"`
+	DeliveryCost    float64    `json:"delivery_cost"`
+	PaymentMethod   string     `json:"payment_method"`
+	Comment         string     `json:"comment"`
+	TrackingNumber  string     `json:"tracking_number"`
+	VinOrder        []VinOrder `json:"vin_orders" gorm:"foreignKey:OrderID"`
 }
 
 type VinOrder struct {
