@@ -9,4 +9,5 @@ type NotificationUser struct {
 	Type      string    `json:"type"`
 	CreatedAt time.Time `json:"created_at"`
 	ChatID    int64     `json:"chat_id"`
+	IsAdmin   bool      `json:"is_admin"`
 }

@@ -34,3 +34,12 @@ func (r *BotRepo) GetOrderWithVinOrders(orderID uint) (*models.Order, error) {
 	}
 	return &order, nil
 }
+
+func (r *BotRepo) GetUserByID(id int64) (*models.NotificationUser, error) {
+	var user models.NotificationUser
+	if err := r.db.Where("id = ?", id).Find(&user).Error; err != nil {
+		return &models.NotificationUser{}, err
+	}
+
+	return &user, nil
+}

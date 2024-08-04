@@ -38,25 +38,44 @@ func (h *Handler) StartHandle(msg *tgbotapi.Message) {
 		Type:      msg.Chat.Type,
 		CreatedAt: time.Now(),
 		ChatID:    chatID,
+		IsAdmin:   false,
 	}
 
-	if err := h.repo.Save(&user); err != nil {
-		h.log.Errorf("Failed save the user to database: %v", err)
+	if user.ID != int64(msg.From.ID) {
+		if err := h.repo.Save(&user); err != nil {
+			h.log.Errorf("Failed save the user to database: %v", err)
+		}
 	}
 
-	helloText := "Добро пожаловать в бота для получения уведомления от интернет магазина Remzona"
-	welcomMessage := tgbotapi.NewMessage(chatID, helloText)
-
-	h.sendMessageWithButton(welcomMessage)
-
-	// Сообщение с chat_id
-	chatIDMessage := fmt.Sprintf("Ваш chat ID: %d", chatID)
-	chatIDMsg := tgbotapi.NewMessage(chatID, chatIDMessage)
-
-	// Отправка сообщения с chat_id
-	if _, err := h.bot.Send(chatIDMsg); err != nil {
-		h.log.Errorf("Failed to send chat ID message: %v", err)
+	adminUser, err := h.repo.GetUserByID(user.ID)
+	if err != nil {
+		h.log.Errorf("Failed to get user by id: %v", err)
 	}
+
+	if adminUser == nil || !adminUser.IsAdmin {
+		helloText := "Этот бот предназначен для администрации интернет магазина RemZona"
+		welcomMessage := tgbotapi.NewMessage(chatID, helloText)
+
+		if _, err := h.bot.Send(welcomMessage); err != nil {
+			h.log.Logger.Errorf("Failed to send welcom message: %v", err)
+		}
+
+	} else {
+		helloText := "Добро пожаловать в бота для получения уведомления от интернет магазина Remzona"
+		welcomMessage := tgbotapi.NewMessage(chatID, helloText)
+
+		h.sendMessageWithButton(welcomMessage)
+
+		// Сообщение с chat_id
+		chatIDMessage := fmt.Sprintf("Ваш chat ID: %d", chatID)
+		chatIDMsg := tgbotapi.NewMessage(chatID, chatIDMessage)
+
+		// Отправка сообщения с chat_id
+		if _, err := h.bot.Send(chatIDMsg); err != nil {
+			h.log.Errorf("Failed to send chat ID message: %v", err)
+		}
+	}
+
 }
 
 func (h *Handler) sendMessageWithButton(message tgbotapi.MessageConfig) {
