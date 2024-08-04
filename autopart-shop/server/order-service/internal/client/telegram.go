@@ -23,7 +23,7 @@ func NewTelegramClient(token string) *TelegramClient {
 func (c *TelegramClient) SendMessage(chatID int64, text string, orderURL string) error {
 	url := fmt.Sprintf("https://api.telegram.org/bot%s/sendMessage", c.token)
 
-	// Создание кнопки с ссылкой
+	// Создание кнопки с ссылкой для подробной информации о заказе
 	inlineKeyboard := tgbotapi.NewInlineKeyboardMarkup(
 		tgbotapi.NewInlineKeyboardRow(
 			tgbotapi.NewInlineKeyboardButtonURL("Просмотреть заказ", orderURL),

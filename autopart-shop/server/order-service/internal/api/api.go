@@ -11,6 +11,7 @@ import (
 	"github.com/go-redis/redis/v8"
 	"github.com/goccy/go-json"
 	"github.com/gofiber/fiber/v3"
+	"github.com/gofiber/fiber/v3/middleware/cors"
 )
 
 type Server interface {
@@ -42,7 +43,8 @@ func NewServer(infra infra.Infra, redisClient *redis.Client) Server {
 }
 
 func (s *server) Run() {
-	s.app.Use(s.middleware.CORS())
+	//s.app.Use(s.middleware.CORS())
+	s.app.Use(cors.New())
 	s.handlers()
 	s.v1()
 
