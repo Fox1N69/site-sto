@@ -6,6 +6,8 @@ import (
 	"shop-server-order/internal/models"
 	"shop-server-order/notification-bot/repository"
 	"shop-server-order/utils/logger"
+	"strconv"
+	"strings"
 	"time"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
@@ -114,14 +116,67 @@ func (h *Handler) CallBackHandle(update tgbotapi.Update) {
 	}
 
 	callbackData := update.CallbackQuery.Data
-	//chatID := update.CallbackQuery.Message.Chat.ID
+	chatID := update.CallbackQuery.Message.Chat.ID
 
 	switch {
 	case callbackData == "all_orders":
 		h.GetAllOrdersHandle(update.CallbackQuery.Message)
 	case callbackData == "last_order":
 		// Обработка нажатия на кнопку для последнего заказа
+	case strings.HasPrefix(callbackData, "show_order_"):
+		// Получаем ID заказа из callbackData
+		orderIDStr := strings.TrimPrefix(callbackData, "show_order_")
+		orderID, err := strconv.ParseUint(orderIDStr, 10, 64)
+		if err != nil {
+			h.log.Errorf("Failed to parse order ID: %v", err)
+			return
+		}
+		h.GetOrderDetailsHandle(chatID, uint(orderID))
 	default:
 		// Дополнительная логика для других возможных значений callbackData
+	}
+}
+
+func (h *Handler) GetOrderDetailsHandle(chatID int64, orderID uint) {
+	// Получаем полный заказ и связанные VinOrder
+	order, err := h.repo.GetOrderWithVinOrders(orderID)
+	if err != nil {
+		h.log.Errorf("Failed to get order details: %v", err)
+		return
+	}
+
+	// Формируем сообщение с полными данными о заказе
+	message := fmt.Sprintf("Детали заказа:\n\n"+
+		"Order ID: %d\n"+
+		"Status: %s\n"+
+		"Email: %s\n"+
+		"Phone Number: %s\n"+
+		"Delivery City: %s\n"+
+		"Delivery Address: %s\n"+
+		"Delivery Cost: %.2f\n"+
+		"Payment Method: %s\n"+
+		"Comment: %s\n"+
+		"Tracking Number: %s\n\n"+
+		"Vin Orders:\n",
+		order.ID,
+		order.Status,
+		order.Email,
+		order.PhoneNumber,
+		order.DeliveryCity,
+		order.DeliveryAddress,
+		order.DeliveryCost,
+		order.PaymentMethod,
+		order.Comment,
+		order.TrackingNumber,
+	)
+
+	for _, vinOrder := range order.VinOrder {
+		message += fmt.Sprintf("ID: %d\nVin: %s\nPart: %s\nAuto: %s\nModel: %s\n\n", vinOrder.ID, vinOrder.VinNumber, vinOrder.PartName, vinOrder.Auto, vinOrder.ModelAuto)
+	}
+
+	respMsg := tgbotapi.NewMessage(chatID, message)
+	_, err = h.bot.Send(respMsg)
+	if err != nil {
+		h.log.Errorf("Failed to send order details message: %v", err)
 	}
 }

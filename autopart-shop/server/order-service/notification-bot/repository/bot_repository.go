@@ -26,3 +26,11 @@ func (r *BotRepo) GetOrderByID(id uint) (*models.Order, error) {
 
 	return nil, nil
 }
+
+func (r *BotRepo) GetOrderWithVinOrders(orderID uint) (*models.Order, error) {
+	var order models.Order
+	if err := r.db.Preload("VinOrder").First(&order, orderID).Error; err != nil {
+		return nil, err
+	}
+	return &order, nil
+}

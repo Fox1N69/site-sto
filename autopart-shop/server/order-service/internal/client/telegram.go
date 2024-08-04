@@ -27,7 +27,7 @@ func (c *TelegramClient) SendMessage(chatID int64, text string, orderURL string,
 	inlineKeyboard := tgbotapi.NewInlineKeyboardMarkup(
 		tgbotapi.NewInlineKeyboardRow(
 			tgbotapi.NewInlineKeyboardButtonURL("Детали заказа", orderURL),
-			tgbotapi.NewInlineKeyboardButtonData("Детали заказа в чате", "show_order"+fmt.Sprint(orderID)),
+			tgbotapi.NewInlineKeyboardButtonData("Показать детали в чате", fmt.Sprintf("show_order_%d", orderID)),
 		),
 	)
 
