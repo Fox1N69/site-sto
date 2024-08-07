@@ -23,8 +23,8 @@ export default function CheckOutPage() {
 	const [phone, setPhone] = useState('');
 
 	useEffect(() => {
-		const vinOrder = JSON.parse(localStorage.getItem('vin_order') || '{}');
-		if (!vinOrder.vin_number) {
+		const vinOrder = JSON.parse(localStorage.getItem('vin_order') || '[]');
+		if (!vinOrder.length) {
 			router.push('/');
 		}
 	}, [router]);
@@ -32,7 +32,7 @@ export default function CheckOutPage() {
 	const handleSubmit = async (event: React.FormEvent) => {
 		event.preventDefault();
 
-		const vinOrder = JSON.parse(localStorage.getItem('vin_order') || '{}');
+		const vinOrder = JSON.parse(localStorage.getItem('vin_order') || '[]');
 
 		const orderData = {
 			order: {

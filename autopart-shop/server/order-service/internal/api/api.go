@@ -15,7 +15,7 @@ import (
 )
 
 type Server interface {
-	Run() 
+	Run()
 }
 
 type server struct {
@@ -43,7 +43,7 @@ func NewServer(infra infra.Infra, redisClient *redis.Client) Server {
 }
 
 func (s *server) Run() {
-	//s.app.Use(s.middleware.CORS())
+	//s.app.Use(s.imiddleware.CORS())
 	s.app.Use(cors.New())
 	s.handlers()
 	s.v1()

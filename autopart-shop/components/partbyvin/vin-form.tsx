@@ -1,55 +1,83 @@
-// pages/index.tsx
 'use client';
 import { Button, Input } from '@nextui-org/react';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
+const initialForm = {
+	vin_number: '',
+	part_name: '',
+	auto: '',
+	model_auto: '2022'
+};
+
 export const VinForm = () => {
-	const [vin, setVin] = useState('');
-	const [partName, setPartName] = useState('');
-	const [auto, setAuto] = useState('');
+	const [forms, setForms] = useState([initialForm]);
 	const router = useRouter();
+
+	const handleInputChange = (
+		index: number,
+		event: React.ChangeEvent<HTMLInputElement>
+	) => {
+		const { name, value } = event.target;
+		const updatedForms = [...forms];
+		updatedForms[index] = { ...updatedForms[index], [name]: value };
+		setForms(updatedForms);
+	};
+
+	const addForm = () => {
+		setForms([...forms, { ...initialForm }]);
+	};
+
+	const removeForm = (index: number) => {
+		const updatedForms = forms.filter((_, i) => i !== index);
+		setForms(updatedForms);
+	};
 
 	const handleSubmit = (event: React.FormEvent) => {
 		event.preventDefault();
-
-		// Сохраняем данные в localStorage или другой метод для передачи на следующую страницу
-		localStorage.setItem(
-			'vin_order',
-			JSON.stringify({
-				vin_number: vin,
-				part_name: partName,
-				auto,
-				model_auto: '2022'
-			})
-		);
+		localStorage.setItem('vin_order', JSON.stringify(forms));
 		router.push('/checkout');
 	};
 
 	return (
-		<>
-			<form className='flex flex-col gap-4 w-[35%]' onSubmit={handleSubmit}>
-				<Input
-					label='VIN / Номер кузова*'
-					labelPlacement='outside'
-					required
-					value={vin}
-					onChange={e => setVin(e.target.value)}
-				/>
-				<Input
-					label='Название запчасти'
-					labelPlacement='outside'
-					value={partName}
-					onChange={e => setPartName(e.target.value)}
-				/>
-				<Input
-					label='Машина / Модель машины'
-					labelPlacement='outside'
-					value={auto}
-					onChange={e => setAuto(e.target.value)}
-				/>
-				<Button type='submit'>Перейти к оформлению</Button>
-			</form>
-		</>
+		<form className='flex flex-col gap-4 w-[35%]' onSubmit={handleSubmit}>
+			{forms.map((form, index) => (
+				<div key={index} className='flex flex-col gap-4'>
+					<Input
+						name='vin_number'
+						label={`VIN / Номер кузова* (${index + 1})`}
+						labelPlacement='outside'
+						required
+						value={form.vin_number}
+						onChange={e => handleInputChange(index, e)}
+					/>
+					<Input
+						name='part_name'
+						label='Название запчасти'
+						labelPlacement='outside'
+						value={form.part_name}
+						onChange={e => handleInputChange(index, e)}
+					/>
+					<Input
+						name='auto'
+						label='Машина / Модель машины'
+						labelPlacement='outside'
+						value={form.auto}
+						onChange={e => handleInputChange(index, e)}
+					/>
+					<Button
+						className='hidden'
+						type='button'
+						onClick={() => removeForm(index)}
+					>
+						Удалить форму {index + 1}
+					</Button>
+				</div>
+			))}
+			<Button type='button' onClick={addForm} color='primary'>
+				Добавить запчасть
+			</Button>
+			<Button type='submit'>Перейти к оформлению</Button>
+		</form>
 	);
 };
