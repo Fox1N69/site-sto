@@ -128,34 +128,6 @@ func (h *Handler) GetAllOrdersHandle(msg *tgbotapi.Message) {
 	h.sendMessageWithButton(respMsg)
 }
 
-func (h *Handler) CallBackHandle(update tgbotapi.Update) {
-	if update.CallbackQuery == nil {
-		h.log.Error("Received nil CallbackQuery in CallBackHandle")
-		return
-	}
-
-	callbackData := update.CallbackQuery.Data
-	chatID := update.CallbackQuery.Message.Chat.ID
-
-	switch {
-	case callbackData == "all_orders":
-		h.GetAllOrdersHandle(update.CallbackQuery.Message)
-	case callbackData == "last_order":
-		// Обработка нажатия на кнопку для последнего заказа
-	case strings.HasPrefix(callbackData, "show_order_"):
-		// Получаем ID заказа из callbackData
-		orderIDStr := strings.TrimPrefix(callbackData, "show_order_")
-		orderID, err := strconv.ParseUint(orderIDStr, 10, 64)
-		if err != nil {
-			h.log.Errorf("Failed to parse order ID: %v", err)
-			return
-		}
-		h.GetOrderDetailsHandle(chatID, uint(orderID))
-	default:
-		// Дополнительная логика для других возможных значений callbackData
-	}
-}
-
 func (h *Handler) GetOrderDetailsHandle(chatID int64, orderID uint) {
 	// Получаем полный заказ и связанные VinOrder
 	order, err := h.repo.GetOrderWithVinOrders(orderID)
@@ -164,19 +136,19 @@ func (h *Handler) GetOrderDetailsHandle(chatID int64, orderID uint) {
 		return
 	}
 
-	// Формируем сообщение с полными данными о заказе
+	// Full order data
 	message := fmt.Sprintf("Детали заказа:\n\n"+
-		"Order ID: %d\n"+
-		"Status: %s\n"+
-		"Email: %s\n"+
-		"Phone Number: %s\n"+
-		"Delivery City: %s\n"+
-		"Delivery Address: %s\n"+
-		"Delivery Cost: %.2f\n"+
-		"Payment Method: %s\n"+
-		"Comment: %s\n"+
-		"Tracking Number: %s\n\n"+
-		"Vin Orders:\n",
+		"ID заказа: %d\n"+
+		"Статус: %s\n"+
+		"Почта: %s\n"+
+		"Номер телефона: %s\n"+
+		"Город доставки: %s\n"+
+		"Адресс доставки: %s\n"+
+		"Стоимость: %.2f\n"+
+		"Спосбо оплаты: %s\n"+
+		"Коментарий: %s\n"+
+		"Трек номер: %s\n\n"+
+		"Заказ по Vin номеру:\n",
 		order.ID,
 		order.Status,
 		order.Email,
@@ -194,8 +166,42 @@ func (h *Handler) GetOrderDetailsHandle(chatID int64, orderID uint) {
 	}
 
 	respMsg := tgbotapi.NewMessage(chatID, message)
-	_, err = h.bot.Send(respMsg)
+	/*_, err = h.bot.Send(respMsg)
 	if err != nil {
 		h.log.Errorf("Failed to send order details message: %v", err)
+	}*/
+
+	h.sendMessageWithButton(respMsg)
+}
+
+// CallBackHandler ...
+//
+// handler for button
+func (h *Handler) CallBackHandle(update tgbotapi.Update) {
+	if update.CallbackQuery == nil {
+		h.log.Error("Received nil CallbackQuery in CallBackHandle")
+		return
+	}
+
+	callbackData := update.CallbackQuery.Data
+	chatID := update.CallbackQuery.Message.Chat.ID
+
+	switch {
+	case callbackData == "all_orders":
+		h.GetAllOrdersHandle(update.CallbackQuery.Message)
+	case callbackData == "last_order":
+		h.repo.GetLastOrder()
+		// Обработка нажатия на кнопку для последнего заказа
+	case strings.HasPrefix(callbackData, "show_order_"):
+		// Получаем ID заказа из callbackData
+		orderIDStr := strings.TrimPrefix(callbackData, "show_order_")
+		orderID, err := strconv.ParseUint(orderIDStr, 10, 64)
+		if err != nil {
+			h.log.Errorf("Failed to parse order ID: %v", err)
+			return
+		}
+		h.GetOrderDetailsHandle(chatID, uint(orderID))
+	default:
+		// Дополнительная логика для других возможных значений callbackData
 	}
 }

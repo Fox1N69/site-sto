@@ -61,7 +61,7 @@ func (h *orderHandler) CreateOrder(c fiber.Ctx) error {
 	// Формируем сообщение только с VinOrder
 	var vinOrderMessages string
 	for _, vinOrder := range request.VinOrder {
-		vinOrderMessages += fmt.Sprintf("ID: %d\nVin: %s\nPart: %s\nAuto: %s\nModel: %s\n\n", vinOrder.ID, vinOrder.VinNumber, vinOrder.PartName, vinOrder.Auto, vinOrder.ModelAuto)
+		vinOrderMessages += fmt.Sprintf("ID: %d\nVin номер: %s\nЗапчасть: %s\nМашина: %s\nМодель машины: %s\n\n", vinOrder.ID, vinOrder.VinNumber, vinOrder.PartName, vinOrder.Auto, vinOrder.ModelAuto)
 	}
 
 	message := fmt.Sprintf("Новый заказ создан!\n\n"+
@@ -103,7 +103,7 @@ func (h *orderHandler) CreateVinOrder(c fiber.Ctx) error {
 	}
 
 	for _, chatID := range chatIDs {
-		message := fmt.Sprintf("Новый заказ создан!\nID: %d\nPart: %s\nAuto: %s\nModelAuto: %s", order.ID, order.PartName, order.Auto, order.ModelAuto)
+		message := fmt.Sprintf("Новый заказ создан!\nID: %d\nЗапчасть: %s\nМашина: %s\nМодель машины: %s", order.ID, order.PartName, order.Auto, order.ModelAuto)
 		orderUrl := fmt.Sprintf("https://google.com/%d", order.ID)
 		if err := h.telegramClient.SendMessage(int64(chatID), message, orderUrl, order.ID); err != nil {
 			logrus.Errorf("Failed to send Telegram message: %v", err)

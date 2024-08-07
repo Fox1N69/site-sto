@@ -16,6 +16,7 @@ type OrderRepo interface {
 	Delete(id uint) error
 	GetAllBotChatIDs() ([]int64, error)
 	GetOrderWithVinOrders(orderID uint) (*models.Order, error) // Новый метод
+	LastOrder() (*models.Order, error)
 }
 
 type orderRepo struct {
@@ -122,6 +123,16 @@ func (r *orderRepo) GetOrderWithVinOrders(orderID uint) (*models.Order, error) {
 	if err := r.db.Preload("VinOrder").First(&order, orderID).Error; err != nil {
 		logrus.Errorf("Failed to get order with vin orders: %v", err)
 		return nil, fmt.Errorf("failed to get order with vin orders: %v", err)
+	}
+
+	return &order, nil
+}
+
+func (r *orderRepo) LastOrder() (*models.Order, error) {
+	var order models.Order
+	if err := r.db.Order("create_at desc").Find(&order).Error; err != nil {
+		logrus.Errorf("Failed getter last order: %v", err)
+		return nil, fmt.Errorf("failed getter last order: %v", err)
 	}
 
 	return &order, nil

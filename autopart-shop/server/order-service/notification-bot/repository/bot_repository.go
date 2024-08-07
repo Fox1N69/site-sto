@@ -43,3 +43,12 @@ func (r *BotRepo) GetUserByID(id int64) (*models.NotificationUser, error) {
 
 	return &user, nil
 }
+
+func (r *BotRepo) GetLastOrder() (*models.Order, error) {
+	var order models.Order
+	if err := r.db.Order("create_at desc").Find(&order).Error; err != nil {
+		return nil, err
+	}
+
+	return &order, nil
+}

@@ -2,11 +2,13 @@ package models
 
 import (
 	"database/sql"
+	"time"
 )
 
 type ShopCustom struct {
 	ID        uint         `json:"id" gorm:"primaryKey"`
 	DeletedAt sql.NullTime `json:"deleted_at" gorm:"index"`
+	CreatedAt time.Time
 }
 
 type Order struct {

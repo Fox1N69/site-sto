@@ -12,6 +12,7 @@ type OrderService interface {
 	GetAllOrders() ([]models.VinOrder, error)
 	DeleteOrder(id uint) error
 	GetAllBotChatIDs() ([]int64, error)
+	GetLastOrder() (*models.Order, error)
 }
 
 type orderService struct {
@@ -51,4 +52,8 @@ func (s *orderService) DeleteOrder(id uint) error {
 
 func (s *orderService) GetAllBotChatIDs() ([]int64, error) {
 	return s.repository.GetAllBotChatIDs()
+}
+
+func (s *orderService) GetLastOrder() (*models.Order, error) {
+	return s.repository.LastOrder()
 }

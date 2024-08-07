@@ -15,7 +15,7 @@ import (
 )
 
 type Server interface {
-	Run()
+	Run() 
 }
 
 type server struct {
